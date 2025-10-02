@@ -1,7 +1,5 @@
 ---
 import BookmarkTags from "./BookmarkTags.astro";
-import { Image } from "astro:assets";
-import logoImg from "../assets/logo-small.png";
 
 interface Props {
   bookmarks: any[];
@@ -12,225 +10,37 @@ const { bookmarks, title } = Astro.props as Props;
 
 ---
 
-<section class="bookmark-category" id={`${title.toLowerCase()}`}>
-  <div class="category-header">
-    <h2 class="category-title">#{title}</h2>
-    <div class="category-count">{bookmarks.length} bookmark{bookmarks.length !== 1 ? 's' : ''}</div>
-  </div>
-
-  <div class="bookmarks-grid">
+<section id={`${title.toLowerCase()}`}>
+  <h2>#{title}</h2>
+  <ul>
     {bookmarks.map((bookmark) => (
-      <article class="bookmark-card">
-        <div class="bookmark-card-image">
-          {(() => {
-            try {
-              if (bookmark.metadata && bookmark.metadata.ogImage) {
-                return (
-                  <Image
-                    src={bookmark.metadata.ogImage[0].url}
-                    alt={bookmark.metadata.ogImage[0]?.alt ?? bookmark.link}
-                    width={400}
-                    height={250}
-                    loading="lazy"
-                  />
-                );
-              }
-            } catch (error) {
-              console.error("Failed to load image:", error);
-            }
-
-            // Fallback to default logo image
-            return (
-              <Image
-                src={logoImg}
-                alt="Default bookmark preview"
-                width={400}
-                height={250}
-                loading="lazy"
-                class="bookmark-default-image"
-              />
-            );
-          })()}
-        </div>
-
-        <div class="bookmark-card-content">
-          <h3 class="bookmark-card-title">
-            <a href={bookmark.link} target="_blank" rel="noopener noreferrer">
-              {bookmark.metadata?.ogTitle ?? bookmark.link}
-            </a>
-          </h3>
-          {bookmark.metadata?.ogDescription && (
-            <p class="bookmark-card-description">
-              {bookmark.metadata.ogDescription.length > 120
-                ? bookmark.metadata.ogDescription.substring(0, 120) + '...'
-                : bookmark.metadata.ogDescription
-              }
-            </p>
-          )}
-          <div class="bookmark-card-meta">
-            <span class="bookmark-url">{bookmark.link}</span>
-          </div>
-          {bookmark.tags && bookmark.tags.length > 0 && (
-            <div class="bookmark-card-tags">
-              <BookmarkTags tags={bookmark.tags.split(",")} />
-            </div>
-          )}
-        </div>
-      </article>
+      <li>
+        <a href={bookmark.link} target="_blank" rel="noopener noreferrer">
+          {bookmark.metadata?.ogTitle ?? bookmark.link}
+        </a>
+        {bookmark.tags && bookmark.tags.length > 0 && (
+          <>
+            {' '}
+            (<BookmarkTags tags={bookmark.tags.split(",")} />)
+          </>
+        )}
+      </li>
     ))}
-  </div>
+  </ul>
 </section>
 
 <style>
-  .bookmark-category {
-    margin-bottom: 4rem;
+  ul {
+    list-style: disc inside;
+    padding: 0;
+    margin: 0 0 2rem 0;
   }
 
-  .category-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 2rem;
-    padding-bottom: 1rem;
-    border-bottom: 2px solid var(--theme-accent);
+  li {
+    margin: 0.25rem 0;
   }
 
-  .category-title {
-    font-size: 2rem;
-    font-weight: 700;
+  a {
     color: var(--theme-text);
-    font-family: 'Oswald', sans-serif;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    margin: 0;
-  }
-
-  .category-count {
-    background: var(--theme-accent);
-    color: white;
-    padding: 0.5rem 1rem;
-    border-radius: 20px;
-    font-size: 0.9rem;
-    font-weight: 600;
-  }
-
-  .bookmarks-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-    gap: 2rem;
-  }
-
-  .bookmark-card {
-    background: var(--theme-bg);
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-  }
-
-  .bookmark-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-  }
-
-  .bookmark-card-image {
-    position: relative;
-    overflow: hidden;
-    height: 200px;
-  }
-
-  .bookmark-card-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    filter: grayscale(100%);
-    transition: filter 0.3s ease;
-  }
-
-  .bookmark-card:hover .bookmark-card-image img {
-    filter: grayscale(0%);
-  }
-
-  .bookmark-default-image {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    object-position: center;
-    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-    padding: 2rem;
-    filter: grayscale(100%);
-    transition: filter 0.3s ease;
-  }
-
-  .bookmark-card:hover .bookmark-default-image {
-    filter: grayscale(0%);
-  }
-
-  .bookmark-card-content {
-    padding: 1.5rem;
-  }
-
-  .bookmark-card-title {
-    margin: 0 0 0.75rem 0;
-    font-size: 1.5rem;
-    font-weight: 600;
-    font-family: 'Oswald', sans-serif;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-  }
-
-  .bookmark-card-title a {
-    color: var(--theme-text);
-    text-decoration: none;
-    transition: color 0.3s ease;
-  }
-
-  .bookmark-card-title a:hover {
-    color: var(--theme-accent);
-  }
-
-  .bookmark-card-description {
-    margin: 0 0 1rem 0;
-    color: var(--theme-quote);
-    font-style: italic;
-    line-height: 1.5;
-  }
-
-  .bookmark-card-meta {
-    margin-bottom: 1rem;
-  }
-
-  .bookmark-url {
-    font-size: 0.9rem;
-    color: var(--theme-accent);
-    font-weight: 500;
-    word-break: break-all;
-  }
-
-  .bookmark-card-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-  }
-
-  @media (max-width: 768px) {
-    .bookmarks-grid {
-      grid-template-columns: 1fr;
-      gap: 1.5rem;
-    }
-
-    .category-header {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 0.5rem;
-    }
-
-    .bookmark-card-content {
-      padding: 1rem;
-    }
-
-    .bookmark-card-title {
-      font-size: 1.25rem;
-    }
   }
 </style>

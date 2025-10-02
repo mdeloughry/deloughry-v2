@@ -184,6 +184,7 @@
   flex: 1;
   margin-left: 1rem;
   margin-right: 0.5rem;
+  text-transform: capitalize;
 }
 
 
@@ -213,6 +214,8 @@
   border-radius: 20px;
   font-size: 0.9rem;
   font-weight: 500;
+  text-transform: capitalize;
+
 }
 
 /* Shopping List */

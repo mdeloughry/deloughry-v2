@@ -41,24 +41,68 @@ export function parseCook(slug: string, raw: string): ParsedRecipe {
 		.map((t) => t.trim())
 		.filter(Boolean);
 
-	const ingredients: ParsedIngredient[] = (r.ingredients || []).map((i: any) => {
-		const result: ParsedIngredient = {
-			name: i.name || '',
-			optional: false
-		};
+  // First map raw ingredients
+  const rawIngredients: ParsedIngredient[] = (r.ingredients || []).map((i: any) => {
+    const result: ParsedIngredient = {
+      name: i.name || '',
+      optional: false
+    };
 
-		// Use the library's parsed quantity and units
-		if (typeof i.quantity === 'number') {
-			(result as any).quantity = i.quantity;
+    if (typeof i.quantity === 'number') {
+      (result as any).quantity = i.quantity;
+    }
+    if (i.units && i.units.trim()) {
+      (result as any).unit = i.units.trim();
+    }
+
+    return result;
+  });
+
+  // Aggregate by normalised name + unit to ensure uniqueness and correct totals
+  const ingredientTotals = new Map<string, ParsedIngredient>();
+  for (const ing of rawIngredients) {
+    const unit = (ing.unit || '').trim().toLowerCase();
+    const nameKey = (ing.name || '').trim().toLowerCase();
+    const key = `${nameKey}::${unit}`;
+
+    const existing = ingredientTotals.get(key);
+    if (!existing) {
+      ingredientTotals.set(key, { ...ing });
+    } else {
+      const q1 = typeof existing.quantity === 'number' ? existing.quantity : 0;
+      const q2 = typeof ing.quantity === 'number' ? ing.quantity : 0;
+      const total = q1 + q2;
+      const merged: ParsedIngredient = { ...existing };
+      if (total !== 0) {
+        merged.quantity = total;
+      } else {
+        delete (merged as any).quantity;
+      }
+      ingredientTotals.set(key, merged);
+    }
+  }
+
+  const ingredients: ParsedIngredient[] = Array.from(ingredientTotals.values());
+
+	// Normalise cookware so multi-word utensils are preserved (e.g. "baking tray")
+	// Prefer quoted raw names if present, otherwise fall back to name with dashes as spaces
+	const normaliseCookware = (c: any): string => {
+		const rawToken = (c?.raw || '').toString();
+		if (rawToken.includes('"')) {
+			const match = rawToken.match(/"([^"]+)"/);
+			if (match && match[1]) return match[1].trim();
 		}
-		if (i.units && i.units.trim()) {
-			(result as any).unit = i.units.trim();
-		}
+		const name = (c?.name || '').toString();
+		return name.replace(/[-_]+/g, ' ').replace(/\s+/g, ' ').trim();
+	};
 
-		return result;
-	});
-
-	const utensils: string[] = (r.cookware || []).map((c: any) => c.name);
+	const utensils: string[] = Array.from(
+		new Set(
+			(r.cookware || [])
+				.map((c: any) => normaliseCookware(c))
+				.filter((u: string) => u.length > 0)
+		)
+	);
 
 	const steps: ParsedStep[] = (r.steps || []).map((s: any) => {
 		// Build text from parsed tokens, handling ingredients, cookware, and timers

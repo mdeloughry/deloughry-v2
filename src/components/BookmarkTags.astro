@@ -1,32 +1,5 @@
 ---
 const { tags } = Astro.props;
 ---
-<>
-    { tags &&  tags.map( (tag: string) => {
-      return (
-        <span class="bookmark-tag">
-          {tag}
-        </span>
-      )
-    })}
-</>
 
-<style>
-  .bookmark-tag {
-    display: inline-block;
-    background: var(--theme-accent);
-    color: white;
-    padding: 0.25rem 0.75rem;
-    border-radius: 12px;
-    font-size: 0.75rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    transition: all 0.2s ease;
-  }
-
-  .bookmark-tag:hover {
-    background: var(--theme-accent-dark, #1a4d3a);
-    transform: translateY(-1px);
-  }
-</style>
+{tags && tags.length > 0 ? tags.join(", ") : null}

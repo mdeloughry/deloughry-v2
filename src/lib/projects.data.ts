@@ -22,16 +22,6 @@ export const projects: Project[] = [
 		technologies: ['JavaScript', 'HTML', 'CSS']
 	},
 	{
-		slug: 'blosm-studio-temps',
-		title: 'BLOSM Studio Latest Temps',
-		description: 'Real-time temperature monitoring for BLOSM Studio with live data updates.',
-		url: 'https://blosm.m4p.uk/',
-		tags: ['monitoring', 'real-time', 'temperature', 'studio'],
-		category: 'monitoring',
-		status: 'live',
-		technologies: ['JavaScript', 'WebSocket', 'Chart.js']
-	},
-	{
 		slug: 'twitch-globe',
 		title: 'Twitch Globe',
 		description: 'Interactive 3D globe visualization showing Twitch streamers around the world.',
