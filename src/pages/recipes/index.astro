@@ -60,7 +60,7 @@ const meta = {
 							)}
 						</div>
 						<h2 class="recipe-title">
-							<a href={`/recipes/${r.slug}/`} class="glitch-hover" data-text={r.title}>
+							<a href={`/recipes/${r.slug}/`} class="brutal-link" data-text={r.title}>
 								{r.title}
 							</a>
 						</h2>
@@ -132,7 +132,7 @@ const meta = {
 									${r.servings ? `<span class="servings-badge">${escapeHtml(String(r.servings))}_SERV</span>` : ''}
 								</div>
 								<h2 class="recipe-title">
-									<a href="/recipes/${escapeHtml(r.slug)}/" class="glitch-hover" data-text="${escapeHtml(r.title)}">
+									<a href="/recipes/${escapeHtml(r.slug)}/" class="brutal-link" data-text="${escapeHtml(r.title)}">
 										${escapeHtml(r.title)}
 									</a>
 								</h2>

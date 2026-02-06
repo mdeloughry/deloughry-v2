@@ -56,7 +56,7 @@ const menuLinks = [
           {index > 0 && <span class="hidden md:inline text-accent font-mono">|</span>}
           <a
             href={link.path}
-            class="nav-link glitch-hover px-3 py-2 font-mono text-sm uppercase tracking-wider text-textColor transition-all hover:text-accent hover:bg-accent/10"
+            class="nav-link px-3 py-2 font-mono text-sm uppercase tracking-wider text-textColor transition-all hover:text-accent hover:bg-accent/10"
             aria-current={url.pathname === link.path ? "page" : false}
             data-text={link.title}
             rel="prefetch"
@@ -115,16 +115,24 @@ const menuLinks = [
     margin-right: 0.25rem;
   }
 
-  /* Glitch effect on hover for nav links */
-  .nav-link:hover {
-    animation: nav-glitch 0.1s ease-in-out;
+  /* Clean hover effect for nav links */
+  .nav-link {
+    position: relative;
   }
 
-  @keyframes nav-glitch {
-    0% { transform: translate(0); }
-    25% { transform: translate(-2px, 1px); }
-    50% { transform: translate(2px, -1px); }
-    75% { transform: translate(-1px, -1px); }
-    100% { transform: translate(0); }
+  .nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background: var(--theme-accent);
+    transition: width 0.2s ease, left 0.2s ease;
+  }
+
+  .nav-link:hover::after {
+    width: 100%;
+    left: 0;
   }
 </style>

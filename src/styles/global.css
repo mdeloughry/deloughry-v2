@@ -154,8 +154,8 @@
 
 /* ============================================
    GLITCH TEXT EFFECTS
-   Decorative pseudo-elements only
-   Base text is ALWAYS readable without effects
+   Reserved for major page headings only
+   More subtle - slower animation, lower opacity
    ============================================ */
 .glitch-text {
   position: relative;
@@ -171,69 +171,65 @@
   width: 100%;
   height: 100%;
   pointer-events: none;
-  /* CSS cannot set aria-hidden, but these are purely decorative */
 }
 
 .glitch-text::before {
   color: var(--glitch-red);
-  animation: glitch-1 0.3s infinite;
+  animation: glitch-1 2s infinite;
   clip-path: polygon(0 0, 100% 0, 100% 45%, 0 45%);
-  transform: translate(-2px, -2px);
-  opacity: 0.8;
+  transform: translate(-1px, -1px);
+  opacity: 0.4;
 }
 
 .glitch-text::after {
   color: var(--glitch-cyan);
-  animation: glitch-2 0.3s infinite;
+  animation: glitch-2 2s infinite;
   clip-path: polygon(0 55%, 100% 55%, 100% 100%, 0 100%);
-  transform: translate(2px, 2px);
-  opacity: 0.8;
+  transform: translate(1px, 1px);
+  opacity: 0.4;
 }
 
 @keyframes glitch-1 {
-  0%, 100% { transform: translate(-2px, -2px); }
-  25% { transform: translate(2px, 0); }
-  50% { transform: translate(-1px, 2px); }
-  75% { transform: translate(1px, -1px); }
+  0%, 90%, 100% { transform: translate(-1px, -1px); opacity: 0.4; }
+  92% { transform: translate(2px, 0); opacity: 0.6; }
+  94% { transform: translate(-1px, 1px); opacity: 0.3; }
+  96% { transform: translate(1px, -1px); opacity: 0.5; }
 }
 
 @keyframes glitch-2 {
-  0%, 100% { transform: translate(2px, 2px); }
-  25% { transform: translate(-2px, 0); }
-  50% { transform: translate(1px, -2px); }
-  75% { transform: translate(-1px, 1px); }
+  0%, 90%, 100% { transform: translate(1px, 1px); opacity: 0.4; }
+  93% { transform: translate(-2px, 0); opacity: 0.6; }
+  95% { transform: translate(1px, -1px); opacity: 0.3; }
+  97% { transform: translate(-1px, 1px); opacity: 0.5; }
 }
 
-/* Hover-activated glitch */
+/* ============================================
+   BRUTALIST LINK HOVER
+   Simple, readable hover effect for links
+   Replaces the distracting glitch-hover
+   ============================================ */
 .glitch-hover {
   position: relative;
+  transition: color 0.15s ease;
 }
 
-.glitch-hover::before,
 .glitch-hover::after {
-  content: attr(data-text);
+  content: '';
   position: absolute;
-  top: 0;
+  bottom: -2px;
   left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 0.1s;
+  width: 0;
+  height: 2px;
+  background: var(--theme-accent);
+  transition: width 0.2s ease;
 }
 
-.glitch-hover:hover::before {
-  color: var(--glitch-red);
-  animation: glitch-1 0.15s infinite;
-  clip-path: polygon(0 0, 100% 0, 100% 45%, 0 45%);
-  opacity: 0.8;
+.glitch-hover:hover {
+  color: var(--theme-accent);
 }
 
 .glitch-hover:hover::after {
-  color: var(--glitch-cyan);
-  animation: glitch-2 0.15s infinite;
-  clip-path: polygon(0 55%, 100% 55%, 100% 100%, 0 100%);
-  opacity: 0.8;
+  width: 100%;
 }
 
 /* ============================================
@@ -484,32 +480,9 @@
   animation: flicker 0.15s infinite;
 }
 
-/* Random glitch flash */
-@keyframes glitch-flash {
-  0%, 95%, 100% {
-    opacity: 1;
-    transform: translate(0);
-  }
-  96% {
-    opacity: 0.8;
-    transform: translate(-5px, 2px);
-  }
-  97% {
-    opacity: 1;
-    transform: translate(3px, -1px);
-  }
-  98% {
-    opacity: 0.9;
-    transform: translate(-2px, 3px);
-  }
-  99% {
-    opacity: 1;
-    transform: translate(1px, -2px);
-  }
-}
-
+/* Random glitch flash - disabled for cleaner UX */
 .glitch-random {
-  animation: glitch-flash 3s infinite;
+  /* Animation removed - was too distracting */
 }
 
 /* ============================================
@@ -529,11 +502,15 @@
   /* Remove glitch pseudo-elements entirely */
   .glitch-text::before,
   .glitch-text::after,
-  .glitch-hover::before,
-  .glitch-hover::after,
   .chromatic::before,
   .chromatic::after {
     display: none !important;
+  }
+
+  /* Keep underline visible but remove animation */
+  .glitch-hover::after,
+  .brutal-link::after {
+    transition: none !important;
   }
 
   /* Hide noise overlay */
