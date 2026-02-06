@@ -687,6 +687,45 @@
     opacity: 1 !important;
     animation: none !important;
   }
+
+  /* Cards - no transform, just border change */
+  .brutal-card:hover {
+    transform: none !important;
+  }
+
+  .brutal-card::before {
+    display: none !important;
+  }
+
+  /* Buttons - instant fill, no slide animation */
+  .brutal-btn::before {
+    display: none !important;
+  }
+
+  .brutal-btn:hover {
+    background: var(--theme-accent) !important;
+    transform: none !important;
+  }
+
+  /* Tags - instant fill, no slide animation */
+  .brutal-tag::before {
+    display: none !important;
+  }
+
+  .brutal-tag:hover {
+    background: var(--theme-accent) !important;
+  }
+
+  /* Links - no underline animation, just show underline */
+  .refined-link::after,
+  .accent-link::after {
+    transform: scaleX(1) !important;
+  }
+
+  /* Blinking cursor - just show it static */
+  .cursor {
+    opacity: 1 !important;
+  }
 }
 
 /* ============================================
