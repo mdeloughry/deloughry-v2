@@ -38,308 +38,253 @@ const { headings } = await post.render();
 </script>
 
 <BaseLayout meta={{ title, description, articleDate, ogImage: socialImage }}>
-	<article class="blog-post h-entry">
-		<header class="blog-post-header">
-			{ogImage && (
-				<div class="blog-post-image">
-					<img src={ogImage} alt={title} />
-				</div>
-			)}
-			<div class="blog-post-meta">
-				<time datetime={articleDate} class="blog-post-date">
-					{new Date(publishDate).toLocaleDateString('en-GB', {
-						year: 'numeric',
-						month: 'long',
-						day: 'numeric'
-					})}
-				</time>
-				<h1 class="blog-post-title">{title}</h1>
-				{post.data.tags && post.data.tags.length > 0 && (
-					<div class="blog-post-tags">
-						{post.data.tags.map((tag) => (
-							<a href={`/tags/${getTagSlug(tag)}`} class="tag" title={`View posts with tag: ${formatTagForDisplay(tag)}`}>
-								{formatTagForDisplay(tag)}
-							</a>
-						))}
+	<article class="bbs-blog-post h-entry">
+		<!-- Post Header -->
+		<header id="blog-hero" class="mb-4">
+			<div class="bbs-box">
+				<div class="px-3 py-1 border-b border-bbs-gray flex items-center justify-between">
+					<div class="flex items-center gap-2">
+						<span class="text-accent" aria-hidden="true">┌─[</span>
+						<span class="text-bbs-cyan font-bold">MESSAGE</span>
+						<span class="text-accent" aria-hidden="true">]─</span>
 					</div>
-				)}
-				{description && <p class="blog-post-description">{description}</p>}
+					<time datetime={articleDate} class="text-bbs-gray text-xs">
+						{new Date(publishDate).toLocaleDateString('en-GB', {
+							year: 'numeric',
+							month: 'long',
+							day: 'numeric'
+						})}
+					</time>
+				</div>
+
+				<div class="p-4">
+					{ogImage && (
+						<div class="mb-4 border border-bbs-gray overflow-hidden">
+							<img
+								src={ogImage}
+								alt={title}
+								class="w-full h-48 sm:h-64 object-cover filter grayscale hover:grayscale-0 transition-all"
+							/>
+						</div>
+					)}
+
+					<h1 class="text-xl sm:text-2xl text-bbs-cyan font-bold mb-3">{title}</h1>
+
+					{post.data.tags && post.data.tags.length > 0 && (
+						<div class="flex flex-wrap gap-1 mb-3">
+							{post.data.tags.map((tag) => (
+								<a
+									href={`/tags/${getTagSlug(tag)}`}
+									class="bbs-tag text-xs"
+									title={`View posts with tag: ${formatTagForDisplay(tag)}`}
+								>
+									{formatTagForDisplay(tag)}
+								</a>
+							))}
+						</div>
+					)}
+
+					{description && (
+						<p class="text-sm text-bbs-gray italic border-l-2 border-accent pl-3">
+							{description}
+						</p>
+					)}
+				</div>
 			</div>
 		</header>
 
-		<div class="blog-post-content">
-			<div class="blog-post-body">
-				<div
-					class="prose prose-lg prose-cactus w-full max-w-none prose-headings:font-semibold prose-headings:before:flex-row prose-heading:before:mr-4 prose-headings:before:text-accent prose-headings:before:content-['#'] prose-th:before:content-none"
-				>
-					<slot />
+		<!-- Content Layout -->
+		<div class="flex flex-col lg:flex-row gap-4">
+			<!-- Main Content -->
+			<div class="flex-1 min-w-0">
+				<div class="bbs-box">
+					<div class="px-3 py-1 border-b border-bbs-gray flex items-center gap-2">
+						<span class="text-accent" aria-hidden="true">┌─[</span>
+						<span class="text-bbs-cyan font-bold">CONTENT</span>
+						<span class="text-accent" aria-hidden="true">]─</span>
+					</div>
+
+					<div class="p-4">
+						<div
+							class="prose prose-sm prose-cactus w-full max-w-none prose-headings:text-bbs-cyan prose-headings:font-bold prose-a:text-bbs-cyan prose-a:no-underline hover:prose-a:text-accent prose-strong:text-accent prose-code:text-bbs-cyan prose-pre:bg-bbs-dark-gray prose-pre:border prose-pre:border-bbs-gray"
+						>
+							<slot />
+						</div>
+					</div>
 				</div>
 			</div>
 
-			<aside class="blog-post-toc">
-				<h2 class="toc-title">Table of Contents</h2>
-				<ul class="toc-list">
-					{
-						headings.flatMap(({ slug, text }) => (
-							<li class="toc-item">
-								<a href={`#${slug}`} aria-label={`Scroll to section: ${text}`}>
-									{text}
-								</a>
-							</li>
-						))
-					}
-				</ul>
-			</aside>
+			<!-- Table of Contents Sidebar -->
+			{headings.length > 0 && (
+				<aside class="lg:w-64 lg:flex-shrink-0">
+					<div class="bbs-box lg:sticky lg:top-4">
+						<div class="px-3 py-1 border-b border-bbs-gray flex items-center gap-2">
+							<span class="text-accent" aria-hidden="true">┌─[</span>
+							<span class="text-bbs-cyan font-bold text-xs">TOC</span>
+							<span class="text-accent" aria-hidden="true">]─</span>
+						</div>
+
+						<nav class="p-3" aria-label="Table of contents">
+							<ul class="space-y-1 text-xs">
+								{headings.map(({ slug, text }, index) => (
+									<li>
+										<a
+											href={`#${slug}`}
+											class="bbs-link block py-1 hover:bg-bbs-dark-gray px-2 transition-colors"
+											aria-label={`Jump to section: ${text}`}
+										>
+											<span class="text-bbs-magenta" aria-hidden="true">[{String(index + 1).padStart(2, '0')}]</span>
+											<span class="ml-1 line-clamp-1">{text}</span>
+										</a>
+									</li>
+								))}
+							</ul>
+						</nav>
+					</div>
+				</aside>
+			)}
+		</div>
+
+		<!-- Footer Actions -->
+		<div class="mt-4">
+			<div class="bbs-box">
+				<div class="p-3 flex flex-wrap gap-2 justify-center">
+					<a href="/posts" class="bbs-button text-xs">
+						<span aria-hidden="true">[B]</span> BACK TO POSTS
+					</a>
+					<a href="/" class="bbs-button text-xs">
+						<span aria-hidden="true">[M]</span> MAIN MENU
+					</a>
+				</div>
+			</div>
 		</div>
 	</article>
 
+	<!-- Scroll to top button -->
 	<button
 		id="to-top-btn"
 		class="scroll-to-top"
 		aria-label="Back to Top"
 		data-show="false"
 	>
-		<svg
-			xmlns="http://www.w3.org/2000/svg"
-			aria-hidden="true"
-			focusable="false"
-			fill="none"
-			viewBox="0 0 24 24"
-			stroke-width="2"
-			stroke="currentColor"
-			class="h-6 w-6"
-		>
-			<path stroke-linecap="round" stroke-linejoin="round" d="M4.5 15.75l7.5-7.5 7.5 7.5"></path>
-		</svg>
+		<span class="text-xs font-bold" aria-hidden="true">TOP</span>
 	</button>
-
-	<style>
-		.blog-post {
-			max-width: 1000px;
-			margin: 0 auto;
-			padding: 2rem;
-			background: var(--theme-bg);
-			border-radius: 8px;
-			box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-			font-family: 'Roboto', sans-serif;
-			line-height: 1.6;
-		}
-
-		.blog-post-header {
-			text-align: center;
-			margin-bottom: 3rem;
-			padding-bottom: 2rem;
-			border-bottom: 2px solid var(--theme-accent);
-			position: relative;
-		}
-
-		.blog-post-image {
-			margin: -2rem -2rem 2rem -2rem;
-			width: calc(100% + 4rem);
-			position: relative;
-			overflow: hidden;
-			border-top-left-radius: 8px;
-			border-top-right-radius: 8px;
-		}
-
-		.blog-post-image img {
-			width: 100%;
-			height: 400px;
-			object-fit: cover;
-			border-radius: 0;
-			box-shadow: none;
-			filter: grayscale(100%);
-			transition: filter 0.3s ease;
-		}
-
-		.blog-post-image:hover img {
-			filter: grayscale(0%);
-		}
-
-		.blog-post-image::after {
-			content: '';
-			position: absolute;
-			bottom: 0;
-			left: 0;
-			right: 0;
-			height: 200px;
-			background: linear-gradient(transparent 0%, rgba(255, 255, 255, 0.1) 30%, var(--theme-bg) 100%);
-			pointer-events: none;
-		}
-
-		/* Only apply image overlay positioning when there's an image */
-		.blog-post:has(.blog-post-image) .blog-post-meta {
-			z-index: 2;
-			margin-top: -200px;
-			padding-top: 200px;
-		}
-
-		.blog-post-meta {
-			position: relative;
-		}
-
-		.blog-post-date {
-			display: block;
-			font-size: 1rem;
-			color: var(--theme-accent);
-			font-weight: 600;
-			margin-bottom: 1rem;
-			font-family: 'Oswald', sans-serif;
-			text-transform: uppercase;
-			letter-spacing: 1px;
-		}
-
-		.blog-post-title {
-			font-size: 2.5rem;
-			font-weight: 700;
-			margin-bottom: 1rem;
-			color: var(--theme-text);
-			font-family: 'Oswald', sans-serif;
-			text-transform: uppercase;
-			letter-spacing: 1px;
-		}
-
-		.blog-post-tags {
-			display: flex;
-			flex-wrap: wrap;
-			justify-content: center;
-			gap: 0.5rem;
-			margin-bottom: 1rem;
-		}
-
-		.tag {
-			background: var(--theme-accent);
-			color: white;
-			padding: 0.25rem 0.75rem;
-			border-radius: 20px;
-			font-size: 0.9rem;
-			font-weight: 500;
-			text-decoration: none;
-			transition: background-color 0.3s ease, transform 0.2s ease;
-		}
-
-		.tag:hover {
-			background: var(--theme-accent-dark, #1a4d3a);
-			transform: translateY(-1px);
-		}
-
-		.blog-post-description {
-			font-size: 1.2rem;
-			color: var(--theme-quote);
-			font-style: italic;
-			margin: 0;
-		}
-
-		.blog-post-content {
-			display: grid;
-			grid-template-columns: 1fr 300px;
-			gap: 3rem;
-		}
-
-		.blog-post-body {
-			min-width: 0;
-		}
-
-		.blog-post-toc {
-			position: sticky;
-			top: 2rem;
-			height: fit-content;
-		}
-
-		.toc-title {
-			font-size: 1.2rem;
-			font-weight: 600;
-			margin-bottom: 1rem;
-			color: var(--theme-accent);
-			font-family: 'Oswald', sans-serif;
-			text-transform: uppercase;
-			letter-spacing: 0.5px;
-		}
-
-		.toc-list {
-			list-style: none;
-			padding: 0;
-			margin: 0;
-		}
-
-		.toc-item {
-			margin-bottom: 0.5rem;
-		}
-
-		.toc-item a {
-			display: block;
-			padding: 0.5rem;
-			color: var(--theme-text);
-			text-decoration: none;
-			border-radius: 4px;
-			transition: all 0.3s ease;
-			font-size: 0.9rem;
-			font-weight: 500;
-		}
-
-		.toc-item a:hover {
-			background: rgba(175, 180, 200, 0.1);
-			color: var(--theme-accent);
-		}
-
-		.scroll-to-top {
-			position: fixed;
-			bottom: 2rem;
-			right: 2rem;
-			width: 3rem;
-			height: 3rem;
-			background: var(--theme-accent);
-			color: white;
-			border: none;
-			border-radius: 50%;
-			cursor: pointer;
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			opacity: 0;
-			transform: translateY(100px);
-			transition: all 0.3s ease;
-			z-index: 100;
-		}
-
-		.scroll-to-top[data-show="true"] {
-			opacity: 1;
-			transform: translateY(0);
-		}
-
-		.scroll-to-top:hover {
-			background: var(--theme-accent-hover);
-			transform: scale(1.1);
-		}
-
-		@media (max-width: 1024px) {
-			.blog-post-content {
-				grid-template-columns: 1fr;
-				gap: 2rem;
-			}
-
-			.blog-post-toc {
-				position: static;
-			}
-		}
-
-		@media (max-width: 768px) {
-			.blog-post {
-				padding: 1rem;
-			}
-
-			.blog-post-title {
-				font-size: 2rem;
-			}
-
-			.blog-post-image {
-				margin: -1rem -1rem 2rem -1rem;
-				width: calc(100% + 2rem);
-			}
-
-			.blog-post-image img {
-				height: 250px;
-			}
-		}
-	</style>
 </BaseLayout>
+
+<style>
+	.bbs-blog-post {
+		font-family: 'IBM Plex Mono', monospace;
+	}
+
+	.line-clamp-1 {
+		display: -webkit-box;
+		-webkit-line-clamp: 1;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
+	}
+
+	.scroll-to-top {
+		position: fixed;
+		bottom: 2rem;
+		right: 2rem;
+		width: 3rem;
+		height: 3rem;
+		background: var(--theme-bg);
+		border: 1px solid var(--theme-accent);
+		color: var(--theme-accent);
+		cursor: pointer;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		opacity: 0;
+		transform: translateY(100px);
+		transition: all 0.3s ease;
+		z-index: 100;
+	}
+
+	.scroll-to-top[data-show="true"] {
+		opacity: 1;
+		transform: translateY(0);
+	}
+
+	.scroll-to-top:hover {
+		background: var(--theme-accent);
+		color: #000;
+	}
+
+	.scroll-to-top:focus-visible {
+		outline: 2px solid var(--bbs-cyan);
+		outline-offset: 2px;
+	}
+
+	/* Prose overrides for BBS style */
+	:global(.bbs-blog-post .prose h2),
+	:global(.bbs-blog-post .prose h3),
+	:global(.bbs-blog-post .prose h4) {
+		color: var(--bbs-cyan);
+		margin-top: 2rem;
+		padding-bottom: 0.5rem;
+		border-bottom: 1px solid var(--bbs-gray);
+	}
+
+	:global(.bbs-blog-post .prose h2::before),
+	:global(.bbs-blog-post .prose h3::before),
+	:global(.bbs-blog-post .prose h4::before) {
+		content: '## ';
+		color: var(--theme-accent);
+	}
+
+	:global(.bbs-blog-post .prose blockquote) {
+		border-left: 2px solid var(--theme-accent);
+		background: var(--bbs-dark-gray);
+		padding: 1rem;
+		font-style: normal;
+	}
+
+	:global(.bbs-blog-post .prose code) {
+		background: var(--bbs-dark-gray);
+		border: 1px solid var(--bbs-gray);
+		padding: 0.125rem 0.25rem;
+		border-radius: 0;
+	}
+
+	:global(.bbs-blog-post .prose pre) {
+		border-radius: 0;
+	}
+
+	:global(.bbs-blog-post .prose ul) {
+		list-style: none;
+		padding-left: 1.5rem;
+	}
+
+	:global(.bbs-blog-post .prose ul li::before) {
+		content: '> ';
+		color: var(--bbs-cyan);
+		margin-left: -1.5rem;
+		position: absolute;
+	}
+
+	:global(.bbs-blog-post .prose ol) {
+		list-style: none;
+		counter-reset: bbs-counter;
+		padding-left: 2rem;
+	}
+
+	:global(.bbs-blog-post .prose ol li) {
+		counter-increment: bbs-counter;
+		position: relative;
+	}
+
+	:global(.bbs-blog-post .prose ol li::before) {
+		content: '[' counter(bbs-counter, decimal-leading-zero) '] ';
+		color: var(--bbs-magenta);
+		position: absolute;
+		left: -2rem;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.scroll-to-top {
+			transition: none;
+		}
+	}
+</style>

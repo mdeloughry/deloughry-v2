@@ -1,75 +1,428 @@
-@import url(https://fonts.bunny.net/css?family=oswald:400,500,600|roboto:400);
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;700&family=VT323&display=swap');
+
 @tailwind base;
 
 @layer base {
   :root {
-    color-scheme: light;
-    --theme-bg: #f3f5f8; /* Light Blueish Gray */
-    --theme-link: #ae0e4e; /* Darker Pink on Hover */
-    --theme-text: #333333; /* Dark Gray */
-    --theme-accent: #d81b60; /* Pink Accent */
-    --theme-accent-hover: #ae0e4e; /* Darker Pink on Hover */
-    --theme-quote: #555555; /* Dark Gray for Quote */
-    --theme-accent-bg: rgba(175, 180, 200, 0.85); /* Semi-transparent Grayish Blue */
-    --github: #6cc644; /* GitHub Green */
-    --twitch: #9146ff; /* Twitch Purple */
-    --twitter: #1da1f2; /* Twitter Blue */
-    --mastodon: #7241d4; /* Mastodon Purple */
-    --youtube: #ff0000; /* YouTube Red */
-    --claw: #ff5722; /* Claw Orange */
+    color-scheme: dark;
+    /* BBS Color Palette - Always dark mode for authentic BBS feel */
+    --theme-bg: #000000;
+    --theme-text: #E5E5E5;
+    --theme-accent: #DAFF01; /* Chartreuse - primary accent */
+    --theme-accent-hover: #b8d900;
+    --theme-link: #00FFCC; /* Cyan */
+    --theme-quote: #888888;
+    --theme-accent-bg: rgba(218, 255, 1, 0.1);
+
+    /* BBS ANSI Colors */
+    --bbs-cyan: #00FFCC;
+    --bbs-magenta: #FF6B9D;
+    --bbs-blue: #00D9FF;
+    --bbs-red: #FF4757;
+    --bbs-yellow: #DAFF01;
+    --bbs-white: #E5E5E5;
+    --bbs-gray: #666666;
+    --bbs-dark-gray: #333333;
+
+    /* Social colors */
+    --github: #6cc644;
+    --twitch: #9146ff;
+    --twitter: #1da1f2;
+    --mastodon: #7241d4;
+    --youtube: #ff0000;
+    --claw: #ff5722;
   }
 
+  /* No light mode - BBS is always dark */
   :root.dark {
     color-scheme: dark;
-    --theme-bg: #1a1a1a; /* Dark Gray */
-    --theme-link: #004d45; /* Darker Teal on Hover */
-    --theme-text: #f0f0f0; /* Light Gray */
-    --theme-accent: #00796b; /* Teal Accent */
-    --theme-accent-hover: #004d45; /* Darker Teal on Hover */
-    --theme-quote: #888888;
   }
 
-
-
-
   html {
-    @apply h-full scroll-smooth border-t-2 border-[var(--theme-accent)];
+    @apply h-full scroll-smooth;
+    background: var(--theme-bg);
   }
 
   html body {
-    @apply mx-auto flex h-full w-full max-w-5xl flex-col bg-bgColor px-8 pt-16 font-roboto font-normal text-textColor antialiased;
+    @apply mx-auto flex h-full w-full max-w-5xl flex-col bg-bgColor px-4 pt-4 font-mono text-textColor antialiased;
+    font-family: 'IBM Plex Mono', 'Courier New', monospace;
+    line-height: 1.4;
   }
 
-  h1, h2, h3, h4, h5, h6, nav {
-    @apply font-oswald uppercase
+  /* All text uses monospace */
+  h1, h2, h3, h4, h5, h6, nav, p, a, span, div {
+    font-family: 'IBM Plex Mono', 'Courier New', monospace;
   }
 
+  /* VT323 for special ASCII art elements */
+  .font-vt323 {
+    font-family: 'VT323', monospace;
+  }
+
+  /* Remove underlines by default - BBS style uses brackets */
   nav a, main a, article a {
-    @apply underline
+    @apply no-underline;
   }
 
   .astro-code {
     @apply w-full;
+    background: var(--bbs-dark-gray) !important;
+    border: 1px solid var(--bbs-gray);
+  }
+
+  /* Selection styling */
+  ::selection {
+    background: var(--bbs-yellow);
+    color: #000;
   }
 }
 
-@keyframes slide-in-top {
-  0% {
-    transform: translateY(-100%);
-    opacity: 0;
-  }
+/* BBS Box Drawing Styles */
+.bbs-box {
+  border: 1px solid var(--theme-accent);
+  position: relative;
+  background: var(--theme-bg);
+}
 
-  100% {
-    transform: translateY(0);
-    opacity: 1;
+.bbs-box-double {
+  border: 2px solid var(--theme-accent);
+  box-shadow: inset 1px 1px 0 var(--theme-accent), inset -1px -1px 0 var(--theme-accent);
+}
+
+/* ASCII Frame using actual characters */
+.bbs-frame {
+  font-family: 'IBM Plex Mono', monospace;
+  white-space: pre;
+  line-height: 1.2;
+  color: var(--theme-accent);
+}
+
+/* ANSI Color Block Classes */
+.ansi-cyan { background: var(--bbs-cyan); color: #000; }
+.ansi-magenta { background: var(--bbs-magenta); color: #000; }
+.ansi-yellow { background: var(--bbs-yellow); color: #000; }
+.ansi-blue { background: var(--bbs-blue); color: #000; }
+.ansi-red { background: var(--bbs-red); color: #000; }
+
+/* Text color variants */
+.text-bbs-cyan { color: var(--bbs-cyan); }
+.text-bbs-magenta { color: var(--bbs-magenta); }
+.text-bbs-yellow { color: var(--bbs-yellow); }
+.text-bbs-blue { color: var(--bbs-blue); }
+.text-bbs-red { color: var(--bbs-red); }
+
+/* BBS Blinking effect - use sparingly! */
+@keyframes bbs-blink {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+
+.blink {
+  animation: bbs-blink 1s step-end infinite;
+}
+
+.blink-slow {
+  animation: bbs-blink 2s step-end infinite;
+}
+
+/* CRT Scanline effect */
+.crt-effect {
+  position: relative;
+}
+
+.crt-effect::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.15),
+    rgba(0, 0, 0, 0.15) 1px,
+    transparent 1px,
+    transparent 2px
+  );
+  pointer-events: none;
+  z-index: 10;
+}
+
+/* CRT glow effect */
+.crt-glow {
+  text-shadow: 0 0 5px currentColor, 0 0 10px currentColor;
+}
+
+/* BBS Menu Item Hover */
+.bbs-menu-item {
+  transition: all 0.1s ease;
+}
+
+.bbs-menu-item:hover {
+  background: var(--theme-accent);
+  color: #000;
+}
+
+/* BBS Link Style - bracketed numbers */
+.bbs-link {
+  color: var(--bbs-cyan);
+  transition: all 0.1s ease;
+}
+
+.bbs-link:hover {
+  color: var(--bbs-yellow);
+  text-shadow: 0 0 5px var(--bbs-yellow);
+}
+
+/* BBS Button */
+.bbs-button {
+  background: transparent;
+  border: 1px solid var(--theme-accent);
+  color: var(--theme-accent);
+  padding: 0.5rem 1rem;
+  font-family: 'IBM Plex Mono', monospace;
+  cursor: pointer;
+  transition: all 0.1s ease;
+}
+
+.bbs-button:hover {
+  background: var(--theme-accent);
+  color: #000;
+}
+
+/* Block characters for decorations */
+.block-full { color: var(--theme-accent); }
+.block-dark { color: var(--bbs-gray); }
+.block-medium { color: var(--bbs-dark-gray); }
+
+/* Status bar style */
+.bbs-status-bar {
+  background: var(--bbs-dark-gray);
+  border: 1px solid var(--bbs-gray);
+  padding: 0.25rem 0.5rem;
+  font-size: 0.875rem;
+}
+
+/* Input field BBS style */
+.bbs-input {
+  background: #000;
+  border: 1px solid var(--bbs-gray);
+  color: var(--bbs-cyan);
+  padding: 0.5rem;
+  font-family: 'IBM Plex Mono', monospace;
+  caret-color: var(--bbs-yellow);
+}
+
+.bbs-input:focus {
+  outline: none;
+  border-color: var(--theme-accent);
+  box-shadow: 0 0 5px var(--theme-accent);
+}
+
+/* Decorative separators */
+.bbs-separator {
+  border: none;
+  height: 1px;
+  background: var(--bbs-gray);
+  margin: 1rem 0;
+}
+
+.bbs-separator-double {
+  border: none;
+  height: 3px;
+  background: linear-gradient(to bottom, var(--theme-accent), transparent, var(--theme-accent));
+  margin: 1rem 0;
+}
+
+/* ASCII Art container */
+.ascii-art {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.75rem;
+  line-height: 1;
+  white-space: pre;
+  color: var(--theme-accent);
+}
+
+@media (max-width: 768px) {
+  .ascii-art {
+    font-size: 0.5rem;
   }
 }
 
-.animation-slide-in-top {
-  animation: slide-in-top 0.5s ease-out;
+/* Tag/badge BBS style */
+.bbs-tag {
+  display: inline-block;
+  padding: 0.125rem 0.5rem;
+  border: 1px solid var(--bbs-cyan);
+  color: var(--bbs-cyan);
+  font-size: 0.75rem;
+  margin: 0.125rem;
 }
 
+.bbs-tag:hover {
+  background: var(--bbs-cyan);
+  color: #000;
+}
 
+/* Progress/loading bar */
+.bbs-progress {
+  background: var(--bbs-dark-gray);
+  border: 1px solid var(--bbs-gray);
+  height: 1rem;
+  overflow: hidden;
+}
+
+.bbs-progress-bar {
+  height: 100%;
+  background: var(--theme-accent);
+  transition: width 0.3s ease;
+}
+
+/* Animation for cursor blink */
+@keyframes cursor-blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
+.cursor-blink::after {
+  content: '_';
+  animation: cursor-blink 1s step-end infinite;
+  color: var(--theme-accent);
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  html body {
+    padding: 0.5rem;
+  }
+}
+
+/* ============================================
+   ACCESSIBILITY - Reduced Motion
+   ============================================ */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .blink, .blink-slow {
+    animation: none !important;
+    opacity: 1 !important;
+  }
+
+  .cursor-blink::after {
+    animation: none !important;
+    opacity: 1 !important;
+  }
+
+  .crt-effect::before {
+    display: none;
+  }
+}
+
+/* ============================================
+   ACCESSIBILITY - Focus States
+   ============================================ */
+:focus {
+  outline: 2px solid var(--theme-accent);
+  outline-offset: 2px;
+}
+
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+:focus-visible {
+  outline: 2px solid var(--theme-accent);
+  outline-offset: 2px;
+}
+
+/* BBS-style focus indicator */
+.bbs-focus:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--theme-accent), inset 0 0 0 1px var(--theme-accent);
+}
+
+/* Links and buttons focus */
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--theme-accent);
+  outline-offset: 2px;
+}
+
+.bbs-menu-item:focus-visible {
+  outline: 2px solid var(--theme-accent);
+  outline-offset: -2px;
+  background: var(--theme-accent);
+  color: #000;
+}
+
+.bbs-button:focus-visible {
+  outline: 2px solid var(--bbs-cyan);
+  outline-offset: 2px;
+  background: var(--theme-accent);
+  color: #000;
+}
+
+.bbs-link:focus-visible {
+  outline: 2px solid var(--theme-accent);
+  outline-offset: 2px;
+  text-shadow: 0 0 5px var(--theme-accent);
+}
+
+.bbs-tag:focus-visible {
+  outline: 2px solid var(--theme-accent);
+  outline-offset: 2px;
+  background: var(--bbs-cyan);
+  color: #000;
+}
+
+/* ============================================
+   ACCESSIBILITY - Screen Reader Only
+   ============================================ */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.sr-only-focusable:focus {
+  position: static;
+  width: auto;
+  height: auto;
+  padding: inherit;
+  margin: inherit;
+  overflow: visible;
+  clip: auto;
+  white-space: normal;
+}
+
+/* ============================================
+   ACCESSIBILITY - Skip Link
+   ============================================ */
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: 0;
+  background: var(--theme-accent);
+  color: #000;
+  padding: 0.5rem 1rem;
+  z-index: 9999;
+  font-weight: bold;
+}
+
+.skip-link:focus {
+  top: 0;
+}
 
 @tailwind components;
 @tailwind utilities;

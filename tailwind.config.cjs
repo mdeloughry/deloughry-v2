@@ -37,20 +37,30 @@ module.exports = {
         accent: "var(--theme-accent)",
         "accent-dark": "var(--theme-accent-hover)",
         "accent-bg": "var(--theme-accent-bg)",
+        // Social colors
         twitch: "var(--twitch)",
         twitter: "var(--twitter)",
         mastodon: "var(--mastodon)",
         youtube: "var(--youtube)",
         claw: "var(--claw)",
         github: "var(--github)",
-
+        // BBS ANSI Colors
+        "bbs-cyan": "var(--bbs-cyan)",
+        "bbs-magenta": "var(--bbs-magenta)",
+        "bbs-blue": "var(--bbs-blue)",
+        "bbs-red": "var(--bbs-red)",
+        "bbs-yellow": "var(--bbs-yellow)",
+        "bbs-white": "var(--bbs-white)",
+        "bbs-gray": "var(--bbs-gray)",
+        "bbs-dark-gray": "var(--bbs-dark-gray)",
       },
       fontFamily: {
-        // Add any custom fonts here
-        'oswald': 'Oswald',
-        'roboto': 'Roboto',
-        sans: [...fontFamily.sans],
-        serif: [...fontFamily.serif],
+        // BBS Fonts
+        'mono': ['IBM Plex Mono', 'Courier New', ...fontFamily.mono],
+        'vt323': ['VT323', 'monospace'],
+        'ibm': ['IBM Plex Mono', ...fontFamily.mono],
+        sans: ['IBM Plex Mono', ...fontFamily.mono],
+        serif: ['IBM Plex Mono', ...fontFamily.mono],
       },
       transitionProperty: {
         height: "height",
@@ -59,46 +69,87 @@ module.exports = {
         cactus: {
           css: {
             "--tw-prose-body": "var(--theme-text)",
-            "--tw-prose-headings": "var(--theme-accent)",
-            "--tw-prose-links": "var(--theme-text)",
-            "--tw-prose-bold": "var(--theme-text)",
-            "--tw-prose-bullets": "var(--theme-text)",
+            "--tw-prose-headings": "var(--bbs-cyan)",
+            "--tw-prose-links": "var(--bbs-cyan)",
+            "--tw-prose-bold": "var(--theme-accent)",
+            "--tw-prose-bullets": "var(--theme-accent)",
             "--tw-prose-quotes": "var(--theme-quote)",
-            "--tw-prose-code": "var(--theme-text)",
-            "--tw-prose-hr": "0.5px dashed #666",
-            "--tw-prose-th-borders": "#666",
+            "--tw-prose-code": "var(--bbs-cyan)",
+            "--tw-prose-hr": "1px solid var(--bbs-gray)",
+            "--tw-prose-th-borders": "var(--bbs-gray)",
           },
         },
         DEFAULT: {
           css: {
+            fontFamily: "'IBM Plex Mono', monospace",
             a: {
-              "@apply cactus-link text-accent": "",
+              "@apply bbs-link": "",
+              color: "var(--bbs-cyan)",
+              textDecoration: "none",
+              "&:hover": {
+                color: "var(--theme-accent)",
+              },
             },
             strong: {
               fontWeight: "700",
+              color: "var(--theme-accent)",
             },
             code: {
-              border: "1px dotted #666",
-              borderRadius: "2px",
+              border: "1px solid var(--bbs-gray)",
+              borderRadius: "0",
+              backgroundColor: "var(--bbs-dark-gray)",
+              color: "var(--bbs-cyan)",
+              padding: "0.125rem 0.25rem",
+            },
+            "code::before": {
+              content: '""',
+            },
+            "code::after": {
+              content: '""',
             },
             blockquote: {
-              borderLeftWidth: "none",
+              borderLeftWidth: "2px",
+              borderLeftColor: "var(--theme-accent)",
+              fontStyle: "normal",
+              backgroundColor: "var(--bbs-dark-gray)",
+              padding: "1rem",
             },
             hr: {
-              borderTopStyle: "dashed",
+              borderTopStyle: "solid",
+              borderColor: "var(--bbs-gray)",
             },
             thead: {
-              borderBottomWidth: "none",
+              borderBottomWidth: "1px",
+              borderColor: "var(--theme-accent)",
             },
             "thead th": {
               fontWeight: "700",
-              borderBottom: "1px dashed #666",
+              borderBottom: "1px solid var(--theme-accent)",
+              color: "var(--theme-accent)",
             },
             "tbody tr": {
-              borderBottomWidth: "none",
+              borderBottomWidth: "1px",
+              borderColor: "var(--bbs-gray)",
             },
             tfoot: {
-              borderTop: "1px dashed #666",
+              borderTop: "1px solid var(--theme-accent)",
+            },
+            h1: {
+              color: "var(--bbs-cyan)",
+            },
+            h2: {
+              color: "var(--bbs-cyan)",
+            },
+            h3: {
+              color: "var(--bbs-cyan)",
+            },
+            h4: {
+              color: "var(--bbs-cyan)",
+            },
+            pre: {
+              backgroundColor: "var(--bbs-dark-gray)",
+              border: "1px solid var(--bbs-gray)",
+              borderRadius: "0",
             },
           },
         },
@@ -120,15 +171,17 @@ module.exports = {
     require('tailwind-scrollbar'),
     plugin(function ({ addComponents }) {
       addComponents({
-        ".cactus-link": {
-          color: "var(--theme-accent)",
-          "@apply bg-[size:100%_6px] bg-bottom bg-repeat-x underline": {},
+        ".bbs-link": {
+          color: "var(--bbs-cyan)",
+          textDecoration: "none",
+          transition: "all 0.1s ease",
           "&:hover": {
-            color: "var(--theme-link)",
+            color: "var(--theme-accent)",
+            textShadow: "0 0 5px var(--theme-accent)",
           },
         },
         ".title": {
-          "@apply text-2xl font-semibold text-accent": {},
+          "@apply text-2xl font-semibold text-bbs-cyan": {},
         },
         ".prose p, .prose blockquote, .prose ul": {
           "@apply max-w-xl": {}
@@ -138,7 +191,7 @@ module.exports = {
          },
         ".prose pre": {
           // show y scrollbar always
-          "@apply scrollbar scrollbar-thumb-accent scrollbar-track-accent": {},
+          "@apply scrollbar scrollbar-thumb-accent scrollbar-track-bbs-dark-gray": {},
         }
       });
     }),

@@ -4,41 +4,74 @@ import Mastodon from "./assets/svgs/Mastodon.astro";
 import GitHub from "./assets/svgs/GitHub.astro";
 ---
 
-<div class="flex flex-wrap items-center gap-x-4 sm:items-center">
-	<p>Find me on</p>
-	<ul class="flex flex-1 items-center gap-x-4 sm:flex-initial">
-		<li>
-			<a
-				class="inline-block p-2 sm:hover:text-link"
-				href="https://github.com/DR-DinoMight"
-				target="_blank"
-				rel="noopener noreferrer me authn"
-			>
-				<GitHub class="h-6 w-6 fill-accent hover:fill-github transition-all" />
-				<span class="sr-only">Github</span>
-			</a>
-		</li>
-		<li>
-			<a
-				class="inline-block p-2 sm:hover:text-link"
-				href="https://phpc.social/@DrDinoMight"
-				target="_blank"
-				rel="noopener noreferrer me"
-			>
-				<Mastodon class="h-6 w-6 fill-accent hover:fill-mastodon transition-all" />
-				<span class="sr-only">Mastodon</span>
-			</a>
-		</li>
-		<li>
-			<a
-				class="inline-block p-2 sm:hover:text-link"
-				href="https://www.twitch.tv/dr_dinomight"
-				target="_blank"
-				rel="noopener noreferrer me"
-			>
-				<Twitch class="h-6 w-6 fill-accent hover:fill-twitch transition-all" />
-				<span class="sr-only">Twitch</span>
-			</a>
-		</li>
-	</ul>
+<div class="social-list">
+	<span class="text-bbs-gray text-sm mr-2">Find me on:</span>
+	<nav class="flex items-center gap-2" aria-label="Social links">
+		<a
+			class="bbs-social-link"
+			href="https://github.com/DR-DinoMight"
+			target="_blank"
+			rel="noopener noreferrer me authn"
+			aria-label="GitHub"
+		>
+			<span class="text-bbs-magenta" aria-hidden="true">[G]</span>
+			<span class="hidden sm:inline">GitHub</span>
+			<GitHub class="h-4 w-4 fill-current sm:hidden" aria-hidden="true" />
+		</a>
+		<span class="text-bbs-gray" aria-hidden="true">|</span>
+		<a
+			class="bbs-social-link"
+			href="https://phpc.social/@DrDinoMight"
+			target="_blank"
+			rel="noopener noreferrer me"
+			aria-label="Mastodon"
+		>
+			<span class="text-bbs-magenta" aria-hidden="true">[M]</span>
+			<span class="hidden sm:inline">Mastodon</span>
+			<Mastodon class="h-4 w-4 fill-current sm:hidden" aria-hidden="true" />
+		</a>
+		<span class="text-bbs-gray" aria-hidden="true">|</span>
+		<a
+			class="bbs-social-link"
+			href="https://www.twitch.tv/dr_dinomight"
+			target="_blank"
+			rel="noopener noreferrer me"
+			aria-label="Twitch"
+		>
+			<span class="text-bbs-magenta" aria-hidden="true">[T]</span>
+			<span class="hidden sm:inline">Twitch</span>
+			<Twitch class="h-4 w-4 fill-current sm:hidden" aria-hidden="true" />
+		</a>
+	</nav>
 </div>
+
+<style>
+	.social-list {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 0.5rem;
+		font-family: 'IBM Plex Mono', monospace;
+	}
+
+	.bbs-social-link {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.25rem;
+		padding: 0.25rem 0.5rem;
+		color: var(--bbs-cyan);
+		text-decoration: none;
+		font-size: 0.875rem;
+		transition: all 0.1s ease;
+	}
+
+	.bbs-social-link:hover {
+		background: var(--theme-accent);
+		color: #000;
+	}
+
+	.bbs-social-link:focus-visible {
+		outline: 2px solid var(--theme-accent);
+		outline-offset: 2px;
+	}
+</style>

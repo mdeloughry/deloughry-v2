@@ -11,19 +11,40 @@ const { prevUrl, nextUrl } = Astro.props;
 
 {
 	(prevUrl || nextUrl) && (
-		<nav class="flex items-center gap-x-4">
-			{prevUrl && (
-				<a class="mr-auto py-2 sm:hover:text-accent" href={prevUrl.url} rel="prefetch">
-					{prevUrl.srLabel && <span class="sr-only">{prevUrl.srLabel}</span>}
-					{prevUrl.text ? prevUrl.text : "Previous"}
+		<div class="bbs-paginator flex items-center gap-4 w-full">
+			{prevUrl ? (
+				<a
+					class="bbs-button text-xs mr-auto"
+					href={prevUrl.url}
+					rel="prefetch"
+					aria-label={prevUrl.srLabel || "Go to previous page"}
+				>
+					<span aria-hidden="true">[&lt;]</span>
+					{prevUrl.text ? prevUrl.text : "PREV"}
 				</a>
+			) : (
+				<span class="text-bbs-gray text-xs mr-auto opacity-50">[&lt;] PREV</span>
 			)}
-			{nextUrl && (
-				<a class="ml-auto py-2 sm:hover:text-accent" href={nextUrl.url} rel="prefetch">
-					{nextUrl.srLabel && <span class="sr-only">{nextUrl.srLabel}</span>}
-					{nextUrl.text ? nextUrl.text : "Next"}
+
+			{nextUrl ? (
+				<a
+					class="bbs-button text-xs ml-auto"
+					href={nextUrl.url}
+					rel="prefetch"
+					aria-label={nextUrl.srLabel || "Go to next page"}
+				>
+					{nextUrl.text ? nextUrl.text : "NEXT"}
+					<span aria-hidden="true">[&gt;]</span>
 				</a>
+			) : (
+				<span class="text-bbs-gray text-xs ml-auto opacity-50">NEXT [&gt;]</span>
 			)}
-		</nav>
+		</div>
 	)
 }
+
+<style>
+	.bbs-paginator {
+		font-family: 'IBM Plex Mono', monospace;
+	}
+</style>

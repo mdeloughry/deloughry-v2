@@ -2,9 +2,7 @@
 import { getCollection } from "astro:content";
 import PageLayout from "@/layouts/Base";
 import SocialList from "@/components/SocialList";
-import MeImage from "../assets/image.webp";
 import { sortMDByDate, getTagSlug, formatTagForDisplay } from "@/utils";
-import { Image } from "astro:assets";
 
 const MAX_POSTS = 10;
 const allPosts = await getCollection("post");
@@ -13,300 +11,226 @@ export const prerender = true;
 ---
 
 <PageLayout meta={{ title: "Home" }}>
-	<div class="home-page">
-		<header class="home-hero">
-			<div class="hero-content">
-				<div class="hero-image">
-					<Image
-						src={MeImage}
-						height={MeImage.height}
-						width={MeImage.width}
-						alt="Matthew Peck-Deloughry"
-						class="profile-photo"
-						transition:name={"profile-image"}
-					/>
+	<div class="bbs-home">
+		<!-- ASCII Art Hero Banner -->
+		<section class="hero-section" aria-labelledby="hero-title">
+			<div class="bbs-box p-4 mb-4">
+				<!-- ASCII Art Name - decorative only -->
+				<div class="hidden sm:block" aria-hidden="true">
+					<pre class="ascii-art text-center mx-auto">
+╔═══════════════════════════════════════════════════════════════════════════╗
+║  ███╗   ███╗ █████╗ ████████╗████████╗                                    ║
+║  ████╗ ████║██╔══██╗╚══██╔══╝╚══██╔══╝                                    ║
+║  ██╔████╔██║███████║   ██║      ██║                                       ║
+║  ██║╚██╔╝██║██╔══██║   ██║      ██║                                       ║
+║  ██║ ╚═╝ ██║██║  ██║   ██║      ██║   <span class="text-bbs-cyan">PECK-DELOUGHRY</span>                     ║
+║  ╚═╝     ╚═╝╚═╝  ╚═╝   ╚═╝      ╚═╝   <span class="text-bbs-magenta">Developer // Streamer</span>             ║
+╠═══════════════════════════════════════════════════════════════════════════╣
+║ <span class="text-bbs-cyan">[WELCOME TO MY PERSONAL BBS - ESTABLISHED 2024]</span>                          ║
+╚═══════════════════════════════════════════════════════════════════════════╝
+					</pre>
 				</div>
-				<div class="hero-text">
-					<a class="u-url hidden" rel="me" href="https://deloughry.co.uk/">Matthew Peck-Deloughry</a>
-					<a class="u-url hidden" href="acct:matt@deloughry.co.uk"></a>
-					<h1 class="hero-title">
-						<span class="text-link">Developer.</span><br />
-						<span class="text-twitch">Streamer.</span><br />
-						<span class="text-twitter line-through">Tweeter.</span><span class="text-mastodon">Tooter.</span><br />
-						&amp; a little bit of everything <span class="text-accent dark:text-accent">Nerdy!</span><span class="font-bold">_</span>
-					</h1>
-				</div>
-			</div>
-		</header>
 
-		<section class="about-section">
-			<div class="about-card">
-				<h2 class="section-title">
-					Av' fun developing, Av' fun learning, then Av'a crack at engineering it!
-				</h2>
-				<div class="about-content">
-					<p class="p-note">
-						Aye up, I'm Matt (aka Dr_DinoMight 🦖🧨), a developer of something around 15 years (I think!?
-						They all blend into one and other now 😖).<br /><br />
-						I'm a developer for the brilliant HMA Digital here in South Yorkshire, UK.<br /><br />
-						💬 I'm a Full Stack Developer who loves to tinker with anything and everything, I love to build,
-						be it personal 1 person projects or large scale community projects, as long as it's code it floats
-						my boat!<br /><br />
-					</p>
-					<SocialList />
+				<!-- Screen reader accessible title -->
+				<h1 id="hero-title" class="sr-only sm:sr-only">
+					Matt Peck-Deloughry - Developer and Streamer. Welcome to my personal BBS, established 2024.
+				</h1>
+
+				<!-- Mobile version - visible alternative -->
+				<div class="sm:hidden text-center">
+					<h1 class="text-2xl text-accent font-bold mb-2">MATT</h1>
+					<p class="text-bbs-cyan text-sm">PECK-DELOUGHRY</p>
+					<p class="text-bbs-magenta text-xs">Developer // Streamer</p>
+					<p class="text-xs text-bbs-gray mt-2">[WELCOME TO MY PERSONAL BBS]</p>
 				</div>
 			</div>
 		</section>
 
-		<section class="recent-posts">
-			<h2 class="section-title">Recent Posts</h2>
-			<div class="posts-grid">
-				{allPostsByDate.map((p) => (
-					<article class="post-card">
-						{p.data.ogImage && (
-							<div class="post-card-image">
-								<img src={p.data.ogImage} alt={p.data.title} />
-							</div>
-						)}
-						<div class="post-card-content">
-							<time datetime={p.data.publishDate.toISOString()} class="post-card-date">
-								{new Date(p.data.publishDate).toLocaleDateString('en-GB', {
-									year: 'numeric',
-									month: 'short',
-									day: 'numeric'
-								})}
-							</time>
-							<h3 class="post-card-title">
-								<a href={`/posts/${p.slug}/`}>{p.data.title}</a>
-							</h3>
-							{p.data.description && <p class="post-card-description">{p.data.description}</p>}
-							{p.data.tags && p.data.tags.length > 0 && (
-								<div class="post-card-tags">
-									{p.data.tags.map((tag) => (
-										<a href={`/tags/${getTagSlug(tag)}`} class="tag" title={`View posts with tag: ${formatTagForDisplay(tag)}`}>
-											{formatTagForDisplay(tag)}
-										</a>
-									))}
-								</div>
-							)}
+		<!-- Quick Info / Status -->
+		<section class="status-section mb-4" aria-labelledby="status-heading">
+			<div class="bbs-box">
+				<div class="px-3 py-1 border-b border-bbs-gray flex items-center gap-2">
+					<span class="text-accent" aria-hidden="true">┌─[</span>
+					<h2 id="status-heading" class="text-bbs-cyan font-bold">SYSOP STATUS</h2>
+					<span class="text-accent" aria-hidden="true">]─</span>
+				</div>
+				<div class="p-3 grid grid-cols-1 sm:grid-cols-3 gap-2 text-sm">
+					<div>
+						<span class="text-bbs-gray">Location:</span>
+						<span class="text-bbs-cyan">Sheffield, UK</span>
+					</div>
+					<div>
+						<span class="text-bbs-gray">Status:</span>
+						<span class="text-accent">ONLINE</span>
+						<span class="blink-slow" aria-hidden="true">_</span>
+					</div>
+					<div>
+						<span class="text-bbs-gray">Mood:</span>
+						<span class="text-bbs-magenta">Coding</span>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<!-- About Section -->
+		<section class="about-section mb-4" aria-labelledby="about-heading">
+			<div class="bbs-box">
+				<div class="px-3 py-1 border-b border-bbs-gray flex items-center gap-2">
+					<span class="text-accent" aria-hidden="true">┌─[</span>
+					<h2 id="about-heading" class="text-bbs-cyan font-bold">ABOUT THE SYSOP</h2>
+					<span class="text-accent" aria-hidden="true">]─</span>
+				</div>
+				<div class="p-3">
+					<div class="flex flex-col sm:flex-row gap-4">
+						<div class="flex-1">
+							<p class="text-sm leading-relaxed mb-3">
+								<span class="text-bbs-cyan" aria-hidden="true">&gt;</span> Aye up, I'm Matt (aka <span class="text-accent">Dr_DinoMight</span>), a developer of something around 15 years (I think!? They all blend into one and other now).
+							</p>
+							<p class="text-sm leading-relaxed mb-3">
+								<span class="text-bbs-cyan" aria-hidden="true">&gt;</span> I'm a developer for the brilliant <span class="text-bbs-magenta">HMA Digital</span> here in South Yorkshire, UK.
+							</p>
+							<p class="text-sm leading-relaxed mb-3">
+								<span class="text-bbs-cyan" aria-hidden="true">&gt;</span> I'm a Full Stack Developer who loves to tinker with anything and everything. I love to build, be it personal 1 person projects or large scale community projects, as long as it's code it floats my boat!
+							</p>
+							<blockquote class="border-l-2 border-accent pl-3 mt-4 text-bbs-gray italic">
+								"Av' fun developing, Av' fun learning, then Av'a crack at engineering it!"
+							</blockquote>
 						</div>
-					</article>
-				))}
+					</div>
+					<div class="mt-4 pt-3 border-t border-bbs-gray">
+						<SocialList />
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<!-- Role/Skills Banner -->
+		<section class="skills-banner mb-4" aria-label="Skills and roles">
+			<div class="flex flex-wrap gap-2 justify-center text-xs">
+				<span class="ansi-cyan px-2 py-1 font-bold">DEVELOPER</span>
+				<span class="ansi-magenta px-2 py-1 font-bold">STREAMER</span>
+				<span class="ansi-blue px-2 py-1 font-bold">TOOTER</span>
+				<span class="ansi-yellow px-2 py-1 font-bold">NERD</span>
+			</div>
+		</section>
+
+		<!-- Recent Posts Section -->
+		<section class="posts-section" aria-labelledby="posts-heading">
+			<div class="bbs-box">
+				<div class="px-3 py-1 border-b border-bbs-gray flex items-center justify-between">
+					<div class="flex items-center gap-2">
+						<span class="text-accent" aria-hidden="true">┌─[</span>
+						<h2 id="posts-heading" class="text-bbs-cyan font-bold">MESSAGE BOARD</h2>
+						<span class="text-accent" aria-hidden="true">]─</span>
+					</div>
+					<span class="text-bbs-gray text-xs">{allPostsByDate.length} posts</span>
+				</div>
+
+				<div class="divide-y divide-bbs-gray">
+					{allPostsByDate.map((p, index) => (
+						<article class="p-3 hover:bg-bbs-dark-gray transition-colors">
+							<div class="flex flex-col sm:flex-row sm:items-start gap-2">
+								<div class="flex items-center gap-2 text-xs">
+									<span class="text-bbs-magenta" aria-hidden="true">[{String(index + 1).padStart(2, '0')}]</span>
+									<time datetime={p.data.publishDate.toISOString()} class="text-bbs-gray">
+										{new Date(p.data.publishDate).toLocaleDateString('en-GB', {
+											year: '2-digit',
+											month: '2-digit',
+											day: '2-digit'
+										})}
+									</time>
+								</div>
+								<div class="flex-1">
+									<h3 class="text-sm">
+										<a href={`/posts/${p.slug}/`} class="bbs-link text-bbs-cyan hover:text-accent transition-colors">
+											{p.data.title}
+										</a>
+									</h3>
+									{p.data.description && (
+										<p class="text-xs text-bbs-gray mt-1 line-clamp-2">{p.data.description}</p>
+									)}
+									{p.data.tags && p.data.tags.length > 0 && (
+										<div class="flex flex-wrap gap-1 mt-2">
+											{p.data.tags.slice(0, 3).map((tag) => (
+												<a
+													href={`/tags/${getTagSlug(tag)}`}
+													class="bbs-tag text-xs"
+													title={`View posts with tag: ${formatTagForDisplay(tag)}`}
+												>
+													{formatTagForDisplay(tag)}
+												</a>
+											))}
+										</div>
+									)}
+								</div>
+							</div>
+						</article>
+					))}
+				</div>
+
+				<div class="px-3 py-2 border-t border-bbs-gray text-center">
+					<a href="/posts" class="bbs-button text-xs">
+						<span aria-hidden="true">[V]</span> VIEW ALL POSTS
+					</a>
+				</div>
+			</div>
+		</section>
+
+		<!-- Quick Links Section -->
+		<section class="quick-links mt-4" aria-labelledby="quicklinks-heading">
+			<div class="bbs-box">
+				<div class="px-3 py-1 border-b border-bbs-gray flex items-center gap-2">
+					<span class="text-accent" aria-hidden="true">┌─[</span>
+					<h2 id="quicklinks-heading" class="text-bbs-cyan font-bold">QUICK JUMP</h2>
+					<span class="text-accent" aria-hidden="true">]─</span>
+				</div>
+				<nav class="p-3 grid grid-cols-2 sm:grid-cols-4 gap-2 text-sm" aria-label="Quick navigation">
+					<a href="/about" class="bbs-menu-item p-2 text-center text-bbs-cyan" aria-label="About">
+						<span class="text-bbs-magenta" aria-hidden="true">[A]</span>bout
+					</a>
+					<a href="/projects" class="bbs-menu-item p-2 text-center text-bbs-cyan" aria-label="Projects">
+						<span class="text-bbs-magenta" aria-hidden="true">[P]</span>rojects
+					</a>
+					<a href="/recipes" class="bbs-menu-item p-2 text-center text-bbs-cyan" aria-label="Recipes">
+						<span class="text-bbs-magenta" aria-hidden="true">[R]</span>ecipes
+					</a>
+					<a href="/bookmarks" class="bbs-menu-item p-2 text-center text-bbs-cyan" aria-label="Bookmarks">
+						<span class="text-bbs-magenta" aria-hidden="true">[B]</span>ookmarks
+					</a>
+				</nav>
 			</div>
 		</section>
 	</div>
-
-	<style>
-		.home-page {
-			max-width: 1200px;
-			margin: 0 auto;
-			padding: 2rem;
-		}
-
-		.home-hero {
-			margin-bottom: 4rem;
-		}
-
-		.hero-content {
-			display: flex;
-			align-items: center;
-			gap: 3rem;
-			background: var(--theme-bg);
-			padding: 3rem;
-			border-radius: 12px;
-		}
-
-		.hero-image {
-			flex-shrink: 0;
-		}
-
-		.profile-photo {
-			width: 200px;
-			height: 200px;
-			border-radius: 12px;
-			box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-			transition: transform 0.3s ease;
-		}
-
-		.profile-photo:hover {
-			transform: scale(1.05);
-		}
-
-		.hero-text {
-			flex: 1;
-		}
-
-		.hero-title {
-			font-size: 2.5rem;
-			font-weight: 700;
-			line-height: 1.2;
-			margin: 0;
-			font-family: 'Oswald', sans-serif;
-			text-transform: uppercase;
-			letter-spacing: 1px;
-		}
-
-		.about-section {
-			margin-bottom: 4rem;
-		}
-
-		.about-card {
-			background: var(--theme-bg);
-			padding: 3rem;
-			border-radius: 12px;
-		}
-
-		.section-title {
-			font-size: 2rem;
-			font-weight: 600;
-			margin-bottom: 2rem;
-			color: var(--theme-accent);
-			font-family: 'Oswald', sans-serif;
-			text-transform: uppercase;
-			letter-spacing: 0.5px;
-		}
-
-		.about-content {
-			display: grid;
-			grid-template-columns: 1fr auto;
-			gap: 2rem;
-			align-items: start;
-		}
-
-		.p-note {
-			font-size: 1.1rem;
-			line-height: 1.7;
-			color: var(--theme-text);
-			margin: 0;
-		}
-
-		.recent-posts {
-			margin-bottom: 2rem;
-		}
-
-		.posts-grid {
-			display: grid;
-			grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-			gap: 2rem;
-		}
-
-		.post-card {
-			background: var(--theme-bg);
-			border-radius: 12px;
-			overflow: hidden;
-			box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-			transition: transform 0.3s ease, box-shadow 0.3s ease;
-		}
-
-		.post-card:hover {
-			transform: translateY(-4px);
-			box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-		}
-
-		.post-card-image {
-			position: relative;
-			overflow: hidden;
-			height: 200px;
-		}
-
-		.post-card-image img {
-			width: 100%;
-			height: 100%;
-			object-fit: cover;
-			filter: grayscale(100%);
-			transition: filter 0.3s ease;
-		}
-
-		.post-card:hover .post-card-image img {
-			filter: grayscale(0%);
-		}
-
-		.post-card-content {
-			padding: 1.5rem;
-		}
-
-		.post-card-date {
-			display: block;
-			font-size: 0.9rem;
-			color: var(--theme-accent);
-			font-weight: 600;
-			margin-bottom: 0.5rem;
-			font-family: 'Oswald', sans-serif;
-			text-transform: uppercase;
-			letter-spacing: 1px;
-		}
-
-		.post-card-title {
-			margin: 0 0 0.75rem 0;
-			font-size: 1.5rem;
-			font-weight: 600;
-			font-family: 'Oswald', sans-serif;
-			text-transform: uppercase;
-			letter-spacing: 0.5px;
-		}
-
-		.post-card-title a {
-			color: var(--theme-text);
-			text-decoration: none;
-			transition: color 0.3s ease;
-		}
-
-		.post-card-title a:hover {
-			color: var(--theme-accent);
-		}
-
-		.post-card-description {
-			margin: 0 0 1rem 0;
-			color: var(--theme-quote);
-			font-style: italic;
-			line-height: 1.5;
-		}
-
-		.post-card-tags {
-			display: flex;
-			flex-wrap: wrap;
-			gap: 0.5rem;
-		}
-
-		.tag {
-			background: var(--theme-accent);
-			color: white;
-			padding: 0.25rem 0.75rem;
-			border-radius: 20px;
-			font-size: 0.9rem;
-			font-weight: 500;
-			text-decoration: none;
-			transition: background-color 0.3s ease, transform 0.2s ease;
-		}
-
-		.tag:hover {
-			background: var(--theme-accent-dark, #1a4d3a);
-			transform: translateY(-1px);
-		}
-
-		@media (max-width: 768px) {
-			.home-page {
-				padding: 1rem;
-			}
-
-			.hero-content {
-				flex-direction: column;
-				text-align: center;
-				padding: 2rem;
-			}
-
-			.hero-title {
-				font-size: 2rem;
-			}
-
-			.about-content {
-				grid-template-columns: 1fr;
-			}
-
-			.posts-grid {
-				grid-template-columns: 1fr;
-				gap: 1.5rem;
-			}
-		}
-	</style>
 </PageLayout>
+
+<style>
+	.bbs-home {
+		font-family: 'IBM Plex Mono', monospace;
+	}
+
+	.ascii-art {
+		font-size: 0.55rem;
+		line-height: 1.1;
+		overflow-x: auto;
+	}
+
+	@media (min-width: 768px) {
+		.ascii-art {
+			font-size: 0.65rem;
+		}
+	}
+
+	@media (min-width: 1024px) {
+		.ascii-art {
+			font-size: 0.75rem;
+		}
+	}
+
+	/* Line clamp for descriptions */
+	.line-clamp-2 {
+		display: -webkit-box;
+		-webkit-line-clamp: 2;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
+	}
+</style>

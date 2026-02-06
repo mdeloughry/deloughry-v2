@@ -11,7 +11,6 @@ const meta = {
 };
 
 // foreach bookmark get the url go get the opengraph data
-
 const bookmarksWithMetadata =  await Promise.all(
   bookmarks.map(async (bookmark: any) => {
     const results = await ogFetcher(bookmark['link']);
@@ -28,6 +27,7 @@ const affiliateBookmarks = bookmarksWithMetadata.filter(bookmark => bookmark.cat
 
 export const prerender = true
 ---
+
 <script>
 	const scrollBtn = document.getElementById("to-top-btn") as HTMLButtonElement;
 	const targetHeader = document.getElementById("heading") as HTMLDivElement;
@@ -46,194 +46,181 @@ export const prerender = true
 	const observer = new IntersectionObserver(callback);
 	observer.observe(targetHeader);
 </script>
-<PageLayout meta={meta}>
-  <div class="bookmarks-page">
-    <header class="bookmarks-header">
-      <h1 class="bookmarks-title" id="heading">Bookmarks</h1>
-      <p class="bookmarks-subtitle">I find fun, useful, or just more people need to see...</p>
-    </header>
 
-    <div class="bookmarks-content">
-      <main class="bookmarks-main">
-        {usefulBookmarks && (<BookmarkCategory title="Useful" bookmarks={usefulBookmarks} />)}
-        {funBookmarks.length > 0 && (<BookmarkCategory title="Fun" bookmarks={funBookmarks} />)}
-        {affiliateBookmarks.length > 0 && (<BookmarkCategory title="Affiliate" bookmarks={affiliateBookmarks} />)}
+<PageLayout meta={meta}>
+  <div class="bbs-bookmarks">
+    <!-- Header -->
+    <section class="header-section mb-4" aria-labelledby="heading">
+      <div class="bbs-box">
+        <div class="px-3 py-1 border-b border-bbs-gray flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <span class="text-accent" aria-hidden="true">┌─[</span>
+            <h1 id="heading" class="text-bbs-cyan font-bold">LINK DATABASE</h1>
+            <span class="text-accent" aria-hidden="true">]─</span>
+          </div>
+          <span class="text-bbs-gray text-xs">
+            {bookmarksWithMetadata.length} links
+          </span>
+        </div>
+
+        <div class="p-3">
+          <p class="text-sm text-bbs-gray">
+            <span class="text-bbs-cyan" aria-hidden="true">&gt;</span> Links I find fun, useful, or just think more people need to see...
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Content Layout -->
+    <div class="flex flex-col lg:flex-row gap-4">
+      <!-- Main Content -->
+      <main class="flex-1 min-w-0 space-y-4">
+        {usefulBookmarks.length > 0 && (
+          <section aria-labelledby="useful-heading">
+            <div class="bbs-box">
+              <div class="px-3 py-1 border-b border-bbs-gray flex items-center gap-2">
+                <span class="text-accent" aria-hidden="true">┌─[</span>
+                <h2 id="useful-heading" class="text-bbs-cyan font-bold">USEFUL</h2>
+                <span class="text-accent" aria-hidden="true">]─</span>
+                <span class="text-bbs-gray text-xs ml-auto">{usefulBookmarks.length} links</span>
+              </div>
+              <div class="p-3">
+                <BookmarkCategory title="Useful" bookmarks={usefulBookmarks} />
+              </div>
+            </div>
+          </section>
+        )}
+
+        {funBookmarks.length > 0 && (
+          <section aria-labelledby="fun-heading">
+            <div class="bbs-box">
+              <div class="px-3 py-1 border-b border-bbs-gray flex items-center gap-2">
+                <span class="text-accent" aria-hidden="true">┌─[</span>
+                <h2 id="fun-heading" class="text-bbs-cyan font-bold">FUN</h2>
+                <span class="text-accent" aria-hidden="true">]─</span>
+                <span class="text-bbs-gray text-xs ml-auto">{funBookmarks.length} links</span>
+              </div>
+              <div class="p-3">
+                <BookmarkCategory title="Fun" bookmarks={funBookmarks} />
+              </div>
+            </div>
+          </section>
+        )}
+
+        {affiliateBookmarks.length > 0 && (
+          <section aria-labelledby="affiliate-heading">
+            <div class="bbs-box">
+              <div class="px-3 py-1 border-b border-bbs-gray flex items-center gap-2">
+                <span class="text-accent" aria-hidden="true">┌─[</span>
+                <h2 id="affiliate-heading" class="text-bbs-cyan font-bold">AFFILIATE</h2>
+                <span class="text-accent" aria-hidden="true">]─</span>
+                <span class="text-bbs-gray text-xs ml-auto">{affiliateBookmarks.length} links</span>
+              </div>
+              <div class="p-3">
+                <BookmarkCategory title="Affiliate" bookmarks={affiliateBookmarks} />
+              </div>
+            </div>
+          </section>
+        )}
       </main>
 
-      <aside class="bookmarks-toc">
-        <h2 class="toc-title">Table of Contents</h2>
-        <ul class="toc-list">
-          <li class="toc-item">
-            <a href="#useful" aria-label="Scroll to section: useful">
-              # useful
-            </a>
-          </li>
-          <li class="toc-item">
-            <a href="#fun" aria-label="Scroll to section: fun">
-              # fun
-            </a>
-          </li>
-          <li class="toc-item">
-            <a href="#affiliate" aria-label="Scroll to section: affiliate">
-              # affiliate
-            </a>
-          </li>
-        </ul>
+      <!-- Table of Contents Sidebar -->
+      <aside class="lg:w-64 lg:flex-shrink-0">
+        <div class="bbs-box lg:sticky lg:top-4">
+          <div class="px-3 py-1 border-b border-bbs-gray flex items-center gap-2">
+            <span class="text-accent" aria-hidden="true">┌─[</span>
+            <span class="text-bbs-cyan font-bold text-xs">CATEGORIES</span>
+            <span class="text-accent" aria-hidden="true">]─</span>
+          </div>
+
+          <nav class="p-3" aria-label="Jump to category">
+            <ul class="space-y-1 text-xs">
+              <li>
+                <a href="#useful-heading" class="bbs-link block py-1 hover:bg-bbs-dark-gray px-2 transition-colors">
+                  <span class="text-bbs-magenta" aria-hidden="true">[1]</span> USEFUL
+                </a>
+              </li>
+              <li>
+                <a href="#fun-heading" class="bbs-link block py-1 hover:bg-bbs-dark-gray px-2 transition-colors">
+                  <span class="text-bbs-magenta" aria-hidden="true">[2]</span> FUN
+                </a>
+              </li>
+              <li>
+                <a href="#affiliate-heading" class="bbs-link block py-1 hover:bg-bbs-dark-gray px-2 transition-colors">
+                  <span class="text-bbs-magenta" aria-hidden="true">[3]</span> AFFILIATE
+                </a>
+              </li>
+            </ul>
+          </nav>
+        </div>
       </aside>
     </div>
 
+    <!-- Actions -->
+    <section class="actions-section mt-4" aria-label="Actions">
+      <div class="bbs-box">
+        <nav class="p-3 flex flex-wrap gap-2 justify-center" aria-label="Bookmark navigation">
+          <a href="/" class="bbs-button text-xs">
+            <span aria-hidden="true">[M]</span> BACK TO MAIN
+          </a>
+        </nav>
+      </div>
+    </section>
+
+    <!-- Scroll to top button -->
     <button
       id="to-top-btn"
       class="scroll-to-top"
       aria-label="Back to Top"
       data-show="false"
     >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        aria-hidden="true"
-        focusable="false"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke-width="2"
-        stroke="currentColor"
-        class="h-6 w-6"
-      >
-        <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 15.75l7.5-7.5 7.5 7.5"></path>
-      </svg>
+      <span class="text-xs font-bold" aria-hidden="true">TOP</span>
     </button>
   </div>
-
-  <style>
-    .bookmarks-page {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 2rem;
-    }
-
-    .bookmarks-header {
-      text-align: center;
-      margin-bottom: 3rem;
-    }
-
-    .bookmarks-title {
-      font-size: 3rem;
-      font-weight: 700;
-      margin-bottom: 1rem;
-      color: var(--theme-text);
-      font-family: 'Oswald', sans-serif;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-
-    .bookmarks-subtitle {
-      font-size: 1.2rem;
-      color: var(--theme-quote);
-      font-style: italic;
-    }
-
-    .bookmarks-content {
-      display: grid;
-      grid-template-columns: 1fr 300px;
-      gap: 3rem;
-    }
-
-    .bookmarks-main {
-      min-width: 0;
-    }
-
-    .bookmarks-toc {
-      position: sticky;
-      top: 2rem;
-      height: fit-content;
-    }
-
-    .toc-title {
-      font-size: 1.2rem;
-      font-weight: 600;
-      margin-bottom: 1rem;
-      color: var(--theme-accent);
-      font-family: 'Oswald', sans-serif;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    .toc-list {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-    }
-
-    .toc-item {
-      margin-bottom: 0.5rem;
-    }
-
-    .toc-item a {
-      display: block;
-      padding: 0.5rem;
-      color: var(--theme-text);
-      text-decoration: none;
-      border-radius: 4px;
-      transition: all 0.3s ease;
-      font-size: 0.9rem;
-      font-weight: 500;
-      font-family: 'Oswald', sans-serif;
-      text-transform: uppercase;
-    }
-
-    .toc-item a:hover {
-      background: rgba(175, 180, 200, 0.1);
-      color: var(--theme-accent);
-    }
-
-    .scroll-to-top {
-      position: fixed;
-      bottom: 2rem;
-      right: 2rem;
-      width: 3rem;
-      height: 3rem;
-      background: var(--theme-accent);
-      color: white;
-      border: none;
-      border-radius: 50%;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      opacity: 0;
-      transform: translateY(100px);
-      transition: all 0.3s ease;
-      z-index: 100;
-    }
-
-    .scroll-to-top[data-show="true"] {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    .scroll-to-top:hover {
-      background: var(--theme-accent-hover);
-      transform: scale(1.1);
-    }
-
-    @media (max-width: 1024px) {
-      .bookmarks-content {
-        grid-template-columns: 1fr;
-        gap: 2rem;
-      }
-
-      .bookmarks-toc {
-        position: static;
-      }
-    }
-
-    @media (max-width: 768px) {
-      .bookmarks-page {
-        padding: 1rem;
-      }
-
-      .bookmarks-title {
-        font-size: 2rem;
-      }
-    }
-  </style>
 </PageLayout>
+
+<style>
+  .bbs-bookmarks {
+    font-family: 'IBM Plex Mono', monospace;
+  }
+
+  .scroll-to-top {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    width: 3rem;
+    height: 3rem;
+    background: var(--theme-bg);
+    border: 1px solid var(--theme-accent);
+    color: var(--theme-accent);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transform: translateY(100px);
+    transition: all 0.3s ease;
+    z-index: 100;
+  }
+
+  .scroll-to-top[data-show="true"] {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .scroll-to-top:hover {
+    background: var(--theme-accent);
+    color: #000;
+  }
+
+  .scroll-to-top:focus-visible {
+    outline: 2px solid var(--bbs-cyan);
+    outline-offset: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .scroll-to-top {
+      transition: none;
+    }
+  }
+</style>

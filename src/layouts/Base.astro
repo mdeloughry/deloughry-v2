@@ -18,43 +18,13 @@ const {
 } = Astro.props;
 ---
 
-<html lang={siteConfig.lang}>
+<html lang={siteConfig.lang} class="dark">
 	<head>
 		<BaseHead title={title} description={description} ogImage={ogImage} articleDate={articleDate} />
 		<script define:vars={{ siteConfig }}>
+			// BBS is always dark mode - no theme switching needed
 			const root = document.documentElement;
-			const colorThemeMetaTag = document.querySelector("meta[name='theme-color']");
-			// get user preference of dark mode, 1st local storage, 2nd browser
-			function getThemePreference() {
-        console.log("data", typeof localStorage, localStorage.getItem("theme"))
-				if (typeof localStorage !== "undefined" && localStorage.getItem("theme")) {
-					return localStorage.getItem("theme");
-				}
-				return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
-			}
-
-
-      function watchTheme(){
-			  const isDark = getThemePreference() === "dark";
-        console.log('watchTheme',isDark);
-        // watch document element class attribute and update user preference when it changes.
-        const observer = new MutationObserver(() => {
-          const rootIsDark = root.classList.contains("dark");
-          // set the meta attribute
-          colorThemeMetaTag.setAttribute(
-            "content",
-            siteConfig[rootIsDark ? "themeColorDark" : "themeColorLight"]
-          );
-
-        });
-        observer.observe(root, { attributeFilter: ["class"] });
-
-        // initailse root class attribute
-        root.classList.toggle("dark", isDark);
-      }
-
-      document.addEventListener("DOMContentLoaded", watchTheme);
-      document.addEventListener("astro:after-swap", watchTheme);
+			root.classList.add('dark');
 		</script>
 
 		<link rel="webmention" href="https://webmention.io/deloughry.co.uk/webmention" />
@@ -62,14 +32,50 @@ const {
     <ViewTransitions />
     <script defer src="https://umami-ss8o8so.loki.m4p.uk/script.js" data-website-id="b5e92cd1-103c-4610-909f-d21ff2988762"></script>
 	</head>
-	<body>
+	<body class="crt-effect">
 		<SkipLink />
-		<Header  transition:name="header"  />
+
+		<!-- BBS Status Bar at very top -->
+		<div class="bbs-status-bar flex justify-between items-center text-xs mb-2 px-2">
+			<span class="text-bbs-cyan">
+				<span class="text-accent">CONNECTED</span> @ 56.6k baud
+			</span>
+			<span class="text-bbs-gray">
+				<span class="hidden sm:inline">Sheffield, UK</span>
+				<span class="text-bbs-magenta ml-2" id="current-time"></span>
+			</span>
+		</div>
+
+		<Header transition:name="header" />
+
 		<main id="main" class="flex-1">
 			<NowPlaying client:load transition:name="now-playing" transition:animate={"slide"} transition:persist/>
 			<slot />
 		</main>
+
 		<Footer />
     <SpeedInsights />
+
+		<!-- Time display script -->
+		<script>
+			function updateTime() {
+				const timeEl = document.getElementById('current-time');
+				if (timeEl) {
+					const now = new Date();
+					timeEl.textContent = now.toLocaleTimeString('en-GB', {
+						hour: '2-digit',
+						minute: '2-digit',
+						second: '2-digit'
+					});
+				}
+			}
+			updateTime();
+			setInterval(updateTime, 1000);
+
+			// Re-init on navigation
+			document.addEventListener('astro:after-swap', () => {
+				updateTime();
+			});
+		</script>
 	</body>
 </html>

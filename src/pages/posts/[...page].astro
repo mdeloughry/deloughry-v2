@@ -29,13 +29,15 @@ const paginationProps = {
 	...(page.url.prev && {
 		prevUrl: {
 			url: page.url.prev,
-			text: `← Previous Posts`,
+			text: `Previous`,
+			srLabel: `Go to previous page`,
 		},
 	}),
 	...(page.url.next && {
 		nextUrl: {
 			url: page.url.next,
-			text: `Next Posts →`,
+			text: `Next`,
+			srLabel: `Go to next page`,
 		},
 	}),
 };
@@ -43,184 +45,133 @@ export const prerender = true;
 ---
 
 <PageLayout meta={meta}>
-	<div class="posts-listing">
-		<header class="posts-header">
-			<h1 class="posts-title">Posts</h1>
-			<p class="posts-subtitle">Thoughts, tutorials, and insights on web development and technology</p>
-		</header>
-
-		<div class="posts-grid">
-			{page.data.map((p) => (
-				<article class="post-card">
-					{p.data.ogImage && (
-						<div class="post-card-image">
-							<img src={p.data.ogImage} alt={p.data.title} />
-						</div>
-					)}
-					<div class="post-card-content">
-						<time datetime={p.data.publishDate.toISOString()} class="post-card-date">
-							{getFormattedDate(new Date(p.data.publishDate), { month: "short" })}
-						</time>
-						<h2 class="post-card-title">
-							<a href={`/posts/${p.slug}/`}>{p.data.title}</a>
-						</h2>
-						{p.data.description && <p class="post-card-description">{p.data.description}</p>}
-						{p.data.tags && p.data.tags.length > 0 && (
-							<div class="post-card-tags">
-								{p.data.tags.map((tag) => (
-									<a href={`/tags/${getTagSlug(tag)}`} class="tag" title={`View posts with tag: ${formatTagForDisplay(tag)}`}>
-										{formatTagForDisplay(tag)}
-									</a>
-								))}
-							</div>
-						)}
+	<div class="bbs-posts">
+		<!-- Header -->
+		<section class="header-section mb-4" aria-labelledby="posts-heading">
+			<div class="bbs-box">
+				<div class="px-3 py-1 border-b border-bbs-gray flex items-center justify-between">
+					<div class="flex items-center gap-2">
+						<span class="text-accent" aria-hidden="true">┌─[</span>
+						<h1 id="posts-heading" class="text-bbs-cyan font-bold">MESSAGE BOARD</h1>
+						<span class="text-accent" aria-hidden="true">]─</span>
 					</div>
-				</article>
-			))}
-		</div>
+					<span class="text-bbs-gray text-xs">
+						Page {page.currentPage} of {page.lastPage}
+					</span>
+				</div>
 
-		<Pagination {...paginationProps} />
+				<div class="p-3">
+					<p class="text-sm text-bbs-gray">
+						<span class="text-bbs-cyan" aria-hidden="true">&gt;</span> Thoughts, tutorials, and insights on web development and technology
+					</p>
+					<p class="text-xs text-bbs-gray mt-2">
+						Total Messages: <span class="text-accent">{page.total}</span>
+					</p>
+				</div>
+			</div>
+		</section>
+
+		<!-- Posts List -->
+		<section class="posts-list" aria-label="Blog posts">
+			<div class="bbs-box">
+				<!-- Table Header - decorative on desktop -->
+				<div class="hidden sm:grid grid-cols-12 gap-2 px-3 py-2 border-b border-accent text-xs font-bold" aria-hidden="true">
+					<div class="col-span-1 text-bbs-magenta">#</div>
+					<div class="col-span-2 text-bbs-gray">DATE</div>
+					<div class="col-span-7 text-bbs-cyan">SUBJECT</div>
+					<div class="col-span-2 text-bbs-gray text-right">TAGS</div>
+				</div>
+
+				<!-- Posts -->
+				<div class="divide-y divide-bbs-gray">
+					{page.data.map((p, index) => {
+						const postNumber = (page.currentPage - 1) * 10 + index + 1;
+						return (
+							<article class="p-3 hover:bg-bbs-dark-gray transition-colors">
+								<div class="sm:grid sm:grid-cols-12 sm:gap-2 sm:items-start">
+									<!-- Number - decorative -->
+									<div class="hidden sm:block col-span-1 text-bbs-magenta text-xs" aria-hidden="true">
+										[{String(postNumber).padStart(2, '0')}]
+									</div>
+
+									<!-- Date -->
+									<time
+										datetime={p.data.publishDate.toISOString()}
+										class="block sm:col-span-2 text-xs text-bbs-gray mb-1 sm:mb-0"
+									>
+										<span class="sm:hidden text-bbs-magenta" aria-hidden="true">[{String(postNumber).padStart(2, '0')}] </span>
+										{getFormattedDate(new Date(p.data.publishDate), { month: "short" })}
+									</time>
+
+									<!-- Title & Description -->
+									<div class="sm:col-span-7">
+										<h2 class="text-sm">
+											<a href={`/posts/${p.slug}/`} class="bbs-link text-bbs-cyan hover:text-accent transition-colors">
+												{p.data.title}
+											</a>
+										</h2>
+										{p.data.description && (
+											<p class="text-xs text-bbs-gray mt-1 line-clamp-2">{p.data.description}</p>
+										)}
+									</div>
+
+									<!-- Tags -->
+									<div class="sm:col-span-2 mt-2 sm:mt-0 sm:text-right">
+										{p.data.tags && p.data.tags.length > 0 && (
+											<div class="flex flex-wrap gap-1 sm:justify-end">
+												{p.data.tags.slice(0, 2).map((tag) => (
+													<a
+														href={`/tags/${getTagSlug(tag)}`}
+														class="bbs-tag text-xs"
+														title={`View posts with tag: ${formatTagForDisplay(tag)}`}
+													>
+														{formatTagForDisplay(tag)}
+													</a>
+												))}
+												{p.data.tags.length > 2 && (
+													<span class="text-bbs-gray text-xs">+{p.data.tags.length - 2}</span>
+												)}
+											</div>
+										)}
+									</div>
+								</div>
+							</article>
+						);
+					})}
+				</div>
+
+				<!-- Pagination -->
+				<nav class="px-3 py-2 border-t border-bbs-gray flex items-center justify-between text-xs" aria-label="Pagination">
+					<Pagination {...paginationProps} />
+				</nav>
+			</div>
+		</section>
+
+		<!-- Quick Actions -->
+		<section class="quick-actions mt-4" aria-label="Quick actions">
+			<div class="bbs-box">
+				<nav class="p-3 flex flex-wrap gap-2 justify-center">
+					<a href="/tags" class="bbs-button text-xs">
+						<span aria-hidden="true">[T]</span> VIEW ALL TAGS
+					</a>
+					<a href="/" class="bbs-button text-xs">
+						<span aria-hidden="true">[M]</span> BACK TO MAIN
+					</a>
+				</nav>
+			</div>
+		</section>
 	</div>
-
-	<style>
-		.posts-listing {
-			max-width: 1200px;
-			margin: 0 auto;
-			padding: 2rem;
-		}
-
-		.posts-header {
-			text-align: center;
-			margin-bottom: 3rem;
-		}
-
-		.posts-title {
-			font-size: 3rem;
-			font-weight: 700;
-			margin-bottom: 1rem;
-			color: var(--theme-text);
-			font-family: 'Oswald', sans-serif;
-			text-transform: uppercase;
-			letter-spacing: 1px;
-		}
-
-		.posts-subtitle {
-			font-size: 1.2rem;
-			color: var(--theme-quote);
-			font-style: italic;
-		}
-
-		.posts-grid {
-			display: grid;
-			grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-			gap: 2rem;
-			margin-bottom: 3rem;
-		}
-
-		.post-card {
-			background: var(--theme-bg);
-			border-radius: 12px;
-			overflow: hidden;
-			box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-			transition: transform 0.3s ease, box-shadow 0.3s ease;
-		}
-
-		.post-card:hover {
-			transform: translateY(-4px);
-			box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-		}
-
-		.post-card-image {
-			position: relative;
-			overflow: hidden;
-			height: 200px;
-		}
-
-		.post-card-image img {
-			width: 100%;
-			height: 100%;
-			object-fit: cover;
-			filter: grayscale(100%);
-			transition: filter 0.3s ease;
-		}
-
-		.post-card:hover .post-card-image img {
-			filter: grayscale(0%);
-		}
-
-		.post-card-content {
-			padding: 1.5rem;
-		}
-
-		.post-card-date {
-			display: block;
-			font-size: 0.9rem;
-			color: var(--theme-accent);
-			font-weight: 600;
-			margin-bottom: 0.5rem;
-		}
-
-		.post-card-title {
-			margin: 0 0 0.75rem 0;
-			font-size: 1.5rem;
-			font-weight: 600;
-			font-family: 'Oswald', sans-serif;
-			text-transform: uppercase;
-			letter-spacing: 0.5px;
-		}
-
-		.post-card-title a {
-			color: var(--theme-text);
-			text-decoration: none;
-			transition: color 0.3s ease;
-		}
-
-		.post-card-title a:hover {
-			color: var(--theme-accent);
-		}
-
-		.post-card-description {
-			margin: 0 0 1rem 0;
-			color: var(--theme-quote);
-			font-style: italic;
-			line-height: 1.5;
-		}
-
-		.post-card-tags {
-			display: flex;
-			flex-wrap: wrap;
-			gap: 0.5rem;
-		}
-
-		.tag {
-			background: var(--theme-accent);
-			color: white;
-			padding: 0.25rem 0.75rem;
-			border-radius: 20px;
-			font-size: 0.9rem;
-			font-weight: 500;
-			text-decoration: none;
-			transition: background-color 0.3s ease, transform 0.2s ease;
-		}
-
-		.tag:hover {
-			background: var(--theme-accent-dark, #1a4d3a);
-			transform: translateY(-1px);
-		}
-
-		@media (max-width: 768px) {
-			.posts-listing {
-				padding: 1rem;
-			}
-
-			.posts-title {
-				font-size: 2rem;
-			}
-
-			.posts-grid {
-				grid-template-columns: 1fr;
-				gap: 1.5rem;
-			}
-		}
-	</style>
 </PageLayout>
+
+<style>
+	.bbs-posts {
+		font-family: 'IBM Plex Mono', monospace;
+	}
+
+	.line-clamp-2 {
+		display: -webkit-box;
+		-webkit-line-clamp: 2;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
+	}
+</style>

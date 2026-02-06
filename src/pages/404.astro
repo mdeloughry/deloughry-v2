@@ -1,13 +1,81 @@
 ---
 import PageLayout from "@/layouts/Base";
 const meta = {
-	title: "Oops! You found a missing page!",
-	description: "Oops! It looks like this page is lost in space!",
+	title: "404 - File Not Found",
+	description: "The requested file could not be found on this BBS.",
 };
 export const prerender = true;
 ---
 
 <PageLayout meta={meta}>
-	<h1 class="title mb-6">404 | Oops something went wrong</h1>
-	<p class="mb-8">Please use the navigation to find your way back</p>
+	<div class="bbs-404">
+		<div class="bbs-box">
+			<div class="px-3 py-1 border-b border-bbs-red flex items-center gap-2">
+				<span class="text-bbs-red" aria-hidden="true">┌─[</span>
+				<span class="text-bbs-red font-bold">ERROR</span>
+				<span class="text-bbs-red" aria-hidden="true">]─</span>
+			</div>
+
+			<div class="p-6 text-center">
+				<!-- ASCII Art 404 -->
+				<pre class="text-bbs-red text-center mx-auto mb-6 text-xs sm:text-sm" aria-hidden="true">
+██╗  ██╗ ██████╗ ██╗  ██╗
+██║  ██║██╔═══██╗██║  ██║
+███████║██║   ██║███████║
+╚════██║██║   ██║╚════██║
+     ██║╚██████╔╝     ██║
+     ╚═╝ ╚═════╝      ╚═╝
+				</pre>
+
+				<h1 class="text-xl sm:text-2xl text-bbs-red font-bold mb-4">FILE NOT FOUND</h1>
+
+				<div class="text-sm text-bbs-gray mb-6 space-y-2">
+					<p>
+						<span class="text-bbs-red" aria-hidden="true">&gt;</span> ERROR: The requested file does not exist on this system.
+					</p>
+					<p>
+						<span class="text-bbs-red" aria-hidden="true">&gt;</span> The file may have been moved, deleted, or never existed.
+					</p>
+					<p>
+						<span class="text-bbs-cyan" aria-hidden="true">&gt;</span> Please use the navigation menu to find your way.
+					</p>
+				</div>
+
+				<div class="bbs-separator-double"></div>
+
+				<div class="flex flex-wrap gap-2 justify-center mt-6">
+					<a href="/" class="bbs-button text-xs">
+						<span aria-hidden="true">[H]</span> HOME
+					</a>
+					<a href="/posts" class="bbs-button text-xs">
+						<span aria-hidden="true">[P]</span> POSTS
+					</a>
+					<a href="/projects" class="bbs-button text-xs">
+						<span aria-hidden="true">[F]</span> FILES
+					</a>
+				</div>
+			</div>
+		</div>
+
+		<!-- System message -->
+		<div class="mt-4 text-center text-xs text-bbs-gray">
+			<p>
+				<span class="text-accent" aria-hidden="true">[SYS]</span>
+				Press any key to continue...
+				<span class="blink" aria-hidden="true">_</span>
+			</p>
+		</div>
+	</div>
 </PageLayout>
+
+<style>
+	.bbs-404 {
+		font-family: 'IBM Plex Mono', monospace;
+		max-width: 600px;
+		margin: 2rem auto;
+	}
+
+	.bbs-404 pre {
+		line-height: 1.1;
+	}
+</style>

@@ -13,209 +13,145 @@ export const prerender = true;
 ---
 
 <PageLayout meta={meta}>
-  <div class="projects-page">
-    <header class="projects-header">
-      <h1 class="projects-title">Projects</h1>
-      <p class="projects-subtitle">A collection of tools, experiments, and work in progress</p>
-    </header>
-
-    <div class="projects-grid">
-      {projects.map((project) => (
-        <article class="project-card">
-          <div class="project-content">
-            <h3 class="project-title">
-              <a
-                href={project.url || `/projects/${project.slug}`}
-                {...(project.url ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-              >
-                {project.title}
-              </a>
-            </h3>
-            <p class="project-description">{project.description}</p>
-            <div class="project-meta">
-              <span class="project-category">{formatTagForDisplay(project.category)}</span>
-              <span class="project-status">{formatTagForDisplay(project.status)}</span>
-            </div>
-            {project.tags && project.tags.length > 0 && (
-              <div class="project-tags">
-                {project.tags.map((tag) => (
-                  <a href={`/projects/tags/${getTagSlug(tag)}`} class="project-tag" title={`View projects with tag: ${formatTagForDisplay(tag)}`}>
-                    {formatTagForDisplay(tag)}
-                  </a>
-                ))}
-              </div>
-            )}
-            {project.technologies && project.technologies.length > 0 && (
-              <div class="project-technologies">
-                {project.technologies.map((tech) => (
-                  <span class="technology-tag">{tech}</span>
-                ))}
-              </div>
-            )}
+  <div class="bbs-projects">
+    <!-- Header -->
+    <section class="header-section mb-4" aria-labelledby="projects-heading">
+      <div class="bbs-box">
+        <div class="px-3 py-1 border-b border-bbs-gray flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <span class="text-accent" aria-hidden="true">┌─[</span>
+            <h1 id="projects-heading" class="text-bbs-cyan font-bold">FILE AREA</h1>
+            <span class="text-accent" aria-hidden="true">]─</span>
           </div>
-        </article>
-      ))}
-    </div>
+          <span class="text-bbs-gray text-xs">
+            {projects.length} files
+          </span>
+        </div>
+
+        <div class="p-3">
+          <p class="text-sm text-bbs-gray">
+            <span class="text-bbs-cyan" aria-hidden="true">&gt;</span> A collection of tools, experiments, and work in progress
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Projects List -->
+    <section class="projects-list" aria-label="Projects">
+      <div class="bbs-box">
+        <!-- Table Header - decorative -->
+        <div class="hidden sm:grid grid-cols-12 gap-2 px-3 py-2 border-b border-accent text-xs font-bold" aria-hidden="true">
+          <div class="col-span-1 text-bbs-magenta">#</div>
+          <div class="col-span-4 text-bbs-cyan">FILENAME</div>
+          <div class="col-span-2 text-bbs-gray">STATUS</div>
+          <div class="col-span-5 text-bbs-gray">DESCRIPTION</div>
+        </div>
+
+        <!-- Projects -->
+        <div class="divide-y divide-bbs-gray">
+          {projects.map((project, index) => (
+            <article class="p-3 hover:bg-bbs-dark-gray transition-colors">
+              <div class="sm:grid sm:grid-cols-12 sm:gap-2 sm:items-start">
+                <!-- Number - decorative -->
+                <div class="hidden sm:block col-span-1 text-bbs-magenta text-xs" aria-hidden="true">
+                  [{String(index + 1).padStart(2, '0')}]
+                </div>
+
+                <!-- Title/Filename -->
+                <div class="sm:col-span-4 mb-2 sm:mb-0">
+                  <span class="sm:hidden text-bbs-magenta text-xs" aria-hidden="true">[{String(index + 1).padStart(2, '0')}] </span>
+                  <h2 class="text-sm inline sm:block">
+                    <a
+                      href={project.url || `/projects/${project.slug}`}
+                      {...(project.url ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                      class="bbs-link text-bbs-cyan hover:text-accent transition-colors"
+                    >
+                      {project.title.toUpperCase()}<span aria-hidden="true">.PRJ</span>
+                    </a>
+                  </h2>
+                  {project.url && (
+                    <span class="text-bbs-gray text-xs ml-1" aria-label="External link">[EXT]</span>
+                  )}
+                </div>
+
+                <!-- Status -->
+                <div class="sm:col-span-2 mb-2 sm:mb-0">
+                  <span class:list={[
+                    "text-xs px-1",
+                    project.status === 'active' ? 'ansi-cyan' :
+                    project.status === 'wip' ? 'ansi-yellow' :
+                    project.status === 'archived' ? 'text-bbs-gray border border-bbs-gray' :
+                    'text-bbs-gray'
+                  ]}>
+                    {formatTagForDisplay(project.status).toUpperCase()}
+                  </span>
+                </div>
+
+                <!-- Description & Tags -->
+                <div class="sm:col-span-5">
+                  <p class="text-xs text-bbs-gray line-clamp-2">{project.description}</p>
+
+                  <div class="flex flex-wrap gap-1 mt-2">
+                    <span class="text-bbs-magenta text-xs" aria-hidden="true">
+                      [{formatTagForDisplay(project.category)}]
+                    </span>
+                    <span class="sr-only">Category: {formatTagForDisplay(project.category)}</span>
+                    {project.technologies && project.technologies.slice(0, 3).map((tech) => (
+                      <span class="bbs-tag text-xs">{tech}</span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- Navigation Section -->
+    <section class="tags-section mt-4" aria-labelledby="nav-heading">
+      <div class="bbs-box">
+        <div class="px-3 py-1 border-b border-bbs-gray flex items-center gap-2">
+          <span class="text-accent" aria-hidden="true">┌─[</span>
+          <h2 id="nav-heading" class="text-bbs-cyan font-bold">FILE CATEGORIES</h2>
+          <span class="text-accent" aria-hidden="true">]─</span>
+        </div>
+
+        <nav class="p-3 flex flex-wrap gap-2" aria-label="Project navigation">
+          <a href="/projects/tags" class="bbs-button text-xs">
+            <span aria-hidden="true">[T]</span> VIEW ALL TAGS
+          </a>
+          <a href="/" class="bbs-button text-xs">
+            <span aria-hidden="true">[M]</span> BACK TO MAIN
+          </a>
+        </nav>
+      </div>
+    </section>
+
+    <!-- Legend -->
+    <section class="legend-section mt-4" aria-labelledby="legend-heading">
+      <div class="bbs-box bg-bbs-dark-gray">
+        <div class="p-3 text-xs">
+          <h2 id="legend-heading" class="text-bbs-gray inline">Legend:</h2>
+          <span class="ansi-cyan px-1 ml-2">ACTIVE</span>
+          <span class="ansi-yellow px-1 ml-2">WIP</span>
+          <span class="text-bbs-gray border border-bbs-gray px-1 ml-2">ARCHIVED</span>
+          <span class="text-bbs-gray ml-4">[EXT] = External Link</span>
+        </div>
+      </div>
+    </section>
   </div>
-
-  <style>
-    .projects-page {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 2rem;
-    }
-
-    .projects-header {
-      text-align: center;
-      margin-bottom: 3rem;
-    }
-
-    .projects-title {
-      font-size: 3rem;
-      font-weight: 700;
-      margin-bottom: 1rem;
-      color: var(--theme-text);
-      font-family: 'Oswald', sans-serif;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-
-    .projects-subtitle {
-      font-size: 1.2rem;
-      color: var(--theme-quote);
-      font-style: italic;
-    }
-
-    .projects-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-      gap: 2rem;
-    }
-
-    .project-card {
-      background: var(--theme-bg);
-      border-radius: 12px;
-      overflow: hidden;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    .project-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-    }
-
-    .project-content {
-      padding: 2rem;
-    }
-
-    .project-title {
-      margin: 0 0 1rem 0;
-      font-size: 1.5rem;
-      font-weight: 600;
-      font-family: 'Oswald', sans-serif;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    .project-title a {
-      color: var(--theme-text);
-      text-decoration: none;
-      transition: color 0.3s ease;
-    }
-
-    .project-title a:hover {
-      color: var(--theme-accent);
-    }
-
-    .project-description {
-      margin: 0 0 1.5rem 0;
-      color: var(--theme-quote);
-      font-style: italic;
-      line-height: 1.5;
-    }
-
-    .project-meta {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-      margin-bottom: 1rem;
-    }
-
-    .project-category {
-      background: var(--theme-accent);
-      color: white;
-      padding: 0.25rem 0.75rem;
-      border-radius: 20px;
-      font-size: 0.9rem;
-      font-weight: 500;
-    }
-
-    .project-status {
-      background: var(--theme-quote);
-      color: white;
-      padding: 0.25rem 0.75rem;
-      border-radius: 20px;
-      font-size: 0.9rem;
-      font-weight: 500;
-    }
-
-    .project-tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-      margin-bottom: 1rem;
-    }
-
-    .project-tag {
-      background: var(--theme-accent);
-      color: white;
-      padding: 0.25rem 0.75rem;
-      border-radius: 20px;
-      font-size: 0.9rem;
-      font-weight: 500;
-      text-decoration: none;
-      transition: background-color 0.3s ease, transform 0.2s ease;
-    }
-
-    .project-tag:hover {
-      background: var(--theme-accent-dark, #1a4d3a);
-      transform: translateY(-1px);
-    }
-
-    .project-technologies {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-    }
-
-    .technology-tag {
-      background: var(--theme-bg);
-      color: var(--theme-text);
-      padding: 0.25rem 0.75rem;
-      border-radius: 20px;
-      font-size: 0.8rem;
-      font-weight: 500;
-      border: 1px solid var(--theme-accent);
-    }
-
-    @media (max-width: 768px) {
-      .projects-page {
-        padding: 1rem;
-      }
-
-      .projects-title {
-        font-size: 2rem;
-      }
-
-      .projects-grid {
-        grid-template-columns: 1fr;
-        gap: 1.5rem;
-      }
-
-      .project-content {
-        padding: 1.5rem;
-      }
-    }
-  </style>
 </PageLayout>
+
+<style>
+  .bbs-projects {
+    font-family: 'IBM Plex Mono', monospace;
+  }
+
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+</style>

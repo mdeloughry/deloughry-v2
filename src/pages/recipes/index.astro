@@ -12,43 +12,136 @@ const meta = {
 ---
 
 <BaseLayout meta={meta}>
-	<div class="recipes-listing">
-		<header class="recipes-header">
-			<h1>Recipes</h1>
-			<p class="recipes-subtitle">Discover delicious recipes with interactive timers and cook mode</p>
-		</header>
-
-		<div class="recipes-grid" id="list">
-			{recipes.map((r) => (
-				<article class="recipe-card">
-					{r.image && (
-						<div class="recipe-card-image">
-							<img src={r.image} alt={r.title} />
-						</div>
-					)}
-					<div class="recipe-card-content">
-						<h2 class="recipe-card-title">
-							<a href={`/recipes/${r.slug}/`}>{r.title}</a>
-						</h2>
-						{r.description && <p class="recipe-card-description">{r.description}</p>}
-						{r.tags.length ? (
-							<div class="recipe-card-tags">
-								{r.tags.map((tag) => (
-									<a href={`/recipes/tags/${getTagSlug(tag)}`} class="tag" title={`View recipes with tag: ${formatTagForDisplay(tag)}`}>
-										{formatTagForDisplay(tag)}
-									</a>
-								))}
-							</div>
-						) : null}
-						{r.servings && (
-							<div class="recipe-card-meta">
-								<span class="servings">{r.servings} servings</span>
-							</div>
-						)}
+	<div class="bbs-recipes">
+		<!-- Header -->
+		<section class="header-section mb-4" aria-labelledby="recipes-heading">
+			<div class="bbs-box">
+				<div class="px-3 py-1 border-b border-bbs-gray flex items-center justify-between">
+					<div class="flex items-center gap-2">
+						<span class="text-accent" aria-hidden="true">┌─[</span>
+						<h1 id="recipes-heading" class="text-bbs-cyan font-bold">RECIPE DATABASE</h1>
+						<span class="text-accent" aria-hidden="true">]─</span>
 					</div>
-				</article>
-			))}
-		</div>
+					<span class="text-bbs-gray text-xs">
+						{recipes.length} recipes
+					</span>
+				</div>
+
+				<div class="p-3">
+					<p class="text-sm text-bbs-gray">
+						<span class="text-bbs-cyan" aria-hidden="true">&gt;</span> Discover delicious recipes with interactive timers and cook mode
+					</p>
+				</div>
+			</div>
+		</section>
+
+		<!-- Search Box -->
+		<section class="search-section mb-4" aria-label="Search">
+			<div class="bbs-box">
+				<div class="p-3">
+					<label for="q" class="text-bbs-cyan text-sm block mb-2">
+						<span class="text-accent" aria-hidden="true">&gt;</span> SEARCH RECIPES:
+					</label>
+					<input
+						type="search"
+						id="q"
+						name="q"
+						placeholder="Type to search..."
+						class="bbs-input w-full"
+						autocomplete="off"
+						aria-describedby="search-hint"
+					/>
+					<p id="search-hint" class="sr-only">Search by recipe name, tags, or ingredients</p>
+				</div>
+			</div>
+		</section>
+
+		<!-- Recipes List -->
+		<section class="recipes-list" aria-labelledby="list-heading">
+			<h2 id="list-heading" class="sr-only">Recipe List</h2>
+			<div class="bbs-box">
+				<!-- Table Header - decorative -->
+				<div class="hidden sm:grid grid-cols-12 gap-2 px-3 py-2 border-b border-accent text-xs font-bold" aria-hidden="true">
+					<div class="col-span-1 text-bbs-magenta">#</div>
+					<div class="col-span-5 text-bbs-cyan">RECIPE NAME</div>
+					<div class="col-span-2 text-bbs-gray">SERVINGS</div>
+					<div class="col-span-4 text-bbs-gray">TAGS</div>
+				</div>
+
+				<!-- Recipes -->
+				<div class="divide-y divide-bbs-gray" id="list" role="list" aria-live="polite">
+					{recipes.map((r, index) => (
+						<article class="recipe-item p-3 hover:bg-bbs-dark-gray transition-colors" data-recipe={JSON.stringify(r)} role="listitem">
+							<div class="sm:grid sm:grid-cols-12 sm:gap-2 sm:items-start">
+								<!-- Number - decorative -->
+								<div class="hidden sm:block col-span-1 text-bbs-magenta text-xs recipe-number" aria-hidden="true">
+									[{String(index + 1).padStart(2, '0')}]
+								</div>
+
+								<!-- Title -->
+								<div class="sm:col-span-5 mb-2 sm:mb-0">
+									<span class="sm:hidden text-bbs-magenta text-xs recipe-number-mobile" aria-hidden="true">[{String(index + 1).padStart(2, '0')}] </span>
+									<h3 class="text-sm inline sm:block">
+										<a href={`/recipes/${r.slug}/`} class="bbs-link text-bbs-cyan hover:text-accent transition-colors recipe-title">
+											{r.title.toUpperCase()}
+										</a>
+									</h3>
+									{r.description && (
+										<p class="text-xs text-bbs-gray mt-1 line-clamp-1 recipe-description">{r.description}</p>
+									)}
+								</div>
+
+								<!-- Servings -->
+								<div class="sm:col-span-2 mb-2 sm:mb-0 recipe-servings">
+									{r.servings && (
+										<span class="text-bbs-cyan text-xs">
+											{r.servings} <span class="text-bbs-gray">servings</span>
+										</span>
+									)}
+								</div>
+
+								<!-- Tags -->
+								<div class="sm:col-span-4 recipe-tags">
+									{r.tags.length > 0 && (
+										<div class="flex flex-wrap gap-1">
+											{r.tags.slice(0, 3).map((tag) => (
+												<a
+													href={`/recipes/tags/${getTagSlug(tag)}`}
+													class="bbs-tag text-xs"
+													title={`View recipes with tag: ${formatTagForDisplay(tag)}`}
+												>
+													{formatTagForDisplay(tag)}
+												</a>
+											))}
+											{r.tags.length > 3 && (
+												<span class="text-bbs-gray text-xs">+{r.tags.length - 3}</span>
+											)}
+										</div>
+									)}
+								</div>
+							</div>
+						</article>
+					))}
+				</div>
+			</div>
+		</section>
+
+		<!-- Actions -->
+		<section class="actions-section mt-4" aria-label="Actions">
+			<div class="bbs-box">
+				<nav class="p-3 flex flex-wrap gap-2 justify-center" aria-label="Recipe navigation">
+					<a href="/recipes/tags" class="bbs-button text-xs">
+						<span aria-hidden="true">[T]</span> VIEW ALL TAGS
+					</a>
+					<a href="/recipes/shopping-list" class="bbs-button text-xs">
+						<span aria-hidden="true">[S]</span> SHOPPING LIST
+					</a>
+					<a href="/" class="bbs-button text-xs">
+						<span aria-hidden="true">[M]</span> BACK TO MAIN
+					</a>
+				</nav>
+			</div>
+		</section>
 
 		<script type="application/json" id="recipes-data">{JSON.stringify(recipes)}</script>
 	</div>
@@ -59,214 +152,52 @@ const meta = {
 		const fuse = new Fuse(data, { keys: ['title', 'tags', 'ingredients.name', 'description'] });
 		const q = document.getElementById('q');
 		const list = document.getElementById('list');
+		const allItems = Array.from(list.querySelectorAll('.recipe-item'));
 
 		q.addEventListener('input', () => {
 			const term = q.value.trim();
-			const results = term ? fuse.search(term).map((r) => r.item) : data;
-			list.innerHTML = results
-				.map(
-					(r) => `
-						<article class="recipe-card">
-							${r.image ? `
-								<div class="recipe-card-image">
-									<img src="${r.image}" alt="${r.title}" />
-								</div>
-							` : ''}
-							<div class="recipe-card-content">
-								<h2 class="recipe-card-title">
-									<a href="/recipes/${r.slug}/">${r.title}</a>
-								</h2>
-								${r.description ? `<p class="recipe-card-description">${r.description}</p>` : ''}
-								${r.tags.length ? `
-									<div class="recipe-card-tags">
-										${r.tags.map(tag => `<a href="/recipes/tags/${encodeURIComponent(tag.toLowerCase().trim())}" class="tag" title="View recipes with tag: ${tag}">${tag}</a>`).join('')}
-									</div>
-								` : ''}
-								${r.servings ? `
-									<div class="recipe-card-meta">
-										<span class="servings">${r.servings} servings</span>
-									</div>
-								` : ''}
-							</div>
-						</article>
-					`
-				)
-				.join('');
+
+			if (!term) {
+				// Show all items
+				allItems.forEach((item, index) => {
+					item.style.display = '';
+					const numEl = item.querySelector('.recipe-number');
+					const numMobileEl = item.querySelector('.recipe-number-mobile');
+					if (numEl) numEl.textContent = `[${String(index + 1).padStart(2, '0')}]`;
+					if (numMobileEl) numMobileEl.textContent = `[${String(index + 1).padStart(2, '0')}] `;
+				});
+				return;
+			}
+
+			const results = fuse.search(term).map((r) => r.item.slug);
+
+			let visibleIndex = 0;
+			allItems.forEach((item) => {
+				const recipe = JSON.parse(item.dataset.recipe);
+				if (results.includes(recipe.slug)) {
+					item.style.display = '';
+					visibleIndex++;
+					const numEl = item.querySelector('.recipe-number');
+					const numMobileEl = item.querySelector('.recipe-number-mobile');
+					if (numEl) numEl.textContent = `[${String(visibleIndex).padStart(2, '0')}]`;
+					if (numMobileEl) numMobileEl.textContent = `[${String(visibleIndex).padStart(2, '0')}] `;
+				} else {
+					item.style.display = 'none';
+				}
+			});
 		});
 	</script>
-
-	<style>
-		.recipes-listing {
-			max-width: 1200px;
-			margin: 0 auto;
-			padding: 2rem;
-		}
-
-		.recipes-header {
-			text-align: center;
-			margin-bottom: 3rem;
-		}
-
-		.recipes-header h1 {
-			font-size: 3rem;
-			font-weight: 700;
-			margin-bottom: 1rem;
-			color: var(--theme-text);
-			font-family: 'Oswald', sans-serif;
-			text-transform: uppercase;
-			letter-spacing: 1px;
-		}
-
-		.recipes-subtitle {
-			font-size: 1.2rem;
-			color: var(--theme-quote);
-			font-style: italic;
-		}
-
-		.search-container {
-			margin-bottom: 3rem;
-			display: flex;
-			justify-content: center;
-		}
-
-		.search-input {
-			width: 100%;
-			max-width: 500px;
-			padding: 1rem 1.5rem;
-			border: 2px solid var(--theme-accent);
-			border-radius: 8px;
-			background: var(--theme-bg);
-			color: var(--theme-text);
-			font-size: 1.1rem;
-			font-family: 'Roboto', sans-serif;
-			transition: border-color 0.3s ease;
-		}
-
-		.search-input:focus {
-			outline: none;
-			border-color: var(--theme-accent-hover);
-		}
-
-		.recipes-grid {
-			display: grid;
-			grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-			gap: 2rem;
-		}
-
-		.recipe-card {
-			background: var(--theme-bg);
-			border-radius: 12px;
-			overflow: hidden;
-			box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-			transition: transform 0.3s ease, box-shadow 0.3s ease;
-		}
-
-		.recipe-card:hover {
-			transform: translateY(-4px);
-			box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-		}
-
-		.recipe-card-image {
-			position: relative;
-			overflow: hidden;
-			height: 200px;
-		}
-
-		.recipe-card-image img {
-			width: 100%;
-			height: 100%;
-			object-fit: cover;
-			filter: grayscale(100%);
-			transition: filter 0.3s ease;
-		}
-
-		.recipe-card:hover .recipe-card-image img {
-			filter: grayscale(0%);
-		}
-
-		.recipe-card-content {
-			padding: 1.5rem;
-		}
-
-		.recipe-card-title {
-			margin: 0 0 0.75rem 0;
-			font-size: 1.5rem;
-			font-weight: 600;
-			font-family: 'Oswald', sans-serif;
-			text-transform: uppercase;
-			letter-spacing: 0.5px;
-		}
-
-		.recipe-card-title a {
-			color: var(--theme-text);
-			text-decoration: none;
-			transition: color 0.3s ease;
-		}
-
-		.recipe-card-title a:hover {
-			color: var(--theme-accent);
-		}
-
-		.recipe-card-description {
-			margin: 0 0 1rem 0;
-			color: var(--theme-quote);
-			font-style: italic;
-			line-height: 1.5;
-		}
-
-		.recipe-card-tags {
-			display: flex;
-			flex-wrap: wrap;
-			gap: 0.5rem;
-			margin-bottom: 1rem;
-		}
-
-		.tag {
-			background: var(--theme-accent);
-			color: white;
-			padding: 0.25rem 0.75rem;
-			border-radius: 20px;
-			font-size: 0.9rem;
-			font-weight: 500;
-			text-decoration: none;
-			transition: background-color 0.3s ease, transform 0.2s ease;
-		}
-
-		.tag:hover {
-			background: var(--theme-accent-dark, #1a4d3a);
-			transform: translateY(-1px);
-		}
-
-		.recipe-card-meta {
-			display: flex;
-			align-items: center;
-			gap: 1rem;
-		}
-
-		.servings {
-			color: var(--theme-accent);
-			font-weight: 600;
-			font-size: 0.9rem;
-		}
-
-		@media (max-width: 768px) {
-			.recipes-listing {
-				padding: 1rem;
-			}
-
-			.recipes-header h1 {
-				font-size: 2rem;
-			}
-
-			.recipes-grid {
-				grid-template-columns: 1fr;
-				gap: 1.5rem;
-			}
-		}
-	</style>
 </BaseLayout>
 
+<style>
+	.bbs-recipes {
+		font-family: 'IBM Plex Mono', monospace;
+	}
 
-</BaseLayout>
-
-
+	.line-clamp-1 {
+		display: -webkit-box;
+		-webkit-line-clamp: 1;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
+	}
+</style>

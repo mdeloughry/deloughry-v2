@@ -1,59 +1,109 @@
 ---
 const year = new Date().getFullYear();
-
 const url = new URL(Astro.request.url);
 
 const menuLinks = [
-  {
-    title: "Home",
-    path: "/",
-  },
-  {
-    title: "About",
-    path: "/about",
-  },
-  {
-    title: "Blog",
-    path: "/posts",
-  },
-  {
-    title: "Playlists",
-    path: "/playlists",
-  },
-  {
-    title: "Projects",
-    path: "/projects",
-  },
-  {
-    title: "Bookmarks",
-    path: "/bookmarks",
-  },
-
+  { title: "HOME", path: "/", key: "1" },
+  { title: "ABOUT", path: "/about", key: "2" },
+  { title: "BLOG", path: "/posts", key: "3" },
+  { title: "PLAYLISTS", path: "/playlists", key: "4" },
+  { title: "PROJECTS", path: "/projects", key: "5" },
+  { title: "BOOKMARKS", path: "/bookmarks", key: "6" },
 ];
 ---
 
-<footer
-  class="mt-auto flex w-full flex-col items-center justify-center gap-y-2 pb-4 pt-20 text-center align-top  sm:flex-row sm:justify-between sm:text-xs"
->
-  <div class="mr-0 sm:mr-4">
-    Copyright &copy; {year}
-    <span aria-label="rocket emoji">🦖</span>
+<footer class="mt-auto pt-8 pb-4">
+  <!-- Top separator -->
+  <div class="text-accent text-xs leading-none select-none mb-2" aria-hidden="true">
+    ════════════════════════════════════════════════════════════════════════════════
   </div>
+
+  <!-- Thank you message with block decoration -->
+  <div class="text-center py-2 text-sm">
+    <span class="text-bbs-gray" aria-hidden="true">░░░</span>
+    <span class="text-accent mx-2">Thank you for visiting DR_DINOMIGHT BBS</span>
+    <span class="text-bbs-gray" aria-hidden="true">░░░</span>
+  </div>
+
+  <!-- Status line -->
+  <div class="flex flex-col sm:flex-row items-center justify-between gap-2 text-xs py-2 border-t border-b border-bbs-gray">
+    <div class="flex items-center gap-4">
+      <span class="text-bbs-gray">
+        Lines: <span class="text-bbs-cyan">1/1</span>
+      </span>
+      <span class="text-bbs-gray hidden sm:inline">│</span>
+      <span class="text-bbs-gray hidden sm:inline">
+        Node: <span class="text-bbs-cyan">01</span>
+      </span>
+    </div>
+
+    <div class="flex items-center gap-4">
+      <span class="text-bbs-gray">
+        &copy; <span class="text-accent">{year}</span>
+      </span>
+      <span class="text-bbs-gray hidden sm:inline">│</span>
+      <span class="text-bbs-gray hidden sm:inline">
+        <span class="text-bbs-cyan">[Q]</span>uit
+      </span>
+    </div>
+  </div>
+
+  <!-- Navigation links -->
   <nav
-    aria-label="More on this site"
-    class="flex gap-x-2 sm:gap-x-0 sm:divide-x sm:divide-dashed sm:divide-accent"
+    aria-label="Footer navigation"
+    class="flex flex-wrap justify-center gap-1 py-2 text-xs"
   >
-    {
-      menuLinks.flatMap((link) => (
-        <a
-          href={link.path}
-          class="cactus-link px-4 py-2 sm:px-2 sm:py-0 sm:hover:underline"
-          aria-current={url.pathname === link.path ? "page" : false}
-          rel="prefetch"
-        >
-          {link.title}
-        </a>
-      ))
-    }
+    {menuLinks.map((link) => (
+      <a
+        href={link.path}
+        class:list={[
+          "px-2 py-1 bbs-menu-item",
+          url.pathname === link.path
+            ? "bg-accent text-black"
+            : "text-bbs-cyan"
+        ]}
+        aria-current={url.pathname === link.path ? "page" : false}
+        aria-label={link.title}
+        rel="prefetch"
+      >
+        <span class="text-bbs-magenta" aria-hidden="true">[{link.key}]</span>{link.title}
+      </a>
+    ))}
   </nav>
+
+  <!-- Bottom separator -->
+  <div class="text-accent text-xs leading-none select-none mt-2" aria-hidden="true">
+    ════════════════════════════════════════════════════════════════════════════════
+  </div>
+
+  <!-- ASCII Art signature - decorative -->
+  <div class="text-center mt-4 text-bbs-gray text-xs" aria-hidden="true">
+    <pre class="inline-block text-left">
+ ██████╗ ██████╗        ██████╗ ██╗███╗   ██╗ ██████╗
+ ██╔══██╗██╔══██╗       ██╔══██╗██║████╗  ██║██╔═══██╗
+ ██║  ██║██████╔╝       ██║  ██║██║██╔██╗ ██║██║   ██║
+ ██║  ██║██╔══██╗       ██║  ██║██║██║╚██╗██║██║   ██║
+ ██████╔╝██║  ██║██╗    ██████╔╝██║██║ ╚████║╚██████╔╝
+ ╚═════╝ ╚═╝  ╚═╝╚═╝    ╚═════╝ ╚═╝╚═╝  ╚═══╝ ╚═════╝
+    </pre>
+  </div>
+  <span class="sr-only">Dr Dino website footer</span>
 </footer>
+
+<style>
+  footer {
+    font-family: 'IBM Plex Mono', monospace;
+  }
+
+  footer pre {
+    font-size: 0.4rem;
+    line-height: 1;
+    color: var(--bbs-gray);
+  }
+
+  @media (min-width: 640px) {
+    footer pre {
+      font-size: 0.5rem;
+    }
+  }
+</style>

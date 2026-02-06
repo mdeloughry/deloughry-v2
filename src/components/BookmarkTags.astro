@@ -2,4 +2,10 @@
 const { tags } = Astro.props;
 ---
 
-{tags && tags.length > 0 ? tags.join(", ") : null}
+{tags && tags.length > 0 && (
+  <div class="flex flex-wrap gap-1">
+    {tags.map((tag: string) => (
+      <span class="bbs-tag text-xs">{tag.trim()}</span>
+    ))}
+  </div>
+)}

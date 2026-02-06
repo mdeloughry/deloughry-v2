@@ -7,40 +7,43 @@ interface Props {
 }
 
 const { bookmarks, title } = Astro.props as Props;
-
 ---
 
-<section id={`${title.toLowerCase()}`}>
-  <h2>#{title}</h2>
-  <ul>
-    {bookmarks.map((bookmark) => (
-      <li>
-        <a href={bookmark.link} target="_blank" rel="noopener noreferrer">
-          {bookmark.metadata?.ogTitle ?? bookmark.link}
-        </a>
-        {bookmark.tags && bookmark.tags.length > 0 && (
-          <>
-            {' '}
-            (<BookmarkTags tags={bookmark.tags.split(",")} />)
-          </>
-        )}
+<div class="bbs-bookmark-category">
+  <ul class="space-y-2" role="list">
+    {bookmarks.map((bookmark, index) => (
+      <li class="flex flex-col sm:flex-row sm:items-start gap-1 sm:gap-2 py-2 border-b border-bbs-gray last:border-0">
+        <span class="text-bbs-magenta text-xs shrink-0" aria-hidden="true">
+          [{String(index + 1).padStart(2, '0')}]
+        </span>
+        <div class="flex-1 min-w-0">
+          <a
+            href={bookmark.link}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="bbs-link text-sm break-words"
+          >
+            {bookmark.metadata?.ogTitle ?? bookmark.link}
+          </a>
+          {bookmark.tags && bookmark.tags.length > 0 && (
+            <div class="mt-1">
+              <BookmarkTags tags={bookmark.tags.split(",")} />
+            </div>
+          )}
+        </div>
       </li>
     ))}
   </ul>
-</section>
+</div>
 
 <style>
-  ul {
-    list-style: disc inside;
+  .bbs-bookmark-category {
+    font-family: 'IBM Plex Mono', monospace;
+  }
+
+  .bbs-bookmark-category ul {
+    list-style: none;
     padding: 0;
-    margin: 0 0 2rem 0;
-  }
-
-  li {
-    margin: 0.25rem 0;
-  }
-
-  a {
-    color: var(--theme-text);
+    margin: 0;
   }
 </style>
