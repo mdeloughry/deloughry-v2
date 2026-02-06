@@ -215,7 +215,8 @@ module.exports = {
           "@apply max-w-3xl": {}
         },
         ".prose pre": {
-          "@apply scrollbar scrollbar-thumb-neon-pink scrollbar-track-transparent border border-neon-pink/30": {},
+          "@apply scrollbar scrollbar-thumb-neon-pink scrollbar-track-transparent": {},
+          border: "1px solid rgba(255, 107, 157, 0.3)",
           boxShadow: "0 0 10px rgba(255, 107, 157, 0.2)",
         }
       });
