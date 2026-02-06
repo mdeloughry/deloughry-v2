@@ -36,16 +36,28 @@ module.exports = {
         // Base colors from CSS variables
         bgColor: "var(--theme-bg)",
         bgSecondary: "var(--theme-bg-secondary)",
+        bgElevated: "var(--theme-bg-elevated)",
         textColor: "var(--theme-text)",
         link: "var(--theme-link)",
         accent: "var(--theme-accent)",
         "accent-hover": "var(--theme-accent-hover)",
         muted: "var(--theme-muted)",
 
-        // Glitch colors
+        // Semantic colors
+        error: "var(--color-error)",
+        success: "var(--color-success)",
+        warning: "var(--color-warning)",
+        info: "var(--color-info)",
+
+        // Extended palette
+        pink: "var(--color-pink)",
+        cyan: "var(--color-cyan)",
+        purple: "var(--color-purple)",
+        orange: "var(--color-orange)",
+
+        // Glitch colors (decorative)
         "glitch-red": "var(--glitch-red)",
         "glitch-cyan": "var(--glitch-cyan)",
-        "glitch-pink": "var(--glitch-pink)",
 
         // Social colors
         twitch: "var(--twitch)",

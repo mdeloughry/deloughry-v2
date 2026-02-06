@@ -135,14 +135,14 @@ export const prerender = true;
     }
 
     .project-status-badge[data-status="active"] {
-      color: var(--theme-accent);
-      background: var(--theme-accent-dim);
+      color: var(--color-success);
+      background: rgba(0, 255, 135, 0.1);
     }
 
     .project-status-badge[data-status="wip"],
     .project-status-badge[data-status="in-progress"] {
-      color: var(--glitch-cyan);
-      background: rgba(0, 229, 255, 0.1);
+      color: var(--color-info);
+      background: rgba(0, 217, 255, 0.1);
     }
 
     .project-status-badge[data-status="archived"],
@@ -152,7 +152,7 @@ export const prerender = true;
     }
 
     .project-status-badge[data-status="experimental"] {
-      color: #FF6B9D;
+      color: var(--color-pink);
       background: rgba(255, 107, 157, 0.1);
     }
 
