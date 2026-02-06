@@ -28,77 +28,149 @@ module.exports = {
         '50': 'repeat(50, minmax(0, 1fr))',
       },
       fontSize: {
-        '20xl': '8rem',
+        '10xl': '10rem',
+        '12xl': '12rem',
+        '20xl': '16rem',
       },
       colors: {
+        // Base colors from CSS variables
         bgColor: "var(--theme-bg)",
+        bgSecondary: "var(--theme-bg-secondary)",
         textColor: "var(--theme-text)",
         link: "var(--theme-link)",
         accent: "var(--theme-accent)",
-        "accent-dark": "var(--theme-accent-hover)",
-        "accent-bg": "var(--theme-accent-bg)",
+        "accent-hover": "var(--theme-accent-hover)",
+        muted: "var(--theme-muted)",
+
+        // Glitch colors
+        "glitch-red": "var(--glitch-red)",
+        "glitch-cyan": "var(--glitch-cyan)",
+        "glitch-pink": "var(--glitch-pink)",
+
+        // Social colors
         twitch: "var(--twitch)",
         twitter: "var(--twitter)",
         mastodon: "var(--mastodon)",
         youtube: "var(--youtube)",
         claw: "var(--claw)",
         github: "var(--github)",
-
       },
       fontFamily: {
-        // Add any custom fonts here
-        'oswald': 'Oswald',
-        'roboto': 'Roboto',
-        sans: [...fontFamily.sans],
-        serif: [...fontFamily.serif],
+        // Brutalist fonts
+        'mono': ['Space Mono', ...fontFamily.mono],
+        'sans': ['Inter', ...fontFamily.sans],
+      },
+      spacing: {
+        'brutal': '4px',
+        'brutal-2': '8px',
+      },
+      borderWidth: {
+        'brutal': '4px',
       },
       transitionProperty: {
         height: "height",
       },
+      animation: {
+        'glitch': 'glitch-1 0.3s infinite',
+        'glitch-2': 'glitch-2 0.3s infinite',
+        'noise': 'noise 0.5s steps(10) infinite',
+        'flicker': 'flicker 0.15s infinite',
+        'glitch-flash': 'glitch-flash 3s infinite',
+      },
       typography: (theme) => ({
-        cactus: {
+        brutalist: {
           css: {
             "--tw-prose-body": "var(--theme-text)",
             "--tw-prose-headings": "var(--theme-accent)",
-            "--tw-prose-links": "var(--theme-text)",
+            "--tw-prose-links": "var(--theme-accent)",
             "--tw-prose-bold": "var(--theme-text)",
-            "--tw-prose-bullets": "var(--theme-text)",
-            "--tw-prose-quotes": "var(--theme-quote)",
-            "--tw-prose-code": "var(--theme-text)",
-            "--tw-prose-hr": "0.5px dashed #666",
-            "--tw-prose-th-borders": "#666",
+            "--tw-prose-bullets": "var(--theme-accent)",
+            "--tw-prose-quotes": "var(--theme-muted)",
+            "--tw-prose-code": "var(--theme-accent)",
+            "--tw-prose-hr": "4px solid var(--theme-accent)",
+            "--tw-prose-th-borders": "var(--theme-accent)",
           },
         },
         DEFAULT: {
           css: {
             a: {
-              "@apply cactus-link text-accent": "",
+              color: "var(--theme-accent)",
+              textDecoration: "none",
+              borderBottom: "2px solid var(--theme-accent)",
+              transition: "all 0.15s ease",
+              "&:hover": {
+                color: "var(--theme-text)",
+                backgroundColor: "var(--theme-accent)",
+              },
             },
             strong: {
               fontWeight: "700",
+              color: "var(--theme-accent)",
             },
             code: {
-              border: "1px dotted #666",
-              borderRadius: "2px",
+              border: "2px solid var(--theme-accent)",
+              borderRadius: "0",
+              padding: "0.125rem 0.375rem",
+              backgroundColor: "var(--theme-bg-secondary)",
+              color: "var(--theme-accent)",
+            },
+            "code::before": {
+              content: '""',
+            },
+            "code::after": {
+              content: '""',
             },
             blockquote: {
-              borderLeftWidth: "none",
+              borderLeftWidth: "4px",
+              borderLeftColor: "var(--theme-accent)",
+              backgroundColor: "var(--theme-bg-secondary)",
+              padding: "1rem",
+              fontStyle: "normal",
             },
             hr: {
-              borderTopStyle: "dashed",
+              borderTop: "4px solid var(--theme-accent)",
             },
             thead: {
-              borderBottomWidth: "none",
+              borderBottomWidth: "4px",
+              borderBottomColor: "var(--theme-accent)",
             },
             "thead th": {
               fontWeight: "700",
-              borderBottom: "1px dashed #666",
+              fontFamily: "Space Mono, monospace",
+              textTransform: "uppercase",
+              letterSpacing: "0.05em",
             },
             "tbody tr": {
-              borderBottomWidth: "none",
+              borderBottomWidth: "2px",
+              borderBottomColor: "var(--theme-bg-secondary)",
             },
             tfoot: {
-              borderTop: "1px dashed #666",
+              borderTop: "4px solid var(--theme-accent)",
+            },
+            pre: {
+              backgroundColor: "var(--theme-bg-secondary)",
+              border: "4px solid var(--theme-accent)",
+              borderRadius: "0",
+            },
+            h1: {
+              fontFamily: "Space Mono, monospace",
+              textTransform: "uppercase",
+              letterSpacing: "0.05em",
+            },
+            h2: {
+              fontFamily: "Space Mono, monospace",
+              textTransform: "uppercase",
+              letterSpacing: "0.05em",
+            },
+            h3: {
+              fontFamily: "Space Mono, monospace",
+              textTransform: "uppercase",
+              letterSpacing: "0.05em",
+            },
+            h4: {
+              fontFamily: "Space Mono, monospace",
+              textTransform: "uppercase",
+              letterSpacing: "0.05em",
             },
           },
         },
@@ -114,32 +186,56 @@ module.exports = {
     },
   },
   plugins: [
-
     require("@tailwindcss/typography"),
     require("@tailwindcss/aspect-ratio"),
     require('tailwind-scrollbar'),
-    plugin(function ({ addComponents }) {
+    plugin(function ({ addComponents, addUtilities }) {
       addComponents({
-        ".cactus-link": {
+        // Brutalist link style
+        ".brutal-link": {
           color: "var(--theme-accent)",
-          "@apply bg-[size:100%_6px] bg-bottom bg-repeat-x underline": {},
-          "&:hover": {
-            color: "var(--theme-link)",
+          position: "relative",
+          display: "inline-block",
+          padding: "0.25rem 0",
+          "&::after": {
+            content: '""',
+            position: "absolute",
+            bottom: "0",
+            left: "0",
+            width: "100%",
+            height: "2px",
+            background: "var(--theme-accent)",
+            transform: "scaleX(0)",
+            transformOrigin: "right",
+            transition: "transform 0.3s ease",
+          },
+          "&:hover::after": {
+            transform: "scaleX(1)",
+            transformOrigin: "left",
           },
         },
         ".title": {
-          "@apply text-2xl font-semibold text-accent": {},
+          "@apply text-4xl font-bold text-accent font-mono uppercase tracking-wider": {},
         },
         ".prose p, .prose blockquote, .prose ul": {
           "@apply max-w-xl": {}
-         },
-        ".prose pre, .prose h1, .prose h2,.prose h3,.prose h4,.prose h5,.prose h6": {
+        },
+        ".prose pre, .prose h1, .prose h2, .prose h3, .prose h4, .prose h5, .prose h6": {
           "@apply max-w-3xl": {}
-         },
+        },
         ".prose pre": {
-          // show y scrollbar always
-          "@apply scrollbar scrollbar-thumb-accent scrollbar-track-accent": {},
+          "@apply scrollbar scrollbar-thumb-accent scrollbar-track-bgSecondary": {},
         }
+      });
+      addUtilities({
+        ".text-stroke": {
+          "-webkit-text-stroke": "1px var(--theme-accent)",
+          "text-stroke": "1px var(--theme-accent)",
+        },
+        ".text-stroke-2": {
+          "-webkit-text-stroke": "2px var(--theme-accent)",
+          "text-stroke": "2px var(--theme-accent)",
+        },
       });
     }),
   ],

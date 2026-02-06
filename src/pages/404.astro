@@ -1,13 +1,126 @@
 ---
 import PageLayout from "@/layouts/Base";
 const meta = {
-	title: "Oops! You found a missing page!",
-	description: "Oops! It looks like this page is lost in space!",
+	title: "404 // PAGE_NOT_FOUND",
+	description: "Oops! It looks like this page is lost in the void!",
 };
 export const prerender = true;
 ---
 
 <PageLayout meta={meta}>
-	<h1 class="title mb-6">404 | Oops something went wrong</h1>
-	<p class="mb-8">Please use the navigation to find your way back</p>
+	<div class="error-page">
+		<div class="error-content">
+			<h1 class="error-code glitch-text" data-text="404">
+				404
+			</h1>
+			<div class="error-message">
+				<p class="error-text">
+					<span class="text-accent">&gt;</span> ERROR: PAGE_NOT_FOUND
+				</p>
+				<p class="error-subtext">
+					The requested resource does not exist or has been corrupted.
+				</p>
+			</div>
+			<div class="error-terminal">
+				<div class="terminal-line">
+					<span class="prompt">$</span> cd /requested/path
+				</div>
+				<div class="terminal-line error">
+					<span class="prompt">!</span> bash: cd: No such file or directory
+				</div>
+				<div class="terminal-line">
+					<span class="prompt">$</span> <span class="cursor">_</span>
+				</div>
+			</div>
+			<a href="/" class="brutal-btn">
+				&lt;&lt; RETURN_HOME
+			</a>
+		</div>
+	</div>
+
+	<style>
+		.error-page {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			min-height: 60vh;
+			text-align: center;
+		}
+
+		.error-content {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			gap: 2rem;
+		}
+
+		.error-code {
+			font-family: 'Space Mono', monospace;
+			font-size: clamp(8rem, 25vw, 16rem);
+			font-weight: 700;
+			line-height: 1;
+			color: var(--theme-accent);
+			margin: 0;
+		}
+
+		.error-message {
+			display: flex;
+			flex-direction: column;
+			gap: 0.5rem;
+		}
+
+		.error-text {
+			font-family: 'Space Mono', monospace;
+			font-size: 1.5rem;
+			color: var(--theme-text);
+			margin: 0;
+			text-transform: uppercase;
+		}
+
+		.error-subtext {
+			font-family: 'Space Mono', monospace;
+			font-size: 0.875rem;
+			color: var(--theme-muted);
+			margin: 0;
+		}
+
+		.error-terminal {
+			width: 100%;
+			max-width: 500px;
+			padding: 1.5rem;
+			background: var(--theme-bg-secondary);
+			border: 4px solid var(--theme-accent);
+			text-align: left;
+		}
+
+		.terminal-line {
+			font-family: 'Space Mono', monospace;
+			font-size: 0.875rem;
+			color: var(--theme-text);
+			margin-bottom: 0.5rem;
+		}
+
+		.terminal-line:last-child {
+			margin-bottom: 0;
+		}
+
+		.terminal-line.error {
+			color: var(--glitch-red);
+		}
+
+		.prompt {
+			color: var(--theme-accent);
+			margin-right: 0.5rem;
+		}
+
+		.cursor {
+			color: var(--theme-accent);
+			animation: blink 1s infinite;
+		}
+
+		@keyframes blink {
+			0%, 50% { opacity: 1; }
+			51%, 100% { opacity: 0; }
+		}
+	</style>
 </PageLayout>

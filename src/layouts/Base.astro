@@ -18,43 +18,23 @@ const {
 } = Astro.props;
 ---
 
-<html lang={siteConfig.lang}>
+<html lang={siteConfig.lang} class="dark">
 	<head>
 		<BaseHead title={title} description={description} ogImage={ogImage} articleDate={articleDate} />
 		<script define:vars={{ siteConfig }}>
 			const root = document.documentElement;
 			const colorThemeMetaTag = document.querySelector("meta[name='theme-color']");
-			// get user preference of dark mode, 1st local storage, 2nd browser
-			function getThemePreference() {
-        console.log("data", typeof localStorage, localStorage.getItem("theme"))
-				if (typeof localStorage !== "undefined" && localStorage.getItem("theme")) {
-					return localStorage.getItem("theme");
+
+			// Force dark mode for brutalist theme
+			function setTheme() {
+				root.classList.add("dark");
+				if (colorThemeMetaTag) {
+					colorThemeMetaTag.setAttribute("content", "#000000");
 				}
-				return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
 			}
 
-
-      function watchTheme(){
-			  const isDark = getThemePreference() === "dark";
-        console.log('watchTheme',isDark);
-        // watch document element class attribute and update user preference when it changes.
-        const observer = new MutationObserver(() => {
-          const rootIsDark = root.classList.contains("dark");
-          // set the meta attribute
-          colorThemeMetaTag.setAttribute(
-            "content",
-            siteConfig[rootIsDark ? "themeColorDark" : "themeColorLight"]
-          );
-
-        });
-        observer.observe(root, { attributeFilter: ["class"] });
-
-        // initailse root class attribute
-        root.classList.toggle("dark", isDark);
-      }
-
-      document.addEventListener("DOMContentLoaded", watchTheme);
-      document.addEventListener("astro:after-swap", watchTheme);
+			document.addEventListener("DOMContentLoaded", setTheme);
+			document.addEventListener("astro:after-swap", setTheme);
 		</script>
 
 		<link rel="webmention" href="https://webmention.io/deloughry.co.uk/webmention" />
@@ -62,10 +42,13 @@ const {
     <ViewTransitions />
     <script defer src="https://umami-ss8o8so.loki.m4p.uk/script.js" data-website-id="b5e92cd1-103c-4610-909f-d21ff2988762"></script>
 	</head>
-	<body>
+	<body class="min-h-screen">
+		<!-- Noise overlay for glitch effect -->
+		<div class="noise-overlay" aria-hidden="true"></div>
+
 		<SkipLink />
-		<Header  transition:name="header"  />
-		<main id="main" class="flex-1">
+		<Header transition:name="header" />
+		<main id="main" class="flex-1 pb-12">
 			<NowPlaying client:load transition:name="now-playing" transition:animate={"slide"} transition:persist/>
 			<slot />
 		</main>

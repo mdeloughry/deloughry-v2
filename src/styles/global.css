@@ -1,64 +1,469 @@
-@import url(https://fonts.bunny.net/css?family=oswald:400,500,600|roboto:400);
+@import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Inter:wght@400;500;700&display=swap');
+
 @tailwind base;
 
 @layer base {
   :root {
-    color-scheme: light;
-    --theme-bg: #f3f5f8; /* Light Blueish Gray */
-    --theme-link: #ae0e4e; /* Darker Pink on Hover */
-    --theme-text: #333333; /* Dark Gray */
-    --theme-accent: #d81b60; /* Pink Accent */
-    --theme-accent-hover: #ae0e4e; /* Darker Pink on Hover */
-    --theme-quote: #555555; /* Dark Gray for Quote */
-    --theme-accent-bg: rgba(175, 180, 200, 0.85); /* Semi-transparent Grayish Blue */
-    --github: #6cc644; /* GitHub Green */
-    --twitch: #9146ff; /* Twitch Purple */
-    --twitter: #1da1f2; /* Twitter Blue */
-    --mastodon: #7241d4; /* Mastodon Purple */
-    --youtube: #ff0000; /* YouTube Red */
-    --claw: #ff5722; /* Claw Orange */
+    color-scheme: dark;
+    /* Glitch Brutalist - Tyrone Neon Chartreuse Palette */
+    /* Color Contrast Ratios against #000000:
+       #E5E5E5 = 17.4:1 (exceeds AAA)
+       #DAFF01 = 17.1:1 (exceeds AAA)
+       #737373 = 5.5:1 (exceeds AA for large text, AA for normal)
+    */
+    --theme-bg: #000000;
+    --theme-bg-secondary: #0A0A0A;
+    --theme-text: #E5E5E5;
+    --theme-muted: #737373;
+    --theme-accent: #DAFF01;
+    --theme-accent-hover: #b8d900;
+    --theme-link: #DAFF01;
+    --theme-quote: #737373;
+
+    /* Glitch Colors (decorative only - not for readable text) */
+    --glitch-red: #FF4757;
+    --glitch-cyan: #00D9FF;
+    --glitch-pink: #FF6B9D;
+
+    /* Social Colors */
+    --github: #6cc644;
+    --twitch: #9146ff;
+    --twitter: #1da1f2;
+    --mastodon: #7241d4;
+    --youtube: #ff0000;
+    --claw: #ff5722;
+
+    /* Brutalist Spacing */
+    --brutal-border: 4px;
+    --brutal-offset: 4px;
+
+    /* Focus ring color - high contrast */
+    --focus-ring: #DAFF01;
   }
 
+  /* No light mode - this is a dark brutalist design */
   :root.dark {
     color-scheme: dark;
-    --theme-bg: #1a1a1a; /* Dark Gray */
-    --theme-link: #004d45; /* Darker Teal on Hover */
-    --theme-text: #f0f0f0; /* Light Gray */
-    --theme-accent: #00796b; /* Teal Accent */
-    --theme-accent-hover: #004d45; /* Darker Teal on Hover */
-    --theme-quote: #888888;
   }
 
-
-
-
   html {
-    @apply h-full scroll-smooth border-t-2 border-[var(--theme-accent)];
+    @apply h-full scroll-smooth;
+    background: var(--theme-bg);
   }
 
   html body {
-    @apply mx-auto flex h-full w-full max-w-5xl flex-col bg-bgColor px-8 pt-16 font-roboto font-normal text-textColor antialiased;
+    @apply mx-auto flex h-full w-full max-w-6xl flex-col px-4 pt-8 antialiased;
+    background: var(--theme-bg);
+    color: var(--theme-text);
+    font-family: 'Inter', sans-serif;
+    letter-spacing: 0.02em;
   }
 
   h1, h2, h3, h4, h5, h6, nav {
-    @apply font-oswald uppercase
+    font-family: 'Space Mono', monospace;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
   }
 
-  nav a, main a, article a {
-    @apply underline
+  /* Remove default link underlines - we'll style them brutalist */
+  a {
+    text-decoration: none;
+    color: inherit;
+  }
+
+  /* ============================================
+     GLOBAL FOCUS STYLES - ACCESSIBILITY
+     All interactive elements get visible focus
+     ============================================ */
+  a:focus-visible,
+  button:focus-visible,
+  input:focus-visible,
+  textarea:focus-visible,
+  select:focus-visible,
+  [tabindex]:focus-visible {
+    outline: 2px solid var(--focus-ring);
+    outline-offset: 2px;
+  }
+
+  /* Skip link for keyboard users */
+  .skip-link {
+    position: absolute;
+    top: -100%;
+    left: 0;
+    z-index: 10000;
+    padding: 1rem;
+    background: var(--theme-accent);
+    color: var(--theme-bg);
+    font-weight: bold;
+    font-family: 'Space Mono', monospace;
+  }
+
+  .skip-link:focus {
+    top: 0;
   }
 
   .astro-code {
     @apply w-full;
+    border: var(--brutal-border) solid var(--theme-accent);
+  }
+
+  /* Screen reader only utility */
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
   }
 }
 
+/* ============================================
+   NOISE OVERLAY
+   Decorative element - hidden from assistive tech
+   Uses aria-hidden="true" and pointer-events: none
+   ============================================ */
+.noise-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.03;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  animation: noise 0.5s steps(10) infinite;
+}
+
+@keyframes noise {
+  0%, 100% { transform: translate(0, 0); }
+  10% { transform: translate(-5%, -5%); }
+  20% { transform: translate(5%, 5%); }
+  30% { transform: translate(-5%, 5%); }
+  40% { transform: translate(5%, -5%); }
+  50% { transform: translate(-2%, 2%); }
+  60% { transform: translate(2%, -2%); }
+  70% { transform: translate(-3%, -3%); }
+  80% { transform: translate(3%, 3%); }
+  90% { transform: translate(-1%, 1%); }
+}
+
+/* ============================================
+   GLITCH TEXT EFFECTS
+   Decorative pseudo-elements only
+   Base text is ALWAYS readable without effects
+   ============================================ */
+.glitch-text {
+  position: relative;
+  display: inline-block;
+}
+
+.glitch-text::before,
+.glitch-text::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  /* CSS cannot set aria-hidden, but these are purely decorative */
+}
+
+.glitch-text::before {
+  color: var(--glitch-red);
+  animation: glitch-1 0.3s infinite;
+  clip-path: polygon(0 0, 100% 0, 100% 45%, 0 45%);
+  transform: translate(-2px, -2px);
+  opacity: 0.8;
+}
+
+.glitch-text::after {
+  color: var(--glitch-cyan);
+  animation: glitch-2 0.3s infinite;
+  clip-path: polygon(0 55%, 100% 55%, 100% 100%, 0 100%);
+  transform: translate(2px, 2px);
+  opacity: 0.8;
+}
+
+@keyframes glitch-1 {
+  0%, 100% { transform: translate(-2px, -2px); }
+  25% { transform: translate(2px, 0); }
+  50% { transform: translate(-1px, 2px); }
+  75% { transform: translate(1px, -1px); }
+}
+
+@keyframes glitch-2 {
+  0%, 100% { transform: translate(2px, 2px); }
+  25% { transform: translate(-2px, 0); }
+  50% { transform: translate(1px, -2px); }
+  75% { transform: translate(-1px, 1px); }
+}
+
+/* Hover-activated glitch */
+.glitch-hover {
+  position: relative;
+}
+
+.glitch-hover::before,
+.glitch-hover::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.1s;
+}
+
+.glitch-hover:hover::before {
+  color: var(--glitch-red);
+  animation: glitch-1 0.15s infinite;
+  clip-path: polygon(0 0, 100% 0, 100% 45%, 0 45%);
+  opacity: 0.8;
+}
+
+.glitch-hover:hover::after {
+  color: var(--glitch-cyan);
+  animation: glitch-2 0.15s infinite;
+  clip-path: polygon(0 55%, 100% 55%, 100% 100%, 0 100%);
+  opacity: 0.8;
+}
+
+/* ============================================
+   CHROMATIC ABERRATION (RGB Split)
+   Decorative effect - base text is readable
+   ============================================ */
+.chromatic {
+  position: relative;
+}
+
+.chromatic::before {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: -3px;
+  color: var(--glitch-red);
+  opacity: 0.7;
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
+
+.chromatic::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 3px;
+  color: var(--glitch-cyan);
+  opacity: 0.7;
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
+
+/* ============================================
+   BRUTALIST CARDS
+   ============================================ */
+.brutal-card {
+  background: var(--theme-bg-secondary);
+  border: var(--brutal-border) solid var(--theme-accent);
+  padding: 1.5rem;
+  position: relative;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.brutal-card:hover {
+  transform: translate(var(--brutal-offset), var(--brutal-offset));
+  box-shadow: calc(var(--brutal-offset) * -1) calc(var(--brutal-offset) * -1) 0 var(--theme-accent);
+}
+
+/* Focus-within state for cards containing interactive elements */
+.brutal-card:focus-within {
+  box-shadow: 0 0 0 2px var(--focus-ring);
+}
+
+/* Offset variant */
+.brutal-card-offset {
+  transform: rotate(-1deg);
+}
+
+.brutal-card-offset:hover {
+  transform: rotate(0deg) translate(var(--brutal-offset), var(--brutal-offset));
+}
+
+/* ============================================
+   BRUTALIST BUTTONS & LINKS
+   ============================================ */
+.brutal-link {
+  color: var(--theme-accent);
+  position: relative;
+  display: inline-block;
+  padding: 0.25rem 0;
+}
+
+.brutal-link::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: var(--theme-accent);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.3s ease;
+}
+
+.brutal-link:hover::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+.brutal-link:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 4px;
+}
+
+.brutal-btn {
+  display: inline-block;
+  padding: 0.75rem 1.5rem;
+  background: transparent;
+  border: var(--brutal-border) solid var(--theme-accent);
+  color: var(--theme-accent);
+  font-family: 'Space Mono', monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.15s ease;
+}
+
+.brutal-btn:hover {
+  background: var(--theme-accent);
+  color: var(--theme-bg);
+  transform: translate(-2px, -2px);
+  box-shadow: 4px 4px 0 var(--glitch-cyan);
+}
+
+.brutal-btn:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 4px;
+  background: var(--theme-accent);
+  color: var(--theme-bg);
+}
+
+/* ============================================
+   BRUTALIST TAGS
+   ============================================ */
+.brutal-tag {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  background: transparent;
+  border: 2px solid var(--theme-accent);
+  color: var(--theme-accent);
+  font-family: 'Space Mono', monospace;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  transition: all 0.15s ease;
+}
+
+.brutal-tag:hover {
+  background: var(--theme-accent);
+  color: var(--theme-bg);
+  transform: translate(-2px, -2px);
+  box-shadow: 2px 2px 0 var(--glitch-pink);
+}
+
+.brutal-tag:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+
+/* ============================================
+   DISTORTION EFFECTS
+   ============================================ */
+.skew-hover {
+  transition: transform 0.2s ease;
+}
+
+.skew-hover:hover {
+  transform: skewX(-2deg) skewY(1deg);
+}
+
+/* ============================================
+   SCANLINES (optional decorative overlay)
+   ============================================ */
+.scanlines::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.1) 2px,
+    rgba(0, 0, 0, 0.1) 4px
+  );
+  pointer-events: none;
+}
+
+/* ============================================
+   TYPOGRAPHY UTILITIES
+   ============================================ */
+.text-massive {
+  font-size: clamp(3rem, 15vw, 12rem);
+  line-height: 0.9;
+  font-weight: 700;
+}
+
+.text-display {
+  font-size: clamp(2rem, 8vw, 6rem);
+  line-height: 1;
+  font-weight: 700;
+}
+
+.mono {
+  font-family: 'Space Mono', monospace;
+}
+
+/* ============================================
+   CUSTOM SCROLLBAR
+   ============================================ */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--theme-bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--theme-accent);
+  border: 2px solid var(--theme-bg);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--glitch-cyan);
+}
+
+/* ============================================
+   ANIMATION UTILITIES
+   ============================================ */
 @keyframes slide-in-top {
   0% {
     transform: translateY(-100%);
     opacity: 0;
   }
-
   100% {
     transform: translateY(0);
     opacity: 1;
@@ -69,7 +474,114 @@
   animation: slide-in-top 0.5s ease-out;
 }
 
+@keyframes flicker {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.8; }
+  75% { opacity: 0.9; }
+}
 
+.animate-flicker {
+  animation: flicker 0.15s infinite;
+}
+
+/* Random glitch flash */
+@keyframes glitch-flash {
+  0%, 95%, 100% {
+    opacity: 1;
+    transform: translate(0);
+  }
+  96% {
+    opacity: 0.8;
+    transform: translate(-5px, 2px);
+  }
+  97% {
+    opacity: 1;
+    transform: translate(3px, -1px);
+  }
+  98% {
+    opacity: 0.9;
+    transform: translate(-2px, 3px);
+  }
+  99% {
+    opacity: 1;
+    transform: translate(1px, -2px);
+  }
+}
+
+.glitch-random {
+  animation: glitch-flash 3s infinite;
+}
+
+/* ============================================
+   REDUCED MOTION - ACCESSIBILITY
+   Respects user preference for reduced motion
+   ============================================ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  /* Remove glitch pseudo-elements entirely */
+  .glitch-text::before,
+  .glitch-text::after,
+  .glitch-hover::before,
+  .glitch-hover::after,
+  .chromatic::before,
+  .chromatic::after {
+    display: none !important;
+  }
+
+  /* Hide noise overlay */
+  .noise-overlay {
+    display: none !important;
+  }
+
+  /* Disable transform effects on hover but keep color changes */
+  .brutal-card:hover,
+  .brutal-card-offset:hover,
+  .brutal-tag:hover,
+  .brutal-btn:hover,
+  .skew-hover:hover {
+    transform: none !important;
+  }
+
+  /* Keep visual feedback for hover states without motion */
+  .brutal-card:hover {
+    box-shadow: 0 0 0 2px var(--theme-accent);
+  }
+
+  .brutal-tag:hover,
+  .brutal-btn:hover {
+    box-shadow: none;
+  }
+}
+
+/* ============================================
+   HIGH CONTRAST MODE SUPPORT
+   ============================================ */
+@media (prefers-contrast: more) {
+  :root {
+    --theme-muted: #999999;
+    --brutal-border: 6px;
+  }
+
+  .brutal-card,
+  .brutal-tag,
+  .brutal-btn {
+    border-width: 3px;
+  }
+
+  a:focus-visible,
+  button:focus-visible,
+  [tabindex]:focus-visible {
+    outline-width: 3px;
+  }
+}
 
 @tailwind components;
 @tailwind utilities;

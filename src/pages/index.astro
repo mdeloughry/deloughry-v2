@@ -6,7 +6,7 @@ import MeImage from "../assets/image.webp";
 import { sortMDByDate, getTagSlug, formatTagForDisplay } from "@/utils";
 import { Image } from "astro:assets";
 
-const MAX_POSTS = 10;
+const MAX_POSTS = 6;
 const allPosts = await getCollection("post");
 const allPostsByDate = sortMDByDate(allPosts).slice(0, MAX_POSTS);
 export const prerender = true;
@@ -14,76 +14,121 @@ export const prerender = true;
 
 <PageLayout meta={{ title: "Home" }}>
 	<div class="home-page">
-		<header class="home-hero">
-			<div class="hero-content">
-				<div class="hero-image">
+		<!-- Hero Section with MASSIVE Typography -->
+		<section class="hero-section">
+			<div class="hero-grid">
+				<!-- Profile Image with glitch border -->
+				<div class="hero-image-container">
 					<Image
 						src={MeImage}
 						height={MeImage.height}
 						width={MeImage.width}
 						alt="Matthew Peck-Deloughry"
-						class="profile-photo"
+						class="hero-image"
 						transition:name={"profile-image"}
 					/>
+					<div class="image-glitch-overlay" aria-hidden="true"></div>
 				</div>
-				<div class="hero-text">
+
+				<!-- Hero Text -->
+				<div class="hero-content">
 					<a class="u-url hidden" rel="me" href="https://deloughry.co.uk/">Matthew Peck-Deloughry</a>
 					<a class="u-url hidden" href="acct:matt@deloughry.co.uk"></a>
-					<h1 class="hero-title">
-						<span class="text-link">Developer.</span><br />
-						<span class="text-twitch">Streamer.</span><br />
-						<span class="text-twitter line-through">Tweeter.</span><span class="text-mastodon">Tooter.</span><br />
-						&amp; a little bit of everything <span class="text-accent dark:text-accent">Nerdy!</span><span class="font-bold">_</span>
-					</h1>
-				</div>
-			</div>
-		</header>
 
-		<section class="about-section">
-			<div class="about-card">
-				<h2 class="section-title">
-					Av' fun developing, Av' fun learning, then Av'a crack at engineering it!
-				</h2>
-				<div class="about-content">
-					<p class="p-note">
-						Aye up, I'm Matt (aka Dr_DinoMight 🦖🧨), a developer of something around 15 years (I think!?
-						They all blend into one and other now 😖).<br /><br />
-						I'm a developer for the brilliant HMA Digital here in South Yorkshire, UK.<br /><br />
-						💬 I'm a Full Stack Developer who loves to tinker with anything and everything, I love to build,
-						be it personal 1 person projects or large scale community projects, as long as it's code it floats
-						my boat!<br /><br />
-					</p>
-					<SocialList />
+					<div class="hero-titles">
+						<h2 class="hero-role glitch-text" data-text="DEVELOPER_">
+							<span class="text-glitch-cyan">DEVELOPER_</span>
+						</h2>
+						<h2 class="hero-role">
+							<span class="text-twitch">STREAMER_</span>
+						</h2>
+						<h2 class="hero-role">
+							<span class="text-mastodon">TOOTER_</span>
+						</h2>
+						<h2 class="hero-role">
+							<span class="text-accent">NERD_</span>
+							<span class="cursor">|</span>
+						</h2>
+					</div>
 				</div>
 			</div>
 		</section>
 
-		<section class="recent-posts">
-			<h2 class="section-title">Recent Posts</h2>
+		<!-- About Section -->
+		<section class="about-section">
+			<div class="brutal-card brutal-card-offset">
+				<h2 class="section-title">
+					<span class="text-accent">//</span> ABOUT_ME
+				</h2>
+				<div class="about-content">
+					<p class="p-note">
+						Aye up, I'm Matt (aka Dr_DinoMight), a developer of around 15 years.
+						Full Stack Developer who loves to tinker with anything and everything.
+						I love to build, be it personal projects or large scale community projects.
+						As long as it's code it floats my boat!
+					</p>
+					<div class="mt-6">
+						<SocialList />
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<!-- Motto Section -->
+		<section class="motto-section">
+			<blockquote class="motto-quote">
+				<span class="quote-mark">"</span>
+				<span class="glitch-hover" data-text="Av' fun developing, Av' fun learning, then Av'a crack at engineering it!">
+					Av' fun developing, Av' fun learning, then Av'a crack at engineering it!
+				</span>
+				<span class="quote-mark">"</span>
+			</blockquote>
+		</section>
+
+		<!-- Recent Posts Section -->
+		<section class="posts-section">
+			<div class="section-header">
+				<h2 class="section-title">
+					<span class="text-accent">//</span> RECENT_POSTS
+				</h2>
+				<a href="/posts" class="brutal-btn">
+					VIEW_ALL
+				</a>
+			</div>
+
 			<div class="posts-grid">
-				{allPostsByDate.map((p) => (
-					<article class="post-card">
+				{allPostsByDate.map((p, index) => (
+					<article class={`brutal-card post-card ${index % 3 === 1 ? 'brutal-card-offset' : ''}`}>
 						{p.data.ogImage && (
 							<div class="post-card-image">
-								<img src={p.data.ogImage} alt={p.data.title} />
+								<img src={p.data.ogImage} alt={p.data.title} loading="lazy" />
+								<div class="image-overlay" aria-hidden="true"></div>
 							</div>
 						)}
 						<div class="post-card-content">
-							<time datetime={p.data.publishDate.toISOString()} class="post-card-date">
+							<time datetime={p.data.publishDate.toISOString()} class="post-date">
 								{new Date(p.data.publishDate).toLocaleDateString('en-GB', {
 									year: 'numeric',
 									month: 'short',
 									day: 'numeric'
-								})}
+								}).toUpperCase().replace(/ /g, '_')}
 							</time>
-							<h3 class="post-card-title">
-								<a href={`/posts/${p.slug}/`}>{p.data.title}</a>
+							<h3 class="post-title">
+								<a href={`/posts/${p.slug}/`} class="glitch-hover" data-text={p.data.title}>
+									{p.data.title}
+								</a>
 							</h3>
-							{p.data.description && <p class="post-card-description">{p.data.description}</p>}
+							{p.data.description && (
+								<p class="post-description">{p.data.description}</p>
+							)}
 							{p.data.tags && p.data.tags.length > 0 && (
-								<div class="post-card-tags">
-									{p.data.tags.map((tag) => (
-										<a href={`/tags/${getTagSlug(tag)}`} class="tag" title={`View posts with tag: ${formatTagForDisplay(tag)}`}>
+								<div class="post-tags">
+									{p.data.tags.slice(0, 3).map((tag) => (
+										<a
+											href={`/tags/${getTagSlug(tag)}`}
+											class="brutal-tag"
+											title={`View posts with tag: ${formatTagForDisplay(tag)}`}
+										>
 											{formatTagForDisplay(tag)}
 										</a>
 									))}
@@ -98,115 +143,165 @@ export const prerender = true;
 
 	<style>
 		.home-page {
-			max-width: 1200px;
-			margin: 0 auto;
-			padding: 2rem;
+			display: flex;
+			flex-direction: column;
+			gap: 4rem;
 		}
 
-		.home-hero {
-			margin-bottom: 4rem;
+		/* Hero Section */
+		.hero-section {
+			padding: 2rem 0;
+		}
+
+		.hero-grid {
+			display: grid;
+			grid-template-columns: auto 1fr;
+			gap: 3rem;
+			align-items: center;
+		}
+
+		.hero-image-container {
+			position: relative;
+			width: 200px;
+			height: 200px;
+		}
+
+		.hero-image {
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+			border: 4px solid var(--theme-accent);
+			filter: grayscale(100%) contrast(1.1);
+			transition: filter 0.3s ease;
+		}
+
+		.hero-image-container:hover .hero-image {
+			filter: grayscale(0%) contrast(1);
+		}
+
+		.image-glitch-overlay {
+			position: absolute;
+			top: 4px;
+			left: 4px;
+			right: -4px;
+			bottom: -4px;
+			border: 2px solid var(--glitch-cyan);
+			pointer-events: none;
+			opacity: 0.5;
 		}
 
 		.hero-content {
 			display: flex;
-			align-items: center;
-			gap: 3rem;
-			background: var(--theme-bg);
-			padding: 3rem;
-			border-radius: 12px;
+			flex-direction: column;
+			gap: 0;
 		}
 
-		.hero-image {
-			flex-shrink: 0;
+		.hero-titles {
+			display: flex;
+			flex-direction: column;
+			gap: 0;
 		}
 
-		.profile-photo {
-			width: 200px;
-			height: 200px;
-			border-radius: 12px;
-			box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-			transition: transform 0.3s ease;
-		}
-
-		.profile-photo:hover {
-			transform: scale(1.05);
-		}
-
-		.hero-text {
-			flex: 1;
-		}
-
-		.hero-title {
-			font-size: 2.5rem;
+		.hero-role {
+			font-family: 'Space Mono', monospace;
+			font-size: clamp(1.5rem, 5vw, 3rem);
 			font-weight: 700;
-			line-height: 1.2;
+			line-height: 1.1;
 			margin: 0;
-			font-family: 'Oswald', sans-serif;
 			text-transform: uppercase;
-			letter-spacing: 1px;
+			letter-spacing: 0.02em;
 		}
 
+		.text-glitch-cyan {
+			color: var(--glitch-cyan);
+		}
+
+		.cursor {
+			color: var(--theme-accent);
+			animation: blink 1s infinite;
+		}
+
+		@keyframes blink {
+			0%, 50% { opacity: 1; }
+			51%, 100% { opacity: 0; }
+		}
+
+		/* About Section */
 		.about-section {
-			margin-bottom: 4rem;
-		}
-
-		.about-card {
-			background: var(--theme-bg);
-			padding: 3rem;
-			border-radius: 12px;
+			max-width: 800px;
 		}
 
 		.section-title {
-			font-size: 2rem;
-			font-weight: 600;
-			margin-bottom: 2rem;
-			color: var(--theme-accent);
-			font-family: 'Oswald', sans-serif;
+			font-family: 'Space Mono', monospace;
+			font-size: 1.5rem;
+			font-weight: 700;
+			margin-bottom: 1.5rem;
 			text-transform: uppercase;
-			letter-spacing: 0.5px;
+			letter-spacing: 0.05em;
+			color: var(--theme-text);
 		}
 
 		.about-content {
-			display: grid;
-			grid-template-columns: 1fr auto;
-			gap: 2rem;
-			align-items: start;
+			color: var(--theme-text);
 		}
 
 		.p-note {
 			font-size: 1.1rem;
 			line-height: 1.7;
-			color: var(--theme-text);
-			margin: 0;
+			color: var(--theme-muted);
 		}
 
-		.recent-posts {
+		/* Motto Section */
+		.motto-section {
+			padding: 2rem 0;
+			border-top: 2px solid var(--theme-accent);
+			border-bottom: 2px solid var(--theme-accent);
+		}
+
+		.motto-quote {
+			font-family: 'Space Mono', monospace;
+			font-size: clamp(1rem, 3vw, 1.5rem);
+			text-align: center;
+			color: var(--theme-text);
+			margin: 0;
+			padding: 0;
+			border: none;
+		}
+
+		.quote-mark {
+			color: var(--theme-accent);
+			font-size: 2em;
+			line-height: 0;
+			vertical-align: middle;
+		}
+
+		/* Posts Section */
+		.section-header {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
 			margin-bottom: 2rem;
+			flex-wrap: wrap;
+			gap: 1rem;
 		}
 
 		.posts-grid {
 			display: grid;
-			grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-			gap: 2rem;
+			grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+			gap: 1.5rem;
 		}
 
 		.post-card {
-			background: var(--theme-bg);
-			border-radius: 12px;
-			overflow: hidden;
-			box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-			transition: transform 0.3s ease, box-shadow 0.3s ease;
-		}
-
-		.post-card:hover {
-			transform: translateY(-4px);
-			box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+			display: flex;
+			flex-direction: column;
 		}
 
 		.post-card-image {
 			position: relative;
+			height: 180px;
 			overflow: hidden;
-			height: 200px;
+			margin: -1.5rem -1.5rem 1rem -1.5rem;
+			border-bottom: 4px solid var(--theme-accent);
 		}
 
 		.post-card-image img {
@@ -221,91 +316,82 @@ export const prerender = true;
 			filter: grayscale(0%);
 		}
 
-		.post-card-content {
-			padding: 1.5rem;
+		.image-overlay {
+			position: absolute;
+			inset: 0;
+			background: linear-gradient(
+				180deg,
+				transparent 0%,
+				rgba(0, 0, 0, 0.8) 100%
+			);
+			mix-blend-mode: multiply;
 		}
 
-		.post-card-date {
+		.post-date {
 			display: block;
-			font-size: 0.9rem;
+			font-family: 'Space Mono', monospace;
+			font-size: 0.75rem;
 			color: var(--theme-accent);
-			font-weight: 600;
 			margin-bottom: 0.5rem;
-			font-family: 'Oswald', sans-serif;
-			text-transform: uppercase;
-			letter-spacing: 1px;
+			letter-spacing: 0.1em;
 		}
 
-		.post-card-title {
+		.post-title {
+			font-family: 'Space Mono', monospace;
+			font-size: 1.25rem;
+			font-weight: 700;
 			margin: 0 0 0.75rem 0;
-			font-size: 1.5rem;
-			font-weight: 600;
-			font-family: 'Oswald', sans-serif;
 			text-transform: uppercase;
-			letter-spacing: 0.5px;
+			line-height: 1.3;
 		}
 
-		.post-card-title a {
+		.post-title a {
 			color: var(--theme-text);
-			text-decoration: none;
-			transition: color 0.3s ease;
+			transition: color 0.15s ease;
 		}
 
-		.post-card-title a:hover {
+		.post-title a:hover {
 			color: var(--theme-accent);
 		}
 
-		.post-card-description {
-			margin: 0 0 1rem 0;
-			color: var(--theme-quote);
-			font-style: italic;
+		.post-description {
+			font-size: 0.9rem;
+			color: var(--theme-muted);
 			line-height: 1.5;
+			margin: 0 0 1rem 0;
 		}
 
-		.post-card-tags {
+		.post-tags {
 			display: flex;
 			flex-wrap: wrap;
 			gap: 0.5rem;
+			margin-top: auto;
 		}
 
-		.tag {
-			background: var(--theme-accent);
-			color: white;
-			padding: 0.25rem 0.75rem;
-			border-radius: 20px;
-			font-size: 0.9rem;
-			font-weight: 500;
-			text-decoration: none;
-			transition: background-color 0.3s ease, transform 0.2s ease;
-		}
-
-		.tag:hover {
-			background: var(--theme-accent-dark, #1a4d3a);
-			transform: translateY(-1px);
-		}
-
+		/* Responsive */
 		@media (max-width: 768px) {
-			.home-page {
-				padding: 1rem;
-			}
-
-			.hero-content {
-				flex-direction: column;
-				text-align: center;
-				padding: 2rem;
-			}
-
-			.hero-title {
-				font-size: 2rem;
-			}
-
-			.about-content {
+			.hero-grid {
 				grid-template-columns: 1fr;
+				text-align: center;
+			}
+
+			.hero-image-container {
+				margin: 0 auto;
+				width: 150px;
+				height: 150px;
+			}
+
+			.hero-titles {
+				align-items: center;
 			}
 
 			.posts-grid {
 				grid-template-columns: 1fr;
-				gap: 1.5rem;
+			}
+
+			.section-header {
+				flex-direction: column;
+				align-items: flex-start;
 			}
 		}
 	</style>
