@@ -46,35 +46,25 @@ export const prerender = true;
 	<div class="posts-page">
 		<!-- Header -->
 		<header class="page-header">
-			<h1 class="page-title glitch-text" data-text="POSTS_">
-				<span class="text-accent">//</span> POSTS_
-			</h1>
-			<p class="page-subtitle">
-				THOUGHTS // TUTORIALS // TECH_INSIGHTS
-			</p>
-			<div class="header-line" aria-hidden="true">
-				<span class="line"></span>
-				<span class="count">[{page.total}_ENTRIES]</span>
-				<span class="line"></span>
-			</div>
+			<h1 class="page-title">Posts</h1>
+			<p class="page-subtitle">{page.total} articles</p>
 		</header>
 
-		<!-- Posts Grid with overlapping cards -->
-		<div class="posts-grid">
-			{page.data.map((p, index) => (
-				<article class={`brutal-card post-card ${index % 4 === 1 || index % 4 === 2 ? 'brutal-card-offset' : ''}`}>
+		<!-- Posts Grid -->
+		<div class="posts-grid stagger-reveal">
+			{page.data.map((p) => (
+				<article class="brutal-card post-card">
 					{p.data.ogImage && (
 						<div class="post-image">
 							<img src={p.data.ogImage} alt={p.data.title} loading="lazy" />
-							<div class="image-scanlines" aria-hidden="true"></div>
 						</div>
 					)}
 					<div class="post-content">
 						<time datetime={p.data.publishDate.toISOString()} class="post-date">
-							{getFormattedDate(new Date(p.data.publishDate), { month: "short" }).toUpperCase().replace(/ /g, '_')}
+							{getFormattedDate(new Date(p.data.publishDate), { month: "short" })}
 						</time>
 						<h2 class="post-title">
-							<a href={`/posts/${p.slug}/`} class="brutal-link" data-text={p.data.title}>
+							<a href={`/posts/${p.slug}/`}>
 								{p.data.title}
 							</a>
 						</h2>
@@ -107,58 +97,36 @@ export const prerender = true;
 		.posts-page {
 			display: flex;
 			flex-direction: column;
-			gap: 3rem;
+			gap: var(--space-xl);
 		}
 
 		/* Header */
 		.page-header {
-			text-align: center;
-			padding-bottom: 2rem;
+			padding-bottom: var(--space-lg);
+			border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 		}
 
 		.page-title {
-			font-family: 'Space Mono', monospace;
-			font-size: clamp(2.5rem, 8vw, 5rem);
-			font-weight: 700;
+			font-family: 'JetBrains Mono', monospace;
+			font-size: var(--text-display);
+			font-weight: 600;
 			line-height: 1;
-			margin: 0 0 1rem 0;
-			text-transform: uppercase;
+			margin: 0 0 var(--space-xs) 0;
 			color: var(--theme-text);
+			letter-spacing: -0.02em;
 		}
 
 		.page-subtitle {
-			font-family: 'Space Mono', monospace;
-			font-size: 0.875rem;
+			font-size: var(--text-sm);
 			color: var(--theme-muted);
-			letter-spacing: 0.1em;
-			margin: 0 0 1.5rem 0;
-		}
-
-		.header-line {
-			display: flex;
-			align-items: center;
-			gap: 1rem;
-			justify-content: center;
-		}
-
-		.header-line .line {
-			height: 2px;
-			width: 60px;
-			background: var(--theme-accent);
-		}
-
-		.header-line .count {
-			font-family: 'Space Mono', monospace;
-			font-size: 0.75rem;
-			color: var(--theme-accent);
-			letter-spacing: 0.05em;
+			margin: 0;
 		}
 
 		/* Posts Grid */
 		.posts-grid {
 			display: grid;
-			grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-			gap: 2rem;
+			grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+			gap: var(--space-md);
 		}
 
 		.post-card {
@@ -166,42 +134,25 @@ export const prerender = true;
 			flex-direction: column;
 		}
 
-		.post-card:nth-child(3n+2) {
-			margin-top: 2rem;
-		}
-
 		.post-image {
 			position: relative;
-			height: 180px;
+			height: 160px;
 			overflow: hidden;
-			margin: -1.5rem -1.5rem 1rem -1.5rem;
-			border-bottom: 4px solid var(--theme-accent);
+			margin: calc(var(--space-md) * -1) calc(var(--space-md) * -1) var(--space-sm) calc(var(--space-md) * -1);
+			border-radius: var(--radius-subtle) var(--radius-subtle) 0 0;
 		}
 
 		.post-image img {
 			width: 100%;
 			height: 100%;
 			object-fit: cover;
-			filter: grayscale(100%) contrast(1.1);
-			transition: filter 0.3s ease, transform 0.3s ease;
+			filter: grayscale(100%);
+			transition: filter var(--transition-medium), transform var(--transition-medium);
 		}
 
 		.post-card:hover .post-image img {
-			filter: grayscale(0%) contrast(1);
-			transform: scale(1.05);
-		}
-
-		.image-scanlines {
-			position: absolute;
-			inset: 0;
-			background: repeating-linear-gradient(
-				0deg,
-				transparent,
-				transparent 2px,
-				rgba(0, 0, 0, 0.15) 2px,
-				rgba(0, 0, 0, 0.15) 4px
-			);
-			pointer-events: none;
+			filter: grayscale(0%);
+			transform: scale(1.02);
 		}
 
 		.post-content {
@@ -212,25 +163,24 @@ export const prerender = true;
 
 		.post-date {
 			display: inline-block;
-			font-family: 'Space Mono', monospace;
-			font-size: 0.75rem;
-			color: var(--theme-accent);
-			margin-bottom: 0.5rem;
-			letter-spacing: 0.1em;
+			font-family: 'JetBrains Mono', monospace;
+			font-size: var(--text-xs);
+			color: var(--theme-muted);
+			margin-bottom: var(--space-xs);
 		}
 
 		.post-title {
-			font-family: 'Space Mono', monospace;
-			font-size: 1.25rem;
-			font-weight: 700;
-			margin: 0 0 0.75rem 0;
-			text-transform: uppercase;
+			font-family: 'JetBrains Mono', monospace;
+			font-size: var(--text-lg);
+			font-weight: 600;
+			margin: 0 0 var(--space-xs) 0;
 			line-height: 1.3;
+			letter-spacing: -0.01em;
 		}
 
 		.post-title a {
 			color: var(--theme-text);
-			transition: color 0.15s ease;
+			transition: color var(--transition-fast);
 		}
 
 		.post-title a:hover {
@@ -238,16 +188,16 @@ export const prerender = true;
 		}
 
 		.post-description {
-			font-size: 0.9rem;
+			font-size: var(--text-sm);
 			color: var(--theme-muted);
 			line-height: 1.6;
-			margin: 0 0 1rem 0;
+			margin: 0 0 var(--space-sm) 0;
 		}
 
 		.post-tags {
 			display: flex;
 			flex-wrap: wrap;
-			gap: 0.5rem;
+			gap: var(--space-xs);
 			margin-top: auto;
 		}
 
@@ -255,10 +205,6 @@ export const prerender = true;
 		@media (max-width: 768px) {
 			.posts-grid {
 				grid-template-columns: 1fr;
-			}
-
-			.post-card:nth-child(3n+2) {
-				margin-top: 0;
 			}
 		}
 	</style>

@@ -15,52 +15,44 @@ const meta = {
 	<div class="recipes-page">
 		<!-- Header -->
 		<header class="page-header">
-			<h1 class="page-title glitch-text" data-text="RECIPES_">
-				<span class="text-accent">//</span> RECIPES_
-			</h1>
-			<p class="page-subtitle">
-				COOKLANG // TIMERS // SCALING // COOK_MODE
-			</p>
-			<div class="header-line" aria-hidden="true">
-				<span class="line"></span>
-				<span class="count">[{recipes.length}_DISHES]</span>
-				<span class="line"></span>
-			</div>
+			<h1 class="page-title">Recipes</h1>
+			<p class="page-subtitle">{recipes.length} dishes</p>
 		</header>
 
 		<!-- Search -->
 		<div class="search-container">
 			<label for="q" class="sr-only">Search recipes</label>
 			<div class="search-wrapper">
-				<span class="search-prefix">&gt;</span>
+				<svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+					<circle cx="11" cy="11" r="8"></circle>
+					<path d="M21 21l-4.35-4.35"></path>
+				</svg>
 				<input
 					type="search"
 					id="q"
-					placeholder="SEARCH_RECIPES..."
+					placeholder="Search recipes..."
 					class="search-input"
 				/>
 			</div>
 		</div>
 
 		<!-- Recipes Grid -->
-		<div class="recipes-grid" id="list">
-			{recipes.map((r, index) => (
-				<article class={`brutal-card recipe-card ${index % 4 === 1 || index % 4 === 2 ? 'brutal-card-offset' : ''}`}>
+		<div class="recipes-grid stagger-reveal" id="list">
+			{recipes.map((r) => (
+				<article class="brutal-card recipe-card">
 					{r.image && (
 						<div class="recipe-image">
 							<img src={r.image} alt={r.title} loading="lazy" />
-							<div class="image-scanlines" aria-hidden="true"></div>
 						</div>
 					)}
 					<div class="recipe-content">
 						<div class="recipe-header">
-							<span class="recipe-index">[{String(index + 1).padStart(2, '0')}]</span>
 							{r.servings && (
-								<span class="servings-badge">{r.servings}_SERV</span>
+								<span class="servings-badge">{r.servings} servings</span>
 							)}
 						</div>
 						<h2 class="recipe-title">
-							<a href={`/recipes/${r.slug}/`} class="brutal-link" data-text={r.title}>
+							<a href={`/recipes/${r.slug}/`}>
 								{r.title}
 							</a>
 						</h2>
@@ -118,21 +110,19 @@ const meta = {
 			const results = term ? fuse.search(term).map((r) => r.item) : data;
 			const html = results
 				.map(
-					(r, index) => `
-						<article class="brutal-card recipe-card ${index % 4 === 1 || index % 4 === 2 ? 'brutal-card-offset' : ''}">
+					(r) => `
+						<article class="brutal-card recipe-card">
 							${r.image ? `
 								<div class="recipe-image">
 									<img src="${escapeHtml(r.image)}" alt="${escapeHtml(r.title)}" loading="lazy" />
-									<div class="image-scanlines" aria-hidden="true"></div>
 								</div>
 							` : ''}
 							<div class="recipe-content">
 								<div class="recipe-header">
-									<span class="recipe-index">[${String(index + 1).padStart(2, '0')}]</span>
-									${r.servings ? `<span class="servings-badge">${escapeHtml(String(r.servings))}_SERV</span>` : ''}
+									${r.servings ? `<span class="servings-badge">${escapeHtml(String(r.servings))} servings</span>` : ''}
 								</div>
 								<h2 class="recipe-title">
-									<a href="/recipes/${escapeHtml(r.slug)}/" class="brutal-link" data-text="${escapeHtml(r.title)}">
+									<a href="/recipes/${escapeHtml(r.slug)}/">
 										${escapeHtml(r.title)}
 									</a>
 								</h2>
@@ -155,81 +145,64 @@ const meta = {
 		.recipes-page {
 			display: flex;
 			flex-direction: column;
-			gap: 3rem;
+			gap: var(--space-xl);
 		}
 
 		/* Header */
 		.page-header {
-			text-align: center;
-			padding-bottom: 2rem;
+			padding-bottom: var(--space-lg);
+			border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 		}
 
 		.page-title {
-			font-family: 'Space Mono', monospace;
-			font-size: clamp(2.5rem, 8vw, 5rem);
-			font-weight: 700;
+			font-family: 'JetBrains Mono', monospace;
+			font-size: var(--text-display);
+			font-weight: 600;
 			line-height: 1;
-			margin: 0 0 1rem 0;
-			text-transform: uppercase;
+			margin: 0 0 var(--space-xs) 0;
 			color: var(--theme-text);
+			letter-spacing: -0.02em;
 		}
 
 		.page-subtitle {
-			font-family: 'Space Mono', monospace;
-			font-size: 0.875rem;
+			font-size: var(--text-sm);
 			color: var(--theme-muted);
-			letter-spacing: 0.1em;
-			margin: 0 0 1.5rem 0;
-		}
-
-		.header-line {
-			display: flex;
-			align-items: center;
-			gap: 1rem;
-			justify-content: center;
-		}
-
-		.header-line .line {
-			height: 2px;
-			width: 60px;
-			background: var(--theme-accent);
-		}
-
-		.header-line .count {
-			font-family: 'Space Mono', monospace;
-			font-size: 0.75rem;
-			color: var(--theme-accent);
-			letter-spacing: 0.05em;
+			margin: 0;
 		}
 
 		/* Search */
 		.search-container {
-			max-width: 500px;
-			margin: 0 auto;
+			max-width: 400px;
 		}
 
 		.search-wrapper {
 			display: flex;
 			align-items: center;
-			border: 4px solid var(--theme-accent);
+			gap: var(--space-sm);
+			border: var(--border-weight) solid rgba(255, 255, 255, 0.1);
+			border-radius: var(--radius-subtle);
 			background: var(--theme-bg-secondary);
+			padding: 0 var(--space-sm);
+			transition: border-color var(--transition-fast);
 		}
 
-		.search-prefix {
-			font-family: 'Space Mono', monospace;
-			color: var(--theme-accent);
-			padding: 0.75rem 0 0.75rem 1rem;
+		.search-wrapper:focus-within {
+			border-color: var(--theme-accent);
+		}
+
+		.search-icon {
+			color: var(--theme-muted);
+			flex-shrink: 0;
 		}
 
 		.search-input {
 			flex: 1;
 			background: transparent;
 			border: none;
-			padding: 0.75rem 1rem;
-			font-family: 'Space Mono', monospace;
-			font-size: 1rem;
+			padding: 0.625rem 0;
+			font-family: 'Outfit', system-ui, sans-serif;
+			font-size: var(--text-base);
 			color: var(--theme-text);
-			text-transform: uppercase;
 		}
 
 		.search-input::placeholder {
@@ -255,8 +228,8 @@ const meta = {
 		/* Recipes Grid */
 		.recipes-grid {
 			display: grid;
-			grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-			gap: 2rem;
+			grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+			gap: var(--space-md);
 		}
 
 		.recipe-card {
@@ -266,78 +239,56 @@ const meta = {
 
 		.recipe-image {
 			position: relative;
-			height: 180px;
+			height: 160px;
 			overflow: hidden;
-			margin: -1.5rem -1.5rem 1rem -1.5rem;
-			border-bottom: 4px solid var(--theme-accent);
+			margin: calc(var(--space-md) * -1) calc(var(--space-md) * -1) var(--space-sm) calc(var(--space-md) * -1);
+			border-radius: var(--radius-subtle) var(--radius-subtle) 0 0;
 		}
 
 		.recipe-image img {
 			width: 100%;
 			height: 100%;
 			object-fit: cover;
-			filter: grayscale(100%) contrast(1.1);
-			transition: filter 0.3s ease, transform 0.3s ease;
+			filter: grayscale(100%);
+			transition: filter var(--transition-medium), transform var(--transition-medium);
 		}
 
 		.recipe-card:hover .recipe-image img {
-			filter: grayscale(0%) contrast(1);
-			transform: scale(1.05);
-		}
-
-		.image-scanlines {
-			position: absolute;
-			inset: 0;
-			background: repeating-linear-gradient(
-				0deg,
-				transparent,
-				transparent 2px,
-				rgba(0, 0, 0, 0.15) 2px,
-				rgba(0, 0, 0, 0.15) 4px
-			);
-			pointer-events: none;
+			filter: grayscale(0%);
+			transform: scale(1.02);
 		}
 
 		.recipe-content {
 			display: flex;
 			flex-direction: column;
 			flex: 1;
-			gap: 0.75rem;
+			gap: var(--space-xs);
 		}
 
 		.recipe-header {
 			display: flex;
-			justify-content: space-between;
+			justify-content: flex-start;
 			align-items: center;
 		}
 
-		.recipe-index {
-			font-family: 'Space Mono', monospace;
-			font-size: 0.75rem;
+		.servings-badge {
+			font-family: 'JetBrains Mono', monospace;
+			font-size: var(--text-xs);
 			color: var(--theme-muted);
 		}
 
-		.servings-badge {
-			font-family: 'Space Mono', monospace;
-			font-size: 0.7rem;
-			padding: 0.25rem 0.5rem;
-			color: var(--theme-accent);
-			border: 2px solid var(--theme-accent);
-			text-transform: uppercase;
-		}
-
 		.recipe-title {
-			font-family: 'Space Mono', monospace;
-			font-size: 1.25rem;
-			font-weight: 700;
+			font-family: 'JetBrains Mono', monospace;
+			font-size: var(--text-lg);
+			font-weight: 600;
 			margin: 0;
-			text-transform: uppercase;
 			line-height: 1.3;
+			letter-spacing: -0.01em;
 		}
 
 		.recipe-title a {
 			color: var(--theme-text);
-			transition: color 0.15s ease;
+			transition: color var(--transition-fast);
 		}
 
 		.recipe-title a:hover {
@@ -345,7 +296,7 @@ const meta = {
 		}
 
 		.recipe-description {
-			font-size: 0.9rem;
+			font-size: var(--text-sm);
 			color: var(--theme-muted);
 			line-height: 1.6;
 			margin: 0;
@@ -354,8 +305,9 @@ const meta = {
 		.recipe-tags {
 			display: flex;
 			flex-wrap: wrap;
-			gap: 0.5rem;
+			gap: var(--space-xs);
 			margin-top: auto;
+			padding-top: var(--space-xs);
 		}
 
 		/* Responsive */

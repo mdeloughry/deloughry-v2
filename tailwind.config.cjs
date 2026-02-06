@@ -56,9 +56,9 @@ module.exports = {
         github: "var(--github)",
       },
       fontFamily: {
-        // Brutalist fonts
-        'mono': ['Space Mono', ...fontFamily.mono],
-        'sans': ['Inter', ...fontFamily.sans],
+        // Refined Neo Brutalist fonts
+        'mono': ['JetBrains Mono', ...fontFamily.mono],
+        'sans': ['Outfit', 'system-ui', ...fontFamily.sans],
       },
       spacing: {
         'brutal': '4px',
@@ -135,10 +135,9 @@ module.exports = {
               borderBottomColor: "var(--theme-accent)",
             },
             "thead th": {
-              fontWeight: "700",
-              fontFamily: "Space Mono, monospace",
-              textTransform: "uppercase",
-              letterSpacing: "0.05em",
+              fontWeight: "600",
+              fontFamily: "JetBrains Mono, monospace",
+              letterSpacing: "0",
             },
             "tbody tr": {
               borderBottomWidth: "2px",
@@ -153,24 +152,24 @@ module.exports = {
               borderRadius: "0",
             },
             h1: {
-              fontFamily: "Space Mono, monospace",
-              textTransform: "uppercase",
-              letterSpacing: "0.05em",
+              fontFamily: "JetBrains Mono, monospace",
+              fontWeight: "600",
+              letterSpacing: "-0.02em",
             },
             h2: {
-              fontFamily: "Space Mono, monospace",
-              textTransform: "uppercase",
-              letterSpacing: "0.05em",
+              fontFamily: "JetBrains Mono, monospace",
+              fontWeight: "600",
+              letterSpacing: "-0.02em",
             },
             h3: {
-              fontFamily: "Space Mono, monospace",
-              textTransform: "uppercase",
-              letterSpacing: "0.05em",
+              fontFamily: "JetBrains Mono, monospace",
+              fontWeight: "600",
+              letterSpacing: "-0.01em",
             },
             h4: {
-              fontFamily: "Space Mono, monospace",
-              textTransform: "uppercase",
-              letterSpacing: "0.05em",
+              fontFamily: "JetBrains Mono, monospace",
+              fontWeight: "500",
+              letterSpacing: "0",
             },
           },
         },

@@ -29,41 +29,37 @@ const menuLinks = [
   document.addEventListener("astro:after-swap", toggleMenu);
 </script>
 
-<header id="main-header" class="group mb-12 border-b-4 border-accent pb-6">
-  <div class="flex flex-col gap-4">
+<header id="main-header" class="group mb-16 pb-8 border-b border-white/10">
+  <div class="flex flex-col gap-6">
     <!-- Logo / Name -->
     <a
       href="/"
       class="inline-block"
       aria-current={url.pathname === "/" ? "page" : false}
     >
-      <h1 class="glitch-text text-massive font-mono font-bold text-accent leading-none" data-text="MPD">
+      <h1 class="glitch-text text-hero font-mono font-bold text-accent leading-none tracking-tighter" data-text="MPD">
         MPD
       </h1>
-      <span class="block text-sm font-mono text-muted tracking-widest mt-2">
-        MATTHEW_PECK-DELOUGHRY
+      <span class="block text-sm font-mono text-muted tracking-wide mt-3 opacity-70">
+        Matthew Peck-Deloughry
       </span>
     </a>
 
     <!-- Navigation -->
     <nav
       id="navigation-menu"
-      class="absolute -inset-x-4 top-full hidden flex-col gap-0 bg-bgColor border-4 border-accent p-4 group-[.menu-open]:z-50 group-[.menu-open]:flex md:static md:flex md:flex-row md:items-center md:gap-1 md:border-0 md:bg-transparent md:p-0"
+      class="absolute -inset-x-4 top-full hidden flex-col gap-0 bg-bgColor border border-white/10 p-4 group-[.menu-open]:z-50 group-[.menu-open]:flex md:static md:flex md:flex-row md:items-center md:gap-6 md:border-0 md:bg-transparent md:p-0"
       aria-label="Main menu"
     >
-      {menuLinks.map((link, index) => (
-        <>
-          {index > 0 && <span class="hidden md:inline text-accent font-mono">|</span>}
-          <a
-            href={link.path}
-            class="nav-link px-3 py-2 font-mono text-sm uppercase tracking-wider text-textColor transition-all hover:text-accent hover:bg-accent/10"
-            aria-current={url.pathname === link.path ? "page" : false}
-            data-text={link.title}
-            rel="prefetch"
-          >
-            {link.title}
-          </a>
-        </>
+      {menuLinks.map((link) => (
+        <a
+          href={link.path}
+          class="nav-link py-2 font-mono text-sm text-muted transition-colors hover:text-textColor"
+          aria-current={url.pathname === link.path ? "page" : false}
+          rel="prefetch"
+        >
+          {link.title}
+        </a>
       ))}
     </nav>
   </div>
@@ -71,7 +67,7 @@ const menuLinks = [
   <!-- Mobile menu button -->
   <button
     id="toggle-navigation-menu"
-    class="group/btn absolute right-4 top-8 h-10 w-10 border-2 border-accent bg-transparent md:hidden"
+    class="group/btn absolute right-4 top-8 h-10 w-10 border border-white/20 rounded bg-transparent md:hidden"
     type="button"
     aria-label="Open main menu"
     aria-expanded="false"
@@ -79,60 +75,47 @@ const menuLinks = [
   >
     <!-- Hamburger icon -->
     <svg
-      class="absolute left-1/2 top-1/2 h-6 w-6 -translate-x-1/2 -translate-y-1/2 text-accent transition-all group-aria-expanded/btn:scale-0 group-aria-expanded/btn:opacity-0"
+      class="absolute left-1/2 top-1/2 h-5 w-5 -translate-x-1/2 -translate-y-1/2 text-textColor transition-all group-aria-expanded/btn:scale-0 group-aria-expanded/btn:opacity-0"
       aria-hidden="true"
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
       viewBox="0 0 24 24"
-      stroke-width="2"
+      stroke-width="1.5"
       stroke="currentColor"
     >
-      <path stroke-linecap="square" stroke-linejoin="miter" d="M4 6h16M4 12h16M4 18h16"></path>
+      <path stroke-linecap="round" d="M4 6h16M4 12h16M4 18h16"></path>
     </svg>
     <!-- Close icon -->
     <svg
-      class="absolute left-1/2 top-1/2 h-6 w-6 -translate-x-1/2 -translate-y-1/2 scale-0 text-accent opacity-0 transition-all group-aria-expanded/btn:scale-100 group-aria-expanded/btn:opacity-100"
+      class="absolute left-1/2 top-1/2 h-5 w-5 -translate-x-1/2 -translate-y-1/2 scale-0 text-textColor opacity-0 transition-all group-aria-expanded/btn:scale-100 group-aria-expanded/btn:opacity-100"
       aria-hidden="true"
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
       viewBox="0 0 24 24"
-      stroke-width="2"
+      stroke-width="1.5"
       stroke="currentColor"
     >
-      <path stroke-linecap="square" stroke-linejoin="miter" d="M6 18L18 6M6 6l12 12"></path>
+      <path stroke-linecap="round" d="M6 18L18 6M6 6l12 12"></path>
     </svg>
   </button>
 </header>
 
 <style>
-  .nav-link[aria-current="page"] {
-    color: var(--theme-accent);
-    background: rgba(218, 255, 1, 0.1);
-  }
-
-  .nav-link[aria-current="page"]::before {
-    content: ">";
-    margin-right: 0.25rem;
-  }
-
-  /* Clean hover effect for nav links */
   .nav-link {
     position: relative;
   }
 
-  .nav-link::after {
+  .nav-link[aria-current="page"] {
+    color: var(--theme-text);
+  }
+
+  .nav-link[aria-current="page"]::after {
     content: '';
     position: absolute;
     bottom: 0;
-    left: 50%;
-    width: 0;
-    height: 2px;
-    background: var(--theme-accent);
-    transition: width 0.2s ease, left 0.2s ease;
-  }
-
-  .nav-link:hover::after {
-    width: 100%;
     left: 0;
+    width: 100%;
+    height: 1px;
+    background: var(--theme-accent);
   }
 </style>
