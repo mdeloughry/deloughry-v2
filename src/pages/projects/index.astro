@@ -16,7 +16,7 @@ export const prerender = true;
   <div class="projects-page">
     <!-- Header -->
     <header class="page-header">
-      <h1 class="page-title">Projects</h1>
+      <h1 class="page-title"><span class="accent-slash">//</span> Projects</h1>
       <p class="page-subtitle">{projects.length} projects</p>
     </header>
 
@@ -93,6 +93,11 @@ export const prerender = true;
       margin: 0 0 var(--space-xs) 0;
       color: var(--theme-text);
       letter-spacing: -0.02em;
+    }
+
+    .accent-slash {
+      color: var(--theme-accent);
+      margin-right: 0.25rem;
     }
 
     .page-subtitle {

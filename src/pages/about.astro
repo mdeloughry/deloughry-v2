@@ -14,7 +14,7 @@ export const prerender = true;
 		<!-- Header -->
 		<header class="about-header">
 			<div class="header-content">
-				<h1 class="page-title">About</h1>
+				<h1 class="page-title"><span class="accent-slash">//</span> About</h1>
 				<p class="subtitle">Developer / Streamer / Sheffield</p>
 			</div>
 			<div class="about-image-container">
@@ -86,7 +86,7 @@ export const prerender = true;
 
 		<!-- Motto quote -->
 		<blockquote class="motto-block">
-			"Av' fun developing, Av' fun learning, then Av'a crack at engineering it!"
+			<span class="quote-mark">"</span>Av' fun developing, Av' fun learning, then Av'a crack at engineering it!<span class="quote-mark">"</span>
 		</blockquote>
 	</article>
 
@@ -121,6 +121,11 @@ export const prerender = true;
 			margin: 0;
 			color: var(--theme-text);
 			letter-spacing: -0.02em;
+		}
+
+		.accent-slash {
+			color: var(--theme-accent);
+			margin-right: 0.25rem;
 		}
 
 		.subtitle {
@@ -195,13 +200,20 @@ export const prerender = true;
 		/* Motto block */
 		.motto-block {
 			margin: 0;
-			padding: var(--space-xl) 0;
-			border-top: 1px solid rgba(255, 255, 255, 0.08);
+			padding: var(--space-xl);
+			border: var(--border-weight) solid var(--theme-accent);
+			border-radius: var(--radius-subtle);
 			font-family: 'JetBrains Mono', monospace;
-			font-size: var(--text-xl);
-			color: var(--theme-muted);
+			font-size: var(--text-lg);
+			color: var(--theme-text);
 			text-align: center;
-			font-style: italic;
+			background: var(--theme-bg-secondary);
+		}
+
+		.quote-mark {
+			color: var(--theme-accent);
+			font-size: 1.5em;
+			vertical-align: -0.1em;
 		}
 
 		/* Responsive */

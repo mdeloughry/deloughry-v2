@@ -35,10 +35,10 @@ export const prerender = true;
 					<a class="u-url hidden" href="acct:matt@deloughry.co.uk"></a>
 
 					<div class="hero-roles">
-						<span class="role-item">Developer</span>
-						<span class="role-divider" aria-hidden="true">/</span>
+						<span class="role-item text-accent-glow">Developer</span>
+						<span class="role-divider" aria-hidden="true">//</span>
 						<span class="role-item">Streamer</span>
-						<span class="role-divider" aria-hidden="true">/</span>
+						<span class="role-divider" aria-hidden="true">//</span>
 						<span class="role-item">Maker</span>
 					</div>
 				</div>
@@ -63,16 +63,19 @@ export const prerender = true;
 		<!-- Motto Section -->
 		<section class="motto-section">
 			<blockquote class="motto-quote">
+				<span class="quote-mark" aria-hidden="true">"</span>
 				<span class="quote-text">
-					"Av' fun developing, Av' fun learning, then Av'a crack at engineering it!"
+					Av' fun developing, Av' fun learning, then Av'a crack at engineering it!
 				</span>
+				<span class="quote-mark" aria-hidden="true">"</span>
+				<span class="cursor" aria-hidden="true">_</span>
 			</blockquote>
 		</section>
 
 		<!-- Recent Posts Section -->
 		<section class="posts-section">
 			<div class="section-header">
-				<h2 class="section-title">Recent Posts</h2>
+				<h2 class="section-title slash-prefix">Recent Posts</h2>
 				<a href="/posts" class="brutal-btn">
 					View all
 				</a>
@@ -182,9 +185,14 @@ export const prerender = true;
 		}
 
 		.role-divider {
-			color: var(--theme-muted);
-			font-size: var(--text-2xl);
-			opacity: 0.3;
+			color: var(--theme-accent);
+			font-size: var(--text-lg);
+			opacity: 0.5;
+		}
+
+		.text-accent-glow {
+			color: var(--theme-accent);
+			text-shadow: 0 0 40px rgba(204, 255, 0, 0.4);
 		}
 
 		/* About Section */
@@ -213,15 +221,26 @@ export const prerender = true;
 			font-family: 'JetBrains Mono', monospace;
 			font-size: var(--text-xl);
 			text-align: center;
-			color: var(--theme-muted);
+			color: var(--theme-text);
 			margin: 0;
 			padding: 0;
 			border: none;
-			font-style: italic;
 		}
 
-		.quote-text {
-			display: block;
+		.quote-mark {
+			color: var(--theme-accent);
+			font-size: 1.5em;
+			vertical-align: -0.1em;
+		}
+
+		.cursor {
+			color: var(--theme-accent);
+			animation: blink 1s step-end infinite;
+		}
+
+		@keyframes blink {
+			0%, 100% { opacity: 1; }
+			50% { opacity: 0; }
 		}
 
 		/* Posts Section */
