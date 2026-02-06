@@ -60,13 +60,13 @@
   font-weight: 700;
   margin-bottom: 0.5rem;
   color: var(--theme-text);
-  font-family: 'Space Mono', monospace;
+  font-family: 'JetBrains Mono', monospace;
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
 
 .recipe-tags {
-  font-family: 'Space Mono', monospace;
+  font-family: 'JetBrains Mono', monospace;
   font-size: 0.875rem;
   color: var(--theme-accent);
   margin-bottom: 0.5rem;
@@ -109,7 +109,7 @@
   cursor: pointer;
   font-weight: 700;
   transition: all 0.15s ease;
-  font-family: 'Space Mono', monospace;
+  font-family: 'JetBrains Mono', monospace;
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
@@ -153,7 +153,7 @@
   align-items: center;
   gap: 0.25rem;
   cursor: pointer;
-  font-family: 'Space Mono', monospace;
+  font-family: 'JetBrains Mono', monospace;
   font-size: 0.875rem;
   color: var(--theme-text);
 }
@@ -166,7 +166,7 @@
   font-size: 1.25rem;
   color: var(--theme-text);
   margin-bottom: 1rem;
-  font-family: 'Space Mono', monospace;
+  font-family: 'JetBrains Mono', monospace;
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
@@ -194,7 +194,7 @@
 }
 
 .ingredient-quantity {
-  font-family: 'Space Mono', monospace;
+  font-family: 'JetBrains Mono', monospace;
   font-weight: 700;
   color: var(--theme-accent);
   min-width: 80px;
@@ -217,7 +217,7 @@
   font-size: 1.25rem;
   color: var(--theme-text);
   margin-bottom: 1rem;
-  font-family: 'Space Mono', monospace;
+  font-family: 'JetBrains Mono', monospace;
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
@@ -238,7 +238,7 @@
   color: var(--theme-accent);
   padding: 0.25rem 0.75rem;
   border: 2px solid var(--theme-accent);
-  font-family: 'Space Mono', monospace;
+  font-family: 'JetBrains Mono', monospace;
   font-size: 0.75rem;
   font-weight: 500;
   text-transform: uppercase;
@@ -257,7 +257,7 @@
 .shopping-list h2 {
   margin: 0 0 1rem 0;
   color: var(--theme-text);
-  font-family: 'Space Mono', monospace;
+  font-family: 'JetBrains Mono', monospace;
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
@@ -276,7 +276,7 @@
   color: var(--glitch-red);
   border: 2px solid var(--glitch-red);
   padding: 0.5rem 1rem;
-  font-family: 'Space Mono', monospace;
+  font-family: 'JetBrains Mono', monospace;
   font-size: 0.875rem;
   cursor: pointer;
   transition: all 0.15s ease;
@@ -378,7 +378,7 @@
   font-size: 1.25rem;
   color: var(--theme-text);
   margin-bottom: 1.5rem;
-  font-family: 'Space Mono', monospace;
+  font-family: 'JetBrains Mono', monospace;
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
@@ -421,7 +421,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: 'Space Mono', monospace;
+  font-family: 'JetBrains Mono', monospace;
   font-weight: 700;
   font-size: 1rem;
 }
@@ -448,7 +448,7 @@
 }
 
 .step-counter {
-  font-family: 'Space Mono', monospace;
+  font-family: 'JetBrains Mono', monospace;
   font-weight: 700;
   color: var(--theme-accent);
   font-size: 1rem;
@@ -468,7 +468,7 @@
   border: 2px solid var(--glitch-cyan);
   padding: 0.5rem 1rem;
   cursor: pointer;
-  font-family: 'Space Mono', monospace;
+  font-family: 'JetBrains Mono', monospace;
   font-size: 0.875rem;
   transition: all 0.15s ease;
   text-transform: uppercase;
@@ -491,7 +491,7 @@
   background: var(--theme-bg-secondary);
   border: 2px solid var(--theme-accent);
   padding: 0.5rem 1rem;
-  font-family: 'Space Mono', monospace;
+  font-family: 'JetBrains Mono', monospace;
   font-weight: 700;
   color: var(--theme-accent);
 }
@@ -502,7 +502,7 @@
   border: none;
   padding: 0.25rem 0.5rem;
   cursor: pointer;
-  font-family: 'Space Mono', monospace;
+  font-family: 'JetBrains Mono', monospace;
   font-size: 0.75rem;
   font-weight: 700;
   transition: all 0.15s ease;

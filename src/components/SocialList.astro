@@ -11,7 +11,7 @@ import GitHub from "./assets/svgs/GitHub.astro";
 	<ul class="social-links">
 		<li>
 			<a
-				class="social-link"
+				class="social-link social-link--github"
 				href="https://github.com/DR-DinoMight"
 				target="_blank"
 				rel="noopener noreferrer me authn"
@@ -24,7 +24,7 @@ import GitHub from "./assets/svgs/GitHub.astro";
 		</li>
 		<li>
 			<a
-				class="social-link"
+				class="social-link social-link--mastodon"
 				href="https://phpc.social/@DrDinoMight"
 				target="_blank"
 				rel="noopener noreferrer me"
@@ -37,7 +37,7 @@ import GitHub from "./assets/svgs/GitHub.astro";
 		</li>
 		<li>
 			<a
-				class="social-link"
+				class="social-link social-link--twitch"
 				href="https://www.twitch.tv/dr_dinomight"
 				target="_blank"
 				rel="noopener noreferrer me"
@@ -61,7 +61,7 @@ import GitHub from "./assets/svgs/GitHub.astro";
 
 	.social-links {
 		display: flex;
-		gap: 0.5rem;
+		gap: 0.75rem;
 		list-style: none;
 		padding: 0;
 		margin: 0;
@@ -71,24 +71,22 @@ import GitHub from "./assets/svgs/GitHub.astro";
 		display: flex;
 		align-items: center;
 		gap: 0.5rem;
-		padding: 0.5rem 0.75rem;
-		border: 2px solid var(--theme-accent);
-		font-family: 'Space Mono', monospace;
+		padding: 0.5rem 1rem;
+		border: 2px solid currentColor;
+		border-radius: 2px;
+		font-family: 'JetBrains Mono', monospace;
 		font-size: 0.75rem;
-		color: var(--theme-accent);
+		font-weight: 500;
 		text-decoration: none;
-		transition: all 0.15s ease;
+		transition: background 0.15s ease, color 0.15s ease;
 	}
 
 	.social-link:hover {
-		background: var(--theme-accent);
 		color: var(--theme-bg);
-		transform: translate(-2px, -2px);
-		box-shadow: 2px 2px 0 currentColor;
 	}
 
 	.social-link:focus-visible {
-		outline: 2px solid var(--theme-accent);
+		outline: 2px solid currentColor;
 		outline-offset: 2px;
 	}
 
@@ -99,8 +97,30 @@ import GitHub from "./assets/svgs/GitHub.astro";
 	.social-icon {
 		width: 1rem;
 		height: 1rem;
-		fill: var(--theme-accent);
+		fill: currentColor;
 		transition: fill 0.15s ease;
+	}
+
+	/* Brand colors */
+	.social-link--github {
+		color: var(--color-success);
+	}
+	.social-link--github:hover {
+		background: var(--color-success);
+	}
+
+	.social-link--mastodon {
+		color: var(--color-purple);
+	}
+	.social-link--mastodon:hover {
+		background: var(--color-purple);
+	}
+
+	.social-link--twitch {
+		color: var(--color-purple);
+	}
+	.social-link--twitch:hover {
+		background: var(--color-purple);
 	}
 
 	.social-name {
@@ -128,7 +148,6 @@ import GitHub from "./assets/svgs/GitHub.astro";
 	@media (prefers-reduced-motion: reduce) {
 		.social-link:hover {
 			transform: none;
-			box-shadow: none;
 		}
 	}
 </style>

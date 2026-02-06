@@ -1,54 +1,45 @@
-import React, { useEffect, useRef, useState } from "react";
+import React from "react";
 
 import "./style.css";
 
 const SoundWave = ({ progress, isPlaying }) => {
-	const [animationTimings, setAnimationsTimings] = useState([]);
-	const ref = useRef();
-
-	useEffect(() => {
-		const timings = [];
-		for (let i = 0; i < 90; i++) {
-			timings.push(Math.floor(Math.random() * 1000) + 500 + "ms");
-		}
-		setAnimationsTimings(timings);
-	}, []);
-
-	const createLines = () => {
-		const progressNum = Math.floor(progress / 2);
-		const lines = [];
-		let y1 = 20;
-		let y2 = 0;
-		for (let i = 1; i < 91; i++) {
-			lines.push(
-				<line
-					key={i}
-					className={i <= progressNum ? "sw__full" : ""}
-					x1={i + i * 6}
-					y1={y1}
-					x2={i + i * 6}
-					y2={y2}
-					strokeWidth="6"
-					style={{ animationDuration: animationTimings[i] }}
-				/>
-			);
-		}
-
-		return lines;
-	};
-
 	return (
-		<div className={`sw ${isPlaying ? "" : " sw--pause"}`}>
-			<svg
-				ref={ref}
-				width="302"
-				height="28"
-				viewBox="0 0 344 28"
-				fill="none"
-				xmlns="http://www.w3.org/2000/svg"
-			>
-				{createLines()}
-			</svg>
+		<div className={`sw ${isPlaying ? "" : "sw--pause"}`}>
+			<div className="sw-oscilloscope">
+				{/* CRT scan lines overlay */}
+				<div className="sw-scanlines" />
+
+				{/* The waveform layers - cyan and red for chromatic aberration */}
+				<svg className="sw-wave sw-wave--red" viewBox="0 0 200 40" preserveAspectRatio="none">
+					<path className="sw-wave-path" d="M0,20 Q10,5 20,20 T40,20 T60,20 T80,20 T100,20 T120,20 T140,20 T160,20 T180,20 T200,20" />
+				</svg>
+				<svg className="sw-wave sw-wave--main" viewBox="0 0 200 40" preserveAspectRatio="none">
+					<path className="sw-wave-path" d="M0,20 Q10,5 20,20 T40,20 T60,20 T80,20 T100,20 T120,20 T140,20 T160,20 T180,20 T200,20" />
+				</svg>
+				<svg className="sw-wave sw-wave--cyan" viewBox="0 0 200 40" preserveAspectRatio="none">
+					<path className="sw-wave-path" d="M0,20 Q10,5 20,20 T40,20 T60,20 T80,20 T100,20 T120,20 T140,20 T160,20 T180,20 T200,20" />
+				</svg>
+
+				{/* Glitch corruption blocks */}
+				<div className="sw-glitch-block sw-glitch-block--1" />
+				<div className="sw-glitch-block sw-glitch-block--2" />
+				<div className="sw-glitch-block sw-glitch-block--3" />
+				<div className="sw-glitch-block sw-glitch-block--4" />
+				<div className="sw-glitch-block sw-glitch-block--5" />
+				<div className="sw-glitch-block sw-glitch-block--6" />
+
+				{/* Horizontal tear lines */}
+				<div className="sw-tear sw-tear--1" />
+				<div className="sw-tear sw-tear--2" />
+
+				{/* Progress indicator */}
+				<div className="sw-progress" style={{ "--progress": `${progress}%` }}>
+					<div className="sw-progress-head" />
+				</div>
+			</div>
+
+			{/* Time track */}
+			<div className="sw-time-track" style={{ "--progress": `${progress}%` }} />
 		</div>
 	);
 };

@@ -3,7 +3,10 @@ import PageLayout from "@/layouts/Base";
 import type { GetStaticPathsResult } from "astro";
 import ImageWithBadge from "src/components/ImageWithBadge";
 import Tracks from "src/components/Tracks";
-import type { PlaylistWithAllRelationships, TrackWithAllRelationships } from "@/lib/types/spotify";
+import type {
+  PlaylistWithAllRelationships,
+  TrackWithAllRelationships,
+} from "@/lib/types/spotify";
 import { getPlaylistsfromDB } from "@/data/models/playlist";
 
 export async function getStaticPaths(): Promise<GetStaticPathsResult> {
@@ -45,13 +48,14 @@ export const prerender = true;
           imageUrl={playlist.artwork[0]?.url ?? ""}
           underText="Play on Spotify"
           transition:name={"album-artwork"}
-
         />
       </a>
     </div>
     <div class="flex-1">
       <h2 class="my-4 flex justify-between sm:justify-start sm:gap-4">
-        <span>Tracks</span><span class="text-accent">({tracks.length ?? 0})</span>
+        <span>Tracks</span><span class="text-accent"
+          >({tracks.length ?? 0})</span
+        >
       </h2>
       {
         tracks && (

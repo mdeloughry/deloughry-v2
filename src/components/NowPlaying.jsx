@@ -38,45 +38,40 @@ export default function NowPlaying() {
     return () => clearInterval(interval);
   }, [data?.song?.progress, data?.song?.duration]);
 
-  return (
-    <div
-      className={`${data?.isPlaying ? "visible" : "invisible"
-        } flex flex-col justify-center align-middle transition-all duration-250 ease-in-out`}
-    >
-      {data?.isPlaying && (
-        <div className="sticky space-around mb-4 flex w-full items-center space-x-0 overflow-hidden rounded-lg bg-zinc-200 p-2 align-middle shadow-lg dark:bg-zinc-700 sm:space-x-2">
-          <ImageWithHeart
-            image={data?.song?.albumArt[2].url}
-            className="relative mr-2 w-[70px] aspect-square"
-            isLiked={data?.song?.isLiked}
-          />
-          <div>
-            <span className="flex-col items-center sm:flex-row">
-              {data?.isPlaying ? (
-                <a
-                  className="capsize font-sm text-wrap flex w-full flex-col flex-wrap truncate break-all dark:text-white no-underline"
-                  href={data?.song?.uri}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <span className="truncate text-accent font-mono font-bold text-lg uppercase">{data?.song?.name}</span>
-                  <span className="capsize truncate break-all text-xs text-zinc-700 dark:text-gray-200">
-                    {data?.song?.artist}
-                  </span>
-                </a>
-              ) : (
-                <p className="capsize font-md text-gray-200">Not Playing</p>
-              )}
-            </span>
+  if (!data?.isPlaying) {
+    return null;
+  }
 
-            <SoundWave
-              progress={Math.floor((progress / data?.song?.duration) * 100) || 0}
-              isPlaying={data?.isPlaying}
-            />
-          </div>
+  return (
+    <div className="now-playing-wrapper mb-4">
+      <h2 className="now-playing-heading">
+        <span className="accent-slash">//</span> Now Playing on Spotify
+      </h2>
+      <div className="now-playing-card flex w-full items-stretch overflow-hidden">
+        <ImageWithHeart
+          image={data?.song?.albumArt[1]?.url || data?.song?.albumArt[0]?.url}
+          className="now-playing-artwork relative"
+          isLiked={data?.song?.isLiked}
+        />
+        <div className="min-w-0 flex-1 p-3 flex flex-col justify-center">
+          <a
+            className="now-playing-link flex w-full flex-col no-underline"
+            href={data?.song?.uri}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <span className="now-playing-title truncate">{data?.song?.name}</span>
+            <span className="now-playing-artist truncate">
+              {data?.song?.artist}
+            </span>
+          </a>
+
+          <SoundWave
+            progress={Math.floor((progress / data?.song?.duration) * 100) || 0}
+            isPlaying={data?.isPlaying}
+          />
         </div>
-      )}
-      {!data?.isPlaying && <p className="min-h-[102px]">Spotify Not Playing</p>}
+      </div>
     </div>
   );
 }

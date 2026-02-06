@@ -55,7 +55,7 @@ export const prerender = true;
 		}
 
 		.error-code {
-			font-family: 'Space Mono', monospace;
+			font-family: 'JetBrains Mono', monospace;
 			font-size: clamp(8rem, 25vw, 16rem);
 			font-weight: 700;
 			line-height: 1;
@@ -66,20 +66,19 @@ export const prerender = true;
 		.error-message {
 			display: flex;
 			flex-direction: column;
-			gap: 0.5rem;
+			gap: var(--space-xs);
 		}
 
 		.error-text {
-			font-family: 'Space Mono', monospace;
-			font-size: 1.5rem;
+			font-family: 'JetBrains Mono', monospace;
+			font-size: var(--text-xl);
 			color: var(--theme-text);
 			margin: 0;
-			text-transform: uppercase;
 		}
 
 		.error-subtext {
-			font-family: 'Space Mono', monospace;
-			font-size: 0.875rem;
+			font-family: 'JetBrains Mono', monospace;
+			font-size: var(--text-sm);
 			color: var(--theme-muted);
 			margin: 0;
 		}
@@ -87,17 +86,18 @@ export const prerender = true;
 		.error-terminal {
 			width: 100%;
 			max-width: 500px;
-			padding: 1.5rem;
+			padding: var(--space-md);
 			background: var(--theme-bg-secondary);
-			border: 4px solid var(--theme-accent);
+			border: var(--border-weight) solid var(--theme-accent);
+			border-radius: var(--radius-subtle);
 			text-align: left;
 		}
 
 		.terminal-line {
-			font-family: 'Space Mono', monospace;
-			font-size: 0.875rem;
+			font-family: 'JetBrains Mono', monospace;
+			font-size: var(--text-sm);
 			color: var(--theme-text);
-			margin-bottom: 0.5rem;
+			margin-bottom: var(--space-xs);
 		}
 
 		.terminal-line:last-child {

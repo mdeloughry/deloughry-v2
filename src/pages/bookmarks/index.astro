@@ -48,9 +48,9 @@ export const prerender = true
 </script>
 <PageLayout meta={meta}>
   <div class="bookmarks-page">
-    <header class="bookmarks-header">
-      <h1 class="bookmarks-title" id="heading">Bookmarks</h1>
-      <p class="bookmarks-subtitle">I find fun, useful, or just more people need to see...</p>
+    <header class="page-header">
+      <h1 class="page-title" id="heading"><span class="accent-slash">//</span> Bookmarks</h1>
+      <p class="page-subtitle">I find fun, useful, or just more people need to see...</p>
     </header>
 
     <div class="bookmarks-content">
@@ -105,36 +105,17 @@ export const prerender = true
 
   <style>
     .bookmarks-page {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-xl);
     }
 
-    .bookmarks-header {
-      text-align: center;
-      margin-bottom: 3rem;
-    }
-
-    .bookmarks-title {
-      font-size: 3rem;
-      font-weight: 700;
-      margin-bottom: 1rem;
-      color: var(--theme-text);
-      font-family: 'Space Mono', monospace;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-
-    .bookmarks-subtitle {
-      font-size: 1.2rem;
-      color: var(--theme-quote);
-      font-style: italic;
-    }
+    /* Page header and title styles from global.css */
 
     .bookmarks-content {
       display: grid;
-      grid-template-columns: 1fr 300px;
-      gap: 3rem;
+      grid-template-columns: 1fr 280px;
+      gap: var(--space-xl);
     }
 
     .bookmarks-main {
@@ -143,18 +124,21 @@ export const prerender = true
 
     .bookmarks-toc {
       position: sticky;
-      top: 2rem;
+      top: var(--space-lg);
       height: fit-content;
+      padding: var(--space-md);
+      background: var(--theme-bg-secondary);
+      border: var(--border-weight) solid rgba(255, 255, 255, 0.08);
+      border-radius: var(--radius-subtle);
     }
 
     .toc-title {
-      font-size: 1.2rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: var(--text-sm);
       font-weight: 600;
-      margin-bottom: 1rem;
-      color: var(--theme-accent);
-      font-family: 'Space Mono', monospace;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
+      margin: 0 0 var(--space-sm) 0;
+      color: var(--color-info);
+      letter-spacing: -0.01em;
     }
 
     .toc-list {
@@ -164,44 +148,40 @@ export const prerender = true
     }
 
     .toc-item {
-      margin-bottom: 0.5rem;
+      margin-bottom: var(--space-xs);
     }
 
     .toc-item a {
       display: block;
-      padding: 0.5rem;
-      color: var(--theme-text);
+      padding: var(--space-xs);
+      color: var(--theme-muted);
       text-decoration: none;
-      border-radius: 4px;
-      transition: all 0.3s ease;
-      font-size: 0.9rem;
-      font-weight: 500;
-      font-family: 'Space Mono', monospace;
-      text-transform: uppercase;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: var(--text-sm);
+      transition: color var(--transition-fast);
     }
 
     .toc-item a:hover {
-      background: rgba(175, 180, 200, 0.1);
       color: var(--theme-accent);
     }
 
     .scroll-to-top {
       position: fixed;
-      bottom: 2rem;
-      right: 2rem;
+      bottom: var(--space-lg);
+      right: var(--space-lg);
       width: 3rem;
       height: 3rem;
       background: var(--theme-accent);
-      color: white;
+      color: var(--theme-bg);
       border: none;
-      border-radius: 50%;
+      border-radius: var(--radius-subtle);
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
       opacity: 0;
       transform: translateY(100px);
-      transition: all 0.3s ease;
+      transition: opacity var(--transition-medium), transform var(--transition-medium), background var(--transition-fast);
       z-index: 100;
     }
 
@@ -212,27 +192,23 @@ export const prerender = true
 
     .scroll-to-top:hover {
       background: var(--theme-accent-hover);
-      transform: scale(1.1);
     }
 
     @media (max-width: 1024px) {
       .bookmarks-content {
         grid-template-columns: 1fr;
-        gap: 2rem;
+        gap: var(--space-lg);
       }
 
       .bookmarks-toc {
         position: static;
+        order: -1;
       }
     }
 
-    @media (max-width: 768px) {
-      .bookmarks-page {
-        padding: 1rem;
-      }
-
-      .bookmarks-title {
-        font-size: 2rem;
+    @media (prefers-reduced-motion: reduce) {
+      .scroll-to-top[data-show="true"] {
+        transform: none;
       }
     }
   </style>

@@ -1,29 +1,403 @@
-.sw--pause line {
-	animation: none !important;
+.sw {
+	margin-top: var(--space-xs, 0.5rem);
+	padding-top: 6px;
 }
 
-.sw line {
-	transform-origin: center;
-	transition: stroke 0.5s ease-in;
-	animation: sound 0.4s ease-out infinite alternate-reverse;
-	@apply stroke-gray-500 dark:stroke-white dark:opacity-10;
+/* ============================================
+   OSCILLOSCOPE CONTAINER
+   ============================================ */
+.sw-oscilloscope {
+	position: relative;
+	height: 32px;
+	background: rgba(0, 0, 0, 0.6);
+	border: 1px solid rgba(255, 255, 255, 0.1);
+	border-radius: 2px;
+	overflow: hidden;
 }
 
-.sw line.sw__full {
-	@apply stroke-accent dark:opacity-100;
+/* ============================================
+   CRT SCAN LINES
+   ============================================ */
+.sw-scanlines {
+	position: absolute;
+	inset: 0;
+	background: repeating-linear-gradient(
+		0deg,
+		transparent,
+		transparent 2px,
+		rgba(0, 0, 0, 0.3) 2px,
+		rgba(0, 0, 0, 0.3) 4px
+	);
+	pointer-events: none;
+	z-index: 10;
+	animation: scanline-flicker 0.1s steps(2) infinite;
 }
 
-@media screen and (max-width: 600px) {
-	.sw > svg {
-		width: 90%;
-	}
+/* ============================================
+   WAVEFORM SVG LAYERS
+   ============================================ */
+.sw-wave {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
 }
 
-@keyframes sound {
+.sw-wave-path {
+	fill: none;
+	stroke-width: 2;
+	stroke-linecap: round;
+	animation: wave-morph 0.8s ease-in-out infinite;
+}
+
+/* Main green wave */
+.sw-wave--main {
+	z-index: 3;
+}
+.sw-wave--main .sw-wave-path {
+	stroke: var(--color-success, #00FF87);
+	filter: drop-shadow(0 0 4px var(--color-success, #00FF87));
+}
+
+/* Chromatic aberration - red layer */
+.sw-wave--red {
+	z-index: 2;
+	animation: chromatic-red 0.15s steps(2) infinite;
+}
+.sw-wave--red .sw-wave-path {
+	stroke: var(--glitch-red, #FF4757);
+	opacity: 0.7;
+}
+
+/* Chromatic aberration - cyan layer */
+.sw-wave--cyan {
+	z-index: 1;
+	animation: chromatic-cyan 0.12s steps(2) infinite;
+}
+.sw-wave--cyan .sw-wave-path {
+	stroke: var(--glitch-cyan, #00D9FF);
+	opacity: 0.7;
+}
+
+/* ============================================
+   GLITCH CORRUPTION BLOCKS
+   ============================================ */
+.sw-glitch-block {
+	position: absolute;
+	background: var(--color-success, #00FF87);
+	opacity: 0;
+	z-index: 5;
+	mix-blend-mode: difference;
+}
+
+.sw-glitch-block--1 {
+	top: 20%;
+	left: 10%;
+	width: 15%;
+	height: 30%;
+	animation: glitch-block-1 4s steps(1) infinite;
+}
+
+.sw-glitch-block--2 {
+	top: 50%;
+	right: 20%;
+	width: 8%;
+	height: 40%;
+	animation: glitch-block-2 3s steps(1) infinite 0.5s;
+}
+
+.sw-glitch-block--3 {
+	bottom: 10%;
+	left: 40%;
+	width: 20%;
+	height: 25%;
+	animation: glitch-block-3 5s steps(1) infinite 1s;
+}
+
+.sw-glitch-block--4 {
+	top: 0;
+	right: 5%;
+	width: 12%;
+	height: 100%;
+	animation: glitch-block-4 2.5s steps(1) infinite 0.3s;
+}
+
+.sw-glitch-block--5 {
+	top: 30%;
+	left: 25%;
+	width: 6%;
+	height: 50%;
+	animation: glitch-block-5 3.5s steps(1) infinite 0.8s;
+}
+
+.sw-glitch-block--6 {
+	bottom: 0;
+	right: 35%;
+	width: 18%;
+	height: 35%;
+	animation: glitch-block-6 4.5s steps(1) infinite 1.5s;
+}
+
+/* Horizontal tear/displacement lines */
+.sw-tear {
+	position: absolute;
+	left: 0;
+	width: 100%;
+	height: 3px;
+	background: var(--color-pink, #FF6B9D);
+	opacity: 0;
+	z-index: 6;
+	mix-blend-mode: screen;
+}
+
+.sw-tear--1 {
+	top: 25%;
+	animation: tear-glitch-1 2s steps(1) infinite;
+}
+
+.sw-tear--2 {
+	top: 70%;
+	animation: tear-glitch-2 3s steps(1) infinite 0.5s;
+}
+
+/* ============================================
+   PROGRESS INDICATOR
+   ============================================ */
+.sw-progress {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: var(--progress);
+	height: 100%;
+	background: linear-gradient(90deg,
+		transparent 0%,
+		rgba(0, 255, 135, 0.1) 80%,
+		rgba(0, 255, 135, 0.3) 100%
+	);
+	z-index: 4;
+	transition: width 0.3s linear;
+}
+
+.sw-progress-head {
+	position: absolute;
+	right: -1px;
+	top: 0;
+	width: 3px;
+	height: 100%;
+	background: var(--color-pink, #FF6B9D);
+	box-shadow:
+		0 0 8px var(--color-pink, #FF6B9D),
+		0 0 16px var(--color-pink, #FF6B9D),
+		0 0 24px var(--color-pink, #FF6B9D),
+		0 0 32px var(--color-pink, #FF6B9D);
+	animation: head-pulse 0.4s ease-in-out infinite;
+}
+
+/* ============================================
+   TIME TRACK
+   ============================================ */
+.sw-time-track {
+	margin-top: 4px;
+	height: 2px;
+	background: rgba(255, 255, 255, 0.1);
+	position: relative;
+	border-radius: 1px;
+}
+
+.sw-time-track::after {
+	content: '';
+	position: absolute;
+	left: 0;
+	top: 0;
+	height: 100%;
+	width: var(--progress);
+	background: var(--color-success, #00FF87);
+	border-radius: 1px;
+	transition: width 0.3s linear;
+	box-shadow: 0 0 6px var(--color-success, #00FF87);
+}
+
+/* ============================================
+   PAUSED STATE
+   ============================================ */
+.sw--pause .sw-wave-path {
+	animation: none;
+	stroke: rgba(255, 255, 255, 0.3);
+	filter: none;
+}
+
+.sw--pause .sw-wave--red,
+.sw--pause .sw-wave--cyan {
+	display: none;
+}
+
+.sw--pause .sw-scanlines {
+	animation: none;
+}
+
+.sw--pause .sw-glitch-block,
+.sw--pause .sw-tear {
+	display: none;
+}
+
+.sw--pause .sw-progress {
+	background: linear-gradient(90deg,
+		transparent 0%,
+		rgba(255, 255, 255, 0.05) 80%,
+		rgba(255, 255, 255, 0.1) 100%
+	);
+}
+
+.sw--pause .sw-progress-head {
+	background: rgba(255, 255, 255, 0.5);
+	box-shadow: none;
+	animation: none;
+}
+
+.sw--pause .sw-time-track::after {
+	background: rgba(255, 255, 255, 0.3);
+	box-shadow: none;
+}
+
+/* ============================================
+   ANIMATIONS
+   ============================================ */
+
+/* Waveform morphing */
+@keyframes wave-morph {
 	0% {
-		transform: scaleY(0);
+		d: path("M0,20 Q10,5 20,20 T40,20 T60,20 T80,20 T100,20 T120,20 T140,20 T160,20 T180,20 T200,20");
+	}
+	25% {
+		d: path("M0,20 Q10,35 20,20 T40,15 T60,25 T80,10 T100,30 T120,15 T140,25 T160,20 T180,15 T200,20");
+	}
+	50% {
+		d: path("M0,20 Q10,10 20,20 T40,30 T60,10 T80,25 T100,15 T120,30 T140,10 T160,25 T180,30 T200,20");
+	}
+	75% {
+		d: path("M0,20 Q10,30 20,20 T40,10 T60,30 T80,20 T100,10 T120,25 T140,15 T160,30 T180,10 T200,20");
 	}
 	100% {
-		transform: scaleY(0.9);
+		d: path("M0,20 Q10,5 20,20 T40,20 T60,20 T80,20 T100,20 T120,20 T140,20 T160,20 T180,20 T200,20");
+	}
+}
+
+/* Chromatic aberration jitter */
+@keyframes chromatic-red {
+	0%, 100% { transform: translate(2px, 0); }
+	50% { transform: translate(3px, 1px); }
+}
+
+@keyframes chromatic-cyan {
+	0%, 100% { transform: translate(-2px, 0); }
+	50% { transform: translate(-3px, -1px); }
+}
+
+/* Scanline flicker */
+@keyframes scanline-flicker {
+	0%, 100% { opacity: 1; }
+	50% { opacity: 0.95; }
+}
+
+/* Playhead pulse */
+@keyframes head-pulse {
+	0%, 100% {
+		opacity: 1;
+		box-shadow:
+			0 0 8px var(--color-pink, #FF6B9D),
+			0 0 16px var(--color-pink, #FF6B9D);
+	}
+	50% {
+		opacity: 0.9;
+		box-shadow:
+			0 0 12px var(--color-pink, #FF6B9D),
+			0 0 24px var(--color-pink, #FF6B9D),
+			0 0 36px var(--color-pink, #FF6B9D),
+			0 0 48px var(--color-pink, #FF6B9D);
+	}
+}
+
+/* Glitch blocks appearing randomly */
+@keyframes glitch-block-1 {
+	0%, 92%, 100% { opacity: 0; transform: translateX(0); }
+	93% { opacity: 0.8; transform: translateX(-5px); background: var(--glitch-cyan, #00D9FF); }
+	95% { opacity: 0.6; transform: translateX(3px); background: var(--glitch-red, #FF4757); }
+	97% { opacity: 0.9; transform: translateX(-2px); background: var(--color-success, #00FF87); }
+}
+
+@keyframes glitch-block-2 {
+	0%, 88%, 100% { opacity: 0; transform: scaleX(1); }
+	89% { opacity: 0.7; transform: scaleX(2); background: var(--glitch-red, #FF4757); }
+	91% { opacity: 0.5; transform: scaleX(0.5); background: var(--glitch-cyan, #00D9FF); }
+	93% { opacity: 0.8; transform: scaleX(1.5); background: var(--color-success, #00FF87); }
+}
+
+@keyframes glitch-block-3 {
+	0%, 95%, 100% { opacity: 0; height: 25%; }
+	96% { opacity: 0.6; height: 80%; background: var(--glitch-red, #FF4757); }
+	97% { opacity: 0.4; height: 10%; background: var(--glitch-cyan, #00D9FF); }
+	98% { opacity: 0.7; height: 50%; background: var(--color-success, #00FF87); }
+}
+
+@keyframes glitch-block-4 {
+	0%, 85%, 100% { opacity: 0; transform: translateX(0); }
+	86% { opacity: 0.9; transform: translateX(-8px); background: var(--color-pink, #FF6B9D); }
+	88% { opacity: 0.5; transform: translateX(4px); background: var(--glitch-cyan, #00D9FF); }
+	90% { opacity: 0.7; transform: translateX(-2px); background: var(--color-warning, #FFFA65); }
+}
+
+@keyframes glitch-block-5 {
+	0%, 90%, 100% { opacity: 0; transform: scaleY(1); }
+	91% { opacity: 0.8; transform: scaleY(2); background: var(--color-warning, #FFFA65); }
+	93% { opacity: 0.6; transform: scaleY(0.3); background: var(--color-pink, #FF6B9D); }
+	95% { opacity: 0.9; transform: scaleY(1.5); background: var(--glitch-red, #FF4757); }
+}
+
+@keyframes glitch-block-6 {
+	0%, 80%, 100% { opacity: 0; width: 18%; }
+	82% { opacity: 0.7; width: 40%; background: var(--glitch-cyan, #00D9FF); }
+	84% { opacity: 0.5; width: 5%; background: var(--color-pink, #FF6B9D); }
+	86% { opacity: 0.8; width: 25%; background: var(--color-warning, #FFFA65); }
+}
+
+/* Horizontal tear glitches */
+@keyframes tear-glitch-1 {
+	0%, 94%, 100% { opacity: 0; transform: translateX(0) scaleX(1); }
+	95% { opacity: 1; transform: translateX(10px) scaleX(0.6); }
+	96% { opacity: 0.8; transform: translateX(-15px) scaleX(1.2); }
+	97% { opacity: 0.6; transform: translateX(5px) scaleX(0.8); height: 5px; }
+}
+
+@keyframes tear-glitch-2 {
+	0%, 91%, 100% { opacity: 0; transform: translateX(0); }
+	92% { opacity: 0.9; transform: translateX(-20px); background: var(--glitch-cyan, #00D9FF); }
+	93% { opacity: 0.7; transform: translateX(12px); background: var(--color-warning, #FFFA65); }
+	94% { opacity: 0.5; transform: translateX(-8px); background: var(--color-pink, #FF6B9D); height: 6px; }
+}
+
+/* ============================================
+   REDUCED MOTION
+   ============================================ */
+@media (prefers-reduced-motion: reduce) {
+	.sw-wave-path {
+		animation: none;
+	}
+
+	.sw-wave--red,
+	.sw-wave--cyan {
+		display: none;
+	}
+
+	.sw-scanlines {
+		animation: none;
+	}
+
+	.sw-glitch-block,
+	.sw-tear {
+		display: none;
+	}
+
+	.sw-progress-head {
+		animation: none;
 	}
 }
