@@ -29,8 +29,8 @@
     --scanline-opacity: 0.03;
   }
 
-  /* Light mode - amber terminal variant */
-  :root.light {
+  /* Light mode - amber terminal variant (when .dark class is not present) */
+  :root:not(.dark) {
     color-scheme: light;
     --theme-bg: #0a0a0a;
     --theme-text: #FFB000;

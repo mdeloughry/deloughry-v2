@@ -88,7 +88,7 @@
 		padding: 0 0.25rem;
 	}
 
-	/* Dark mode shows GREEN option (click to switch to amber) */
+	/* Default state (amber/light mode): show GREEN as the current mode indicator */
 	.green-mode {
 		display: none;
 	}
@@ -97,7 +97,7 @@
 		display: flex;
 	}
 
-	/* When dark mode is active, show amber option */
+	/* When dark mode is active: show GREEN as the current mode indicator */
 	:global(.dark) .green-mode {
 		display: flex;
 	}
