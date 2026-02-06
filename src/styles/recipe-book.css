@@ -1,20 +1,19 @@
-/* Recipe Book Styles */
+/* Recipe Book Styles - Glitch Brutalist Theme */
 .recipe {
-  max-width: 800px;
+  max-width: 900px;
   margin: 0 auto;
   padding: 2rem;
   background: var(--theme-bg);
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  font-family: 'Roboto', sans-serif;
+  border: 4px solid var(--theme-accent);
+  font-family: 'Inter', sans-serif;
   line-height: 1.6;
 }
 
 .recipe-header {
-  text-align: center;
+  text-align: left;
   margin-bottom: 2rem;
   padding-bottom: 1.5rem;
-  border-bottom: 2px solid var(--theme-accent);
+  border-bottom: 4px solid var(--theme-accent);
   position: relative;
 }
 
@@ -30,23 +29,19 @@
   width: calc(100% + 4rem);
   position: relative;
   overflow: hidden;
-
-  border-top-left-radius: 8px;
-  border-top-right-radius: 8px;
+  border-bottom: 4px solid var(--theme-accent);
 }
 
 .recipe-image img {
   width: 100%;
   height: 400px;
   object-fit: cover;
-  border-radius: 0;
-  box-shadow: none;
-  filter: grayscale(100%);
+  filter: grayscale(100%) contrast(1.1);
   transition: filter 0.3s ease;
 }
 
 .recipe-image:hover img {
-  filter: grayscale(0%);
+  filter: grayscale(0%) contrast(1);
 }
 
 .recipe-image::after {
@@ -56,45 +51,48 @@
   left: 0;
   right: 0;
   height: 200px;
-  background: linear-gradient(transparent 0%, rgba(255, 255, 255, 0.1) 30%, var(--theme-bg) 100%);
+  background: linear-gradient(transparent 0%, rgba(0, 0, 0, 0.5) 50%, var(--theme-bg) 100%);
   pointer-events: none;
 }
 
 .recipe h1 {
-  font-size: 2.5rem;
+  font-size: clamp(1.75rem, 5vw, 2.5rem);
   font-weight: 700;
   margin-bottom: 0.5rem;
   color: var(--theme-text);
-  font-family: 'Oswald', sans-serif;
+  font-family: 'Space Mono', monospace;
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 0.05em;
 }
 
 .recipe-tags {
-  font-size: 1rem;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.875rem;
   color: var(--theme-accent);
   margin-bottom: 0.5rem;
-  font-style: italic;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
 }
 
 .recipe-description {
-  font-size: 1.1rem;
-  color: var(--theme-quote);
-  font-style: italic;
+  font-size: 1rem;
+  color: var(--theme-muted);
   max-width: 600px;
-  margin: 0 auto;
+  margin: 0;
+  border-left: 4px solid var(--theme-accent);
+  padding-left: 1rem;
 }
 
 .controls {
   display: flex;
   flex-wrap: wrap;
   gap: 1rem;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   margin-bottom: 2rem;
-  padding: 1rem;
-  background: rgba(175, 180, 200, 0.1);
-  border-radius: 8px;
+  padding: 1.5rem;
+  background: var(--theme-bg-secondary);
+  border: 4px solid var(--theme-accent);
 }
 
 .scaler, .units, .actions {
@@ -104,34 +102,50 @@
 }
 
 .scaler button, .nav-btn, .cook-mode-btn {
-  background: var(--theme-accent);
-  color: white;
-  border: none;
+  background: transparent;
+  color: var(--theme-accent);
+  border: 2px solid var(--theme-accent);
   padding: 0.5rem 1rem;
-  border-radius: 4px;
   cursor: pointer;
-  font-weight: 600;
-  transition: background-color 0.2s;
-  font-family: 'Oswald', sans-serif;
+  font-weight: 700;
+  transition: all 0.15s ease;
+  font-family: 'Space Mono', monospace;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.05em;
 }
 
 .scaler button:hover, .nav-btn:hover, .cook-mode-btn:hover {
-  background: var(--theme-accent-hover);
+  background: var(--theme-accent);
+  color: var(--theme-bg);
+  transform: translate(-2px, -2px);
+  box-shadow: 2px 2px 0 var(--glitch-cyan);
+}
+
+.scaler button:focus-visible, .nav-btn:focus-visible, .cook-mode-btn:focus-visible {
+  outline: 2px solid var(--theme-accent);
+  outline-offset: 2px;
 }
 
 .scaler button:disabled, .nav-btn:disabled {
-  background: #ccc;
+  border-color: var(--theme-muted);
+  color: var(--theme-muted);
   cursor: not-allowed;
+}
+
+.scaler button:disabled:hover, .nav-btn:disabled:hover {
+  background: transparent;
+  transform: none;
+  box-shadow: none;
 }
 
 .cook-mode-btn {
   background: var(--theme-accent);
+  color: var(--theme-bg);
 }
 
 .cook-mode-btn:hover {
-  background: var(--theme-accent-hover);
+  background: transparent;
+  color: var(--theme-accent);
 }
 
 .units label {
@@ -139,7 +153,9 @@
   align-items: center;
   gap: 0.25rem;
   cursor: pointer;
-  font-weight: 500;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.875rem;
+  color: var(--theme-text);
 }
 
 .ingredients-section {
@@ -147,12 +163,17 @@
 }
 
 .ingredients-section h2 {
-  font-size: 1.5rem;
-  color: var(--theme-accent);
+  font-size: 1.25rem;
+  color: var(--theme-text);
   margin-bottom: 1rem;
-  font-family: 'Oswald', sans-serif;
+  font-family: 'Space Mono', monospace;
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 0.05em;
+}
+
+.ingredients-section h2::before {
+  content: "// ";
+  color: var(--theme-accent);
 }
 
 .ingredients-grid {
@@ -167,14 +188,14 @@
   justify-content: space-between;
   align-items: center;
   padding: 0.75rem;
-  background: rgba(175, 180, 200, 0.05);
-  border-left: 3px solid var(--theme-accent);
-  border-radius: 4px;
+  background: var(--theme-bg-secondary);
+  border-left: 4px solid var(--theme-accent);
   position: relative;
 }
 
 .ingredient-quantity {
-  font-weight: 600;
+  font-family: 'Space Mono', monospace;
+  font-weight: 700;
   color: var(--theme-accent);
   min-width: 80px;
 }
@@ -193,12 +214,17 @@
 }
 
 .utensils-section h2 {
-  font-size: 1.5rem;
-  color: var(--theme-accent);
+  font-size: 1.25rem;
+  color: var(--theme-text);
   margin-bottom: 1rem;
-  font-family: 'Oswald', sans-serif;
+  font-family: 'Space Mono', monospace;
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 0.05em;
+}
+
+.utensils-section h2::before {
+  content: "// ";
+  color: var(--theme-accent);
 }
 
 .utensils-list {
@@ -208,32 +234,37 @@
 }
 
 .utensil-tag {
-  background: var(--theme-accent);
-  color: white;
+  background: transparent;
+  color: var(--theme-accent);
   padding: 0.25rem 0.75rem;
-  border-radius: 20px;
-  font-size: 0.9rem;
+  border: 2px solid var(--theme-accent);
+  font-family: 'Space Mono', monospace;
+  font-size: 0.75rem;
   font-weight: 500;
-  text-transform: capitalize;
-
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 /* Shopping List */
 .shopping-list {
   margin-bottom: 2rem;
   padding: 1.5rem;
-  background: var(--theme-bg);
+  background: var(--theme-bg-secondary);
   color: var(--theme-text);
-  border-radius: 8px;
-  border: 1px solid rgba(175, 180, 200, 0.2);
+  border: 4px solid var(--theme-accent);
 }
 
 .shopping-list h2 {
   margin: 0 0 1rem 0;
-  color: var(--theme-accent);
-  font-family: 'Oswald', sans-serif;
+  color: var(--theme-text);
+  font-family: 'Space Mono', monospace;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.05em;
+}
+
+.shopping-list h2::before {
+  content: "// ";
+  color: var(--theme-accent);
 }
 
 .shopping-list-controls {
@@ -241,18 +272,25 @@
 }
 
 .clear-list-btn {
-  background: #dc3545;
-  color: white;
-  border: none;
+  background: transparent;
+  color: var(--glitch-red);
+  border: 2px solid var(--glitch-red);
   padding: 0.5rem 1rem;
-  border-radius: 4px;
-  font-size: 0.9rem;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.875rem;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: all 0.15s ease;
+  text-transform: uppercase;
 }
 
 .clear-list-btn:hover {
-  background: #c82333;
+  background: var(--glitch-red);
+  color: var(--theme-bg);
+}
+
+.clear-list-btn:focus-visible {
+  outline: 2px solid var(--glitch-red);
+  outline-offset: 2px;
 }
 
 .shopping-list ul {
@@ -269,14 +307,13 @@
   margin-bottom: 0.5rem;
   background: var(--theme-bg);
   color: var(--theme-text);
-  border-radius: 6px;
-  border: 1px solid rgba(175, 180, 200, 0.3);
-  transition: box-shadow 0.3s ease;
+  border: 2px solid var(--theme-accent);
+  transition: all 0.15s ease;
 }
 
 .shopping-list li:hover {
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  background: var(--theme-bg);
+  transform: translate(-2px, -2px);
+  box-shadow: 2px 2px 0 var(--theme-accent);
 }
 
 .shopping-list li span {
@@ -286,54 +323,69 @@
 }
 
 .remove-item-btn {
-  background: #dc3545;
-  color: white;
+  background: var(--glitch-red);
+  color: var(--theme-bg);
   border: none;
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
+  width: 28px;
+  height: 28px;
   cursor: pointer;
   font-size: 16px;
   line-height: 1;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background-color 0.3s ease;
+  transition: all 0.15s ease;
 }
 
 .remove-item-btn:hover {
-  background: #c82333;
+  background: #ff1f3d;
+  transform: scale(1.1);
+}
+
+.remove-item-btn:focus-visible {
+  outline: 2px solid var(--glitch-red);
+  outline-offset: 2px;
 }
 
 /* Add to list button */
 .add-to-list-btn {
   background: var(--theme-accent);
-  color: white;
+  color: var(--theme-bg);
   border: none;
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
+  width: 28px;
+  height: 28px;
   cursor: pointer;
   font-size: 16px;
   line-height: 1;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background-color 0.3s ease;
+  transition: all 0.15s ease;
   margin-left: auto;
 }
 
 .add-to-list-btn:hover {
   background: var(--theme-accent-hover);
+  transform: scale(1.1);
+}
+
+.add-to-list-btn:focus-visible {
+  outline: 2px solid var(--theme-accent);
+  outline-offset: 2px;
 }
 
 .method-section h2 {
-  font-size: 1.5rem;
-  color: var(--theme-accent);
+  font-size: 1.25rem;
+  color: var(--theme-text);
   margin-bottom: 1.5rem;
-  font-family: 'Oswald', sans-serif;
+  font-family: 'Space Mono', monospace;
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 0.05em;
+}
+
+.method-section h2::before {
+  content: "// ";
+  color: var(--theme-accent);
 }
 
 .steps-container {
@@ -345,19 +397,19 @@
   gap: 1rem;
   margin-bottom: 1.5rem;
   padding: 1rem;
-  border-radius: 8px;
-  transition: all 0.3s ease;
+  background: var(--theme-bg-secondary);
+  border-left: 4px solid var(--theme-muted);
+  transition: all 0.15s ease;
 }
 
 .step.active {
-  background: rgba(175, 180, 200, 0.1);
-  border-left: 4px solid var(--theme-accent);
-  transform: scale(1.02);
+  background: rgba(218, 255, 1, 0.05);
+  border-left-color: var(--theme-accent);
+  transform: translateX(4px);
 }
 
 .step.inactive {
   opacity: 0.4;
-  background: rgba(175, 180, 200, 0.05);
 }
 
 .step-number {
@@ -365,13 +417,13 @@
   width: 2.5rem;
   height: 2.5rem;
   background: var(--theme-accent);
-  color: white;
-  border-radius: 50%;
+  color: var(--theme-bg);
   display: flex;
   align-items: center;
   justify-content: center;
+  font-family: 'Space Mono', monospace;
   font-weight: 700;
-  font-size: 1.1rem;
+  font-size: 1rem;
 }
 
 .step-content {
@@ -380,9 +432,9 @@
 
 .step-text {
   margin: 0;
-  font-size: 1.1rem;
+  font-size: 1rem;
   color: var(--theme-text);
-  line-height: 1.6;
+  line-height: 1.7;
 }
 
 .cook-navigation {
@@ -390,15 +442,17 @@
   justify-content: space-between;
   align-items: center;
   padding: 1.5rem;
-  background: rgba(175, 180, 200, 0.1);
-  border-radius: 8px;
+  background: var(--theme-bg-secondary);
+  border: 4px solid var(--theme-accent);
   margin-top: 2rem;
 }
 
 .step-counter {
-  font-weight: 600;
+  font-family: 'Space Mono', monospace;
+  font-weight: 700;
   color: var(--theme-accent);
-  font-size: 1.1rem;
+  font-size: 1rem;
+  text-transform: uppercase;
 }
 
 .timers {
@@ -409,45 +463,59 @@
 }
 
 .timers button {
-  background: var(--theme-accent);
-  color: white;
-  border: none;
+  background: transparent;
+  color: var(--glitch-cyan);
+  border: 2px solid var(--glitch-cyan);
   padding: 0.5rem 1rem;
-  border-radius: 4px;
   cursor: pointer;
-  font-size: 0.9rem;
-  transition: background-color 0.2s;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.875rem;
+  transition: all 0.15s ease;
+  text-transform: uppercase;
 }
 
 .timers button:hover {
-  background: var(--theme-accent-hover);
+  background: var(--glitch-cyan);
+  color: var(--theme-bg);
+}
+
+.timers button:focus-visible {
+  outline: 2px solid var(--glitch-cyan);
+  outline-offset: 2px;
 }
 
 .timer-display {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  background: rgba(175, 180, 200, 0.2);
+  background: var(--theme-bg-secondary);
+  border: 2px solid var(--theme-accent);
   padding: 0.5rem 1rem;
-  border-radius: 4px;
-  font-weight: 600;
-  color: var(--theme-text);
+  font-family: 'Space Mono', monospace;
+  font-weight: 700;
+  color: var(--theme-accent);
 }
 
 .stop-timer {
-  background: #dc3545;
-  color: white;
+  background: var(--glitch-red);
+  color: var(--theme-bg);
   border: none;
   padding: 0.25rem 0.5rem;
-  border-radius: 3px;
   cursor: pointer;
-  font-size: 0.8rem;
-  font-weight: 600;
-  transition: background-color 0.2s;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.75rem;
+  font-weight: 700;
+  transition: all 0.15s ease;
+  text-transform: uppercase;
 }
 
 .stop-timer:hover {
-  background: #c82333;
+  background: #ff1f3d;
+}
+
+.stop-timer:focus-visible {
+  outline: 2px solid var(--glitch-red);
+  outline-offset: 2px;
 }
 
 /* Cook Mode Styles */
@@ -465,25 +533,25 @@
 }
 
 .recipe.cook-mode .step.active {
-  background: rgba(175, 180, 200, 0.2);
-  border-left: 6px solid var(--theme-accent);
-  transform: scale(1.05);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  background: rgba(218, 255, 1, 0.1);
+  border-left-width: 8px;
+  border-left-color: var(--theme-accent);
+  transform: translateX(8px);
+  box-shadow: -4px 0 0 var(--glitch-cyan);
 }
 
 .recipe.cook-mode .step.inactive {
   opacity: 0.2;
-  transform: scale(0.95);
 }
 
 .recipe.cook-mode .step-number {
   width: 3rem;
   height: 3rem;
-  font-size: 1.3rem;
+  font-size: 1.25rem;
 }
 
 .recipe.cook-mode .step-text {
-  font-size: 1.2rem;
+  font-size: 1.1rem;
 }
 
 
@@ -494,7 +562,7 @@
   }
 
   .recipe h1 {
-    font-size: 2rem;
+    font-size: 1.5rem;
   }
 
   .controls {
@@ -513,10 +581,28 @@
 
   .step {
     flex-direction: column;
-    text-align: center;
+    text-align: left;
   }
 
   .step-number {
-    align-self: center;
+    align-self: flex-start;
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .step.active,
+  .recipe.cook-mode .step.active {
+    transform: none;
+  }
+
+  .scaler button:hover,
+  .nav-btn:hover,
+  .cook-mode-btn:hover,
+  .shopping-list li:hover,
+  .remove-item-btn:hover,
+  .add-to-list-btn:hover {
+    transform: none;
+    box-shadow: none;
   }
 }
