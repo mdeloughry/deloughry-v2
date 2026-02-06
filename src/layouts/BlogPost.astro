@@ -39,25 +39,26 @@ const { headings } = await post.render();
 
 <BaseLayout meta={{ title, description, articleDate, ogImage: socialImage }}>
 	<article class="blog-post h-entry">
-		<header class="blog-post-header">
+		<header id="blog-hero" class="blog-post-header">
 			{ogImage && (
 				<div class="blog-post-image">
 					<img src={ogImage} alt={title} />
+					<div class="image-scanlines" aria-hidden="true"></div>
 				</div>
 			)}
 			<div class="blog-post-meta">
 				<time datetime={articleDate} class="blog-post-date">
 					{new Date(publishDate).toLocaleDateString('en-GB', {
 						year: 'numeric',
-						month: 'long',
+						month: 'short',
 						day: 'numeric'
-					})}
+					}).toUpperCase().replace(/ /g, '_')}
 				</time>
-				<h1 class="blog-post-title">{title}</h1>
+				<h1 class="blog-post-title glitch-text" data-text={title}>{title}</h1>
 				{post.data.tags && post.data.tags.length > 0 && (
 					<div class="blog-post-tags">
 						{post.data.tags.map((tag) => (
-							<a href={`/tags/${getTagSlug(tag)}`} class="tag" title={`View posts with tag: ${formatTagForDisplay(tag)}`}>
+							<a href={`/tags/${getTagSlug(tag)}`} class="brutal-tag" title={`View posts with tag: ${formatTagForDisplay(tag)}`}>
 								{formatTagForDisplay(tag)}
 							</a>
 						))}
@@ -70,26 +71,31 @@ const { headings } = await post.render();
 		<div class="blog-post-content">
 			<div class="blog-post-body">
 				<div
-					class="prose prose-lg prose-cactus w-full max-w-none prose-headings:font-semibold prose-headings:before:flex-row prose-heading:before:mr-4 prose-headings:before:text-accent prose-headings:before:content-['#'] prose-th:before:content-none"
+					class="prose prose-lg prose-brutalist w-full max-w-none"
 				>
 					<slot />
 				</div>
 			</div>
 
-			<aside class="blog-post-toc">
-				<h2 class="toc-title">Table of Contents</h2>
-				<ul class="toc-list">
-					{
-						headings.flatMap(({ slug, text }) => (
-							<li class="toc-item">
-								<a href={`#${slug}`} aria-label={`Scroll to section: ${text}`}>
-									{text}
-								</a>
-							</li>
-						))
-					}
-				</ul>
-			</aside>
+			{headings.length > 0 && (
+				<aside class="blog-post-toc">
+					<div class="toc-container brutal-card">
+						<h2 class="toc-title">
+							<span class="text-accent">//</span> TOC_
+						</h2>
+						<ul class="toc-list">
+							{headings.map(({ slug, text }) => (
+								<li class="toc-item">
+									<a href={`#${slug}`} aria-label={`Scroll to section: ${text}`}>
+										<span class="toc-marker">&gt;</span>
+										{text}
+									</a>
+								</li>
+							))}
+						</ul>
+					</div>
+				</aside>
+			)}
 		</div>
 	</article>
 
@@ -109,130 +115,95 @@ const { headings } = await post.render();
 			stroke="currentColor"
 			class="h-6 w-6"
 		>
-			<path stroke-linecap="round" stroke-linejoin="round" d="M4.5 15.75l7.5-7.5 7.5 7.5"></path>
+			<path stroke-linecap="square" stroke-linejoin="miter" d="M4.5 15.75l7.5-7.5 7.5 7.5"></path>
 		</svg>
 	</button>
 
 	<style>
 		.blog-post {
-			max-width: 1000px;
+			max-width: 1200px;
 			margin: 0 auto;
-			padding: 2rem;
-			background: var(--theme-bg);
-			border-radius: 8px;
-			box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-			font-family: 'Roboto', sans-serif;
-			line-height: 1.6;
 		}
 
 		.blog-post-header {
-			text-align: center;
 			margin-bottom: 3rem;
 			padding-bottom: 2rem;
-			border-bottom: 2px solid var(--theme-accent);
-			position: relative;
+			border-bottom: 4px solid var(--theme-accent);
 		}
 
 		.blog-post-image {
-			margin: -2rem -2rem 2rem -2rem;
-			width: calc(100% + 4rem);
 			position: relative;
+			margin-bottom: 2rem;
+			border: 4px solid var(--theme-accent);
 			overflow: hidden;
-			border-top-left-radius: 8px;
-			border-top-right-radius: 8px;
 		}
 
 		.blog-post-image img {
 			width: 100%;
 			height: 400px;
 			object-fit: cover;
-			border-radius: 0;
-			box-shadow: none;
-			filter: grayscale(100%);
+			filter: grayscale(100%) contrast(1.1);
 			transition: filter 0.3s ease;
 		}
 
 		.blog-post-image:hover img {
-			filter: grayscale(0%);
+			filter: grayscale(0%) contrast(1);
 		}
 
-		.blog-post-image::after {
-			content: '';
+		.image-scanlines {
 			position: absolute;
-			bottom: 0;
-			left: 0;
-			right: 0;
-			height: 200px;
-			background: linear-gradient(transparent 0%, rgba(255, 255, 255, 0.1) 30%, var(--theme-bg) 100%);
+			inset: 0;
+			background: repeating-linear-gradient(
+				0deg,
+				transparent,
+				transparent 2px,
+				rgba(0, 0, 0, 0.1) 2px,
+				rgba(0, 0, 0, 0.1) 4px
+			);
 			pointer-events: none;
 		}
 
-		/* Only apply image overlay positioning when there's an image */
-		.blog-post:has(.blog-post-image) .blog-post-meta {
-			z-index: 2;
-			margin-top: -200px;
-			padding-top: 200px;
-		}
-
 		.blog-post-meta {
-			position: relative;
+			display: flex;
+			flex-direction: column;
+			gap: 1rem;
 		}
 
 		.blog-post-date {
-			display: block;
-			font-size: 1rem;
+			font-family: 'JetBrains Mono', monospace;
+			font-size: 0.875rem;
 			color: var(--theme-accent);
-			font-weight: 600;
-			margin-bottom: 1rem;
-			font-family: 'Oswald', sans-serif;
-			text-transform: uppercase;
-			letter-spacing: 1px;
+			letter-spacing: 0.1em;
 		}
 
 		.blog-post-title {
-			font-size: 2.5rem;
+			font-family: 'JetBrains Mono', monospace;
+			font-size: clamp(1.75rem, 5vw, 3rem);
 			font-weight: 700;
-			margin-bottom: 1rem;
+			line-height: 1.2;
 			color: var(--theme-text);
-			font-family: 'Oswald', sans-serif;
 			text-transform: uppercase;
-			letter-spacing: 1px;
+			margin: 0;
 		}
 
 		.blog-post-tags {
 			display: flex;
 			flex-wrap: wrap;
-			justify-content: center;
 			gap: 0.5rem;
-			margin-bottom: 1rem;
-		}
-
-		.tag {
-			background: var(--theme-accent);
-			color: white;
-			padding: 0.25rem 0.75rem;
-			border-radius: 20px;
-			font-size: 0.9rem;
-			font-weight: 500;
-			text-decoration: none;
-			transition: background-color 0.3s ease, transform 0.2s ease;
-		}
-
-		.tag:hover {
-			background: var(--theme-accent-dark, #1a4d3a);
-			transform: translateY(-1px);
 		}
 
 		.blog-post-description {
-			font-size: 1.2rem;
-			color: var(--theme-quote);
-			font-style: italic;
+			font-size: 1.1rem;
+			color: var(--theme-muted);
+			line-height: 1.6;
 			margin: 0;
+			padding-left: 1rem;
+			border-left: 4px solid var(--theme-accent);
 		}
 
 		.blog-post-content {
 			display: grid;
-			grid-template-columns: 1fr 300px;
+			grid-template-columns: 1fr 280px;
 			gap: 3rem;
 		}
 
@@ -240,20 +211,77 @@ const { headings } = await post.render();
 			min-width: 0;
 		}
 
+		/* Prose overrides for brutalist style */
+		.blog-post-body :global(h1),
+		.blog-post-body :global(h2),
+		.blog-post-body :global(h3),
+		.blog-post-body :global(h4) {
+			font-family: 'JetBrains Mono', monospace;
+			text-transform: uppercase;
+			letter-spacing: 0.05em;
+			color: var(--theme-accent);
+			margin-top: 2.5rem;
+			margin-bottom: 1rem;
+		}
+
+		.blog-post-body :global(h2)::before {
+			content: "## ";
+			color: var(--theme-muted);
+		}
+
+		.blog-post-body :global(h3)::before {
+			content: "### ";
+			color: var(--theme-muted);
+		}
+
+		.blog-post-body :global(a) {
+			color: var(--theme-accent);
+			text-decoration: none;
+			border-bottom: 2px solid var(--theme-accent);
+			transition: all 0.15s ease;
+		}
+
+		.blog-post-body :global(a:hover) {
+			background: var(--theme-accent);
+			color: var(--theme-bg);
+		}
+
+		.blog-post-body :global(pre) {
+			border: 4px solid var(--theme-accent);
+			border-radius: 0;
+			background: var(--theme-bg-secondary);
+		}
+
+		.blog-post-body :global(code) {
+			font-family: 'JetBrains Mono', monospace;
+		}
+
+		.blog-post-body :global(blockquote) {
+			border-left: 4px solid var(--theme-accent);
+			background: var(--theme-bg-secondary);
+			padding: 1rem 1.5rem;
+			margin: 1.5rem 0;
+			font-style: normal;
+		}
+
+		/* TOC Sidebar */
 		.blog-post-toc {
 			position: sticky;
 			top: 2rem;
 			height: fit-content;
 		}
 
+		.toc-container {
+			padding: 1.5rem;
+		}
+
 		.toc-title {
-			font-size: 1.2rem;
-			font-weight: 600;
-			margin-bottom: 1rem;
-			color: var(--theme-accent);
-			font-family: 'Oswald', sans-serif;
+			font-family: 'JetBrains Mono', monospace;
+			font-size: 1rem;
+			font-weight: 700;
+			margin: 0 0 1rem 0;
 			text-transform: uppercase;
-			letter-spacing: 0.5px;
+			color: var(--theme-text);
 		}
 
 		.toc-list {
@@ -267,38 +295,47 @@ const { headings } = await post.render();
 		}
 
 		.toc-item a {
-			display: block;
+			display: flex;
+			align-items: flex-start;
+			gap: 0.5rem;
 			padding: 0.5rem;
-			color: var(--theme-text);
+			font-family: 'JetBrains Mono', monospace;
+			font-size: 0.75rem;
+			color: var(--theme-muted);
 			text-decoration: none;
-			border-radius: 4px;
-			transition: all 0.3s ease;
-			font-size: 0.9rem;
-			font-weight: 500;
+			text-transform: uppercase;
+			transition: all 0.15s ease;
+			border: 2px solid transparent;
 		}
 
 		.toc-item a:hover {
-			background: rgba(175, 180, 200, 0.1);
 			color: var(--theme-accent);
+			border-color: var(--theme-accent);
+			background: rgba(218, 255, 1, 0.05);
 		}
 
+		.toc-marker {
+			color: var(--theme-accent);
+			flex-shrink: 0;
+		}
+
+		/* Scroll to top button */
 		.scroll-to-top {
 			position: fixed;
 			bottom: 2rem;
 			right: 2rem;
 			width: 3rem;
 			height: 3rem;
-			background: var(--theme-accent);
-			color: white;
-			border: none;
-			border-radius: 50%;
+			background: transparent;
+			color: var(--theme-accent);
+			border: 4px solid var(--theme-accent);
 			cursor: pointer;
 			display: flex;
 			align-items: center;
 			justify-content: center;
 			opacity: 0;
 			transform: translateY(100px);
-			transition: all 0.3s ease;
+			transition: all 0.15s ease;
 			z-index: 100;
 		}
 
@@ -308,8 +345,43 @@ const { headings } = await post.render();
 		}
 
 		.scroll-to-top:hover {
-			background: var(--theme-accent-hover);
-			transform: scale(1.1);
+			background: var(--theme-accent);
+			color: var(--theme-bg);
+			transform: translateY(0) translate(-2px, -2px);
+			box-shadow: 4px 4px 0 var(--glitch-cyan);
+		}
+
+		.scroll-to-top:focus-visible {
+			outline: 2px solid var(--theme-accent);
+			outline-offset: 4px;
+			background: var(--theme-accent);
+			color: var(--theme-bg);
+		}
+
+		.toc-item a:focus-visible {
+			outline: 2px solid var(--theme-accent);
+			outline-offset: 2px;
+			color: var(--theme-accent);
+		}
+
+		.blog-post-body :global(a:focus-visible) {
+			outline: 2px solid var(--theme-accent);
+			outline-offset: 2px;
+		}
+
+		@media (prefers-reduced-motion: reduce) {
+			.scroll-to-top {
+				transition: opacity 0.15s ease;
+			}
+
+			.scroll-to-top:hover {
+				transform: translateY(0);
+				box-shadow: none;
+			}
+
+			.scroll-to-top[data-show="true"] {
+				transform: none;
+			}
 		}
 
 		@media (max-width: 1024px) {
@@ -320,25 +392,17 @@ const { headings } = await post.render();
 
 			.blog-post-toc {
 				position: static;
+				order: -1;
 			}
 		}
 
 		@media (max-width: 768px) {
-			.blog-post {
-				padding: 1rem;
+			.blog-post-image img {
+				height: 250px;
 			}
 
 			.blog-post-title {
-				font-size: 2rem;
-			}
-
-			.blog-post-image {
-				margin: -1rem -1rem 2rem -1rem;
-				width: calc(100% + 2rem);
-			}
-
-			.blog-post-image img {
-				height: 250px;
+				font-size: 1.5rem;
 			}
 		}
 	</style>

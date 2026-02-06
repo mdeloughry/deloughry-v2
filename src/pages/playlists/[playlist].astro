@@ -3,7 +3,10 @@ import PageLayout from "@/layouts/Base";
 import type { GetStaticPathsResult } from "astro";
 import ImageWithBadge from "src/components/ImageWithBadge";
 import Tracks from "src/components/Tracks";
-import type { PlaylistWithAllRelationships, TrackWithAllRelationships } from "@/lib/types/spotify";
+import type {
+  PlaylistWithAllRelationships,
+  TrackWithAllRelationships,
+} from "@/lib/types/spotify";
 import { getPlaylistsfromDB } from "@/data/models/playlist";
 
 export async function getStaticPaths(): Promise<GetStaticPathsResult> {
@@ -36,22 +39,23 @@ export const prerender = true;
 
 <PageLayout meta={meta}>
   <h1 class="title mb-6">{playlist.name}</h1>
-  <a href="/playlists" class="cactus-link mb-4">&lt; Back</a>
+  <a href="/playlists" class="brutal-link mb-4">&lt; Back</a>
   <div class="mt-6 flex flex-col gap-4 sm:flex-row">
     <div class="w-full sm:w-1/4">
-      <a href={playlist.externalUrl} class="cactus-link" target="_blank">
+      <a href={playlist.externalUrl} class="brutal-link" target="_blank">
         <ImageWithBadge
           client:load
           imageUrl={playlist.artwork[0]?.url ?? ""}
           underText="Play on Spotify"
           transition:name={"album-artwork"}
-
         />
       </a>
     </div>
     <div class="flex-1">
       <h2 class="my-4 flex justify-between sm:justify-start sm:gap-4">
-        <span>Tracks</span><span class="text-accent">({tracks.length ?? 0})</span>
+        <span>Tracks</span><span class="text-accent"
+          >({tracks.length ?? 0})</span
+        >
       </h2>
       {
         tracks && (

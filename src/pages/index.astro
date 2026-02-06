@@ -6,307 +6,371 @@ import MeImage from "../assets/image.webp";
 import { sortMDByDate, getTagSlug, formatTagForDisplay } from "@/utils";
 import { Image } from "astro:assets";
 
-const MAX_POSTS = 10;
+const MAX_POSTS = 6;
 const allPosts = await getCollection("post");
 const allPostsByDate = sortMDByDate(allPosts).slice(0, MAX_POSTS);
 export const prerender = true;
 ---
 
 <PageLayout meta={{ title: "Home" }}>
-	<div class="home-page">
-		<header class="home-hero">
-			<div class="hero-content">
-				<div class="hero-image">
-					<Image
-						src={MeImage}
-						height={MeImage.height}
-						width={MeImage.width}
-						alt="Matthew Peck-Deloughry"
-						class="profile-photo"
-						transition:name={"profile-image"}
-					/>
-				</div>
-				<div class="hero-text">
-					<a class="u-url hidden" rel="me" href="https://deloughry.co.uk/">Matthew Peck-Deloughry</a>
-					<a class="u-url hidden" href="acct:matt@deloughry.co.uk"></a>
-					<h1 class="hero-title">
-						<span class="text-link">Developer.</span><br />
-						<span class="text-twitch">Streamer.</span><br />
-						<span class="text-twitter line-through">Tweeter.</span><span class="text-mastodon">Tooter.</span><br />
-						&amp; a little bit of everything <span class="text-accent dark:text-accent">Nerdy!</span><span class="font-bold">_</span>
-					</h1>
-				</div>
-			</div>
-		</header>
+  <div class="home-page">
+    <!-- Hero Section - Clean and confident -->
+    <section class="hero-section">
+      <div class="hero-grid">
+        <!-- Profile Image -->
+        <div class="hero-image-container crt-filter">
+          <Image
+            src={MeImage}
+            height={MeImage.height}
+            width={MeImage.width}
+            alt="Matthew Peck-Deloughry"
+            class="hero-image crt-image"
+            transition:name={"profile-image"}
+          />
+        </div>
 
-		<section class="about-section">
-			<div class="about-card">
-				<h2 class="section-title">
-					Av' fun developing, Av' fun learning, then Av'a crack at engineering it!
-				</h2>
-				<div class="about-content">
-					<p class="p-note">
-						Aye up, I'm Matt (aka Dr_DinoMight 🦖🧨), a developer of something around 15 years (I think!?
-						They all blend into one and other now 😖).<br /><br />
-						I'm a developer for the brilliant HMA Digital here in South Yorkshire, UK.<br /><br />
-						💬 I'm a Full Stack Developer who loves to tinker with anything and everything, I love to build,
-						be it personal 1 person projects or large scale community projects, as long as it's code it floats
-						my boat!<br /><br />
-					</p>
-					<SocialList />
-				</div>
-			</div>
-		</section>
+        <!-- Hero Text -->
+        <div class="hero-content">
+          <a class="u-url hidden" rel="me" href="https://deloughry.co.uk/"
+            >Matthew Peck-Deloughry</a
+          >
+          <a class="u-url hidden" href="acct:matt@deloughry.co.uk"></a>
 
-		<section class="recent-posts">
-			<h2 class="section-title">Recent Posts</h2>
-			<div class="posts-grid">
-				{allPostsByDate.map((p) => (
-					<article class="post-card">
-						{p.data.ogImage && (
-							<div class="post-card-image">
-								<img src={p.data.ogImage} alt={p.data.title} />
-							</div>
-						)}
-						<div class="post-card-content">
-							<time datetime={p.data.publishDate.toISOString()} class="post-card-date">
-								{new Date(p.data.publishDate).toLocaleDateString('en-GB', {
-									year: 'numeric',
-									month: 'short',
-									day: 'numeric'
-								})}
-							</time>
-							<h3 class="post-card-title">
-								<a href={`/posts/${p.slug}/`}>{p.data.title}</a>
-							</h3>
-							{p.data.description && <p class="post-card-description">{p.data.description}</p>}
-							{p.data.tags && p.data.tags.length > 0 && (
-								<div class="post-card-tags">
-									{p.data.tags.map((tag) => (
-										<a href={`/tags/${getTagSlug(tag)}`} class="tag" title={`View posts with tag: ${formatTagForDisplay(tag)}`}>
-											{formatTagForDisplay(tag)}
-										</a>
-									))}
-								</div>
-							)}
-						</div>
-					</article>
-				))}
-			</div>
-		</section>
-	</div>
+          <div class="hero-roles">
+            <span class="role-item text-accent glow-accent">Developer</span>
+            <span class="role-divider" aria-hidden="true">//</span>
+            <span class="role-item text-purple glow-purple">Streamer</span>
+            <span class="role-divider" aria-hidden="true">//</span>
+            <span class="role-item text-cyan glow-cyan">Maker</span>
+          </div>
+        </div>
+      </div>
+    </section>
 
-	<style>
-		.home-page {
-			max-width: 1200px;
-			margin: 0 auto;
-			padding: 2rem;
-		}
+    <!-- About Section -->
+    <section class="about-section">
+      <div class="about-content">
+        <p class="p-note">
+          Aye up, I'm Matt (aka Dr_DinoMight), a developer of around 15 years.
+          Full Stack Developer who loves to tinker with anything and everything.
+          I love to build, be it personal projects or large scale community
+          projects. As long as it's code it floats my boat!
+        </p>
+        <div class="mt-8">
+          <SocialList />
+        </div>
+      </div>
+    </section>
 
-		.home-hero {
-			margin-bottom: 4rem;
-		}
+    <!-- Motto Section -->
+    <section class="motto-section">
+      <blockquote class="motto-quote">
+        <span class="quote-mark" aria-hidden="true">"</span>
+        <span class="quote-text">
+          Av' fun developing, Av' fun learning, then Av'a crack at engineering
+          it!
+        </span>
+        <span class="quote-mark" aria-hidden="true">"</span>
+        <span class="cursor" aria-hidden="true">_</span>
+      </blockquote>
+    </section>
 
-		.hero-content {
-			display: flex;
-			align-items: center;
-			gap: 3rem;
-			background: var(--theme-bg);
-			padding: 3rem;
-			border-radius: 12px;
-		}
+    <!-- Recent Posts Section -->
+    <section class="posts-section">
+      <div class="section-header">
+        <h2 class="section-title slash-prefix">Recent Posts</h2>
+        <a href="/posts" class="brutal-btn"> View all</a>
+      </div>
 
-		.hero-image {
-			flex-shrink: 0;
-		}
+      <div class="posts-grid stagger-reveal">
+        {
+          allPostsByDate.map((p) => (
+            <article class="brutal-card post-card">
+              {p.data.ogImage && (
+                <div class="post-card-image">
+                  <img src={p.data.ogImage} alt={p.data.title} loading="lazy" />
+                </div>
+              )}
+              <div class="post-card-content">
+                <time
+                  datetime={p.data.publishDate.toISOString()}
+                  class="post-date"
+                >
+                  {new Date(p.data.publishDate).toLocaleDateString("en-GB", {
+                    year: "numeric",
+                    month: "short",
+                    day: "numeric",
+                  })}
+                </time>
+                <h3 class="post-title">
+                  <a href={`/posts/${p.slug}/`}>{p.data.title}</a>
+                </h3>
+                {p.data.description && (
+                  <p class="post-description">{p.data.description}</p>
+                )}
+                {p.data.tags && p.data.tags.length > 0 && (
+                  <div class="post-tags">
+                    {p.data.tags.slice(0, 3).map((tag) => (
+                      <a
+                        href={`/tags/${getTagSlug(tag)}`}
+                        class="brutal-tag"
+                        title={`View posts with tag: ${formatTagForDisplay(
+                          tag,
+                        )}`}
+                      >
+                        {formatTagForDisplay(tag)}
+                      </a>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </article>
+          ))
+        }
+      </div>
+    </section>
+  </div>
 
-		.profile-photo {
-			width: 200px;
-			height: 200px;
-			border-radius: 12px;
-			box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-			transition: transform 0.3s ease;
-		}
+  <style>
+    .home-page {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-2xl);
+    }
 
-		.profile-photo:hover {
-			transform: scale(1.05);
-		}
+    /* Hero Section */
+    .hero-section {
+      padding: var(--space-lg) 0;
+    }
 
-		.hero-text {
-			flex: 1;
-		}
+    .hero-grid {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: var(--space-xl);
+      align-items: center;
+    }
 
-		.hero-title {
-			font-size: 2.5rem;
-			font-weight: 700;
-			line-height: 1.2;
-			margin: 0;
-			font-family: 'Oswald', sans-serif;
-			text-transform: uppercase;
-			letter-spacing: 1px;
-		}
+    .hero-image-container {
+      position: relative;
+      width: 180px;
+      height: 180px;
+    }
 
-		.about-section {
-			margin-bottom: 4rem;
-		}
+    .hero-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: var(--radius-subtle);
+      filter: grayscale(100%) contrast(1.05);
+      transition: filter var(--transition-slow);
+    }
 
-		.about-card {
-			background: var(--theme-bg);
-			padding: 3rem;
-			border-radius: 12px;
-		}
+    .hero-image-container:hover .hero-image {
+      filter: grayscale(0%) contrast(1);
+    }
 
-		.section-title {
-			font-size: 2rem;
-			font-weight: 600;
-			margin-bottom: 2rem;
-			color: var(--theme-accent);
-			font-family: 'Oswald', sans-serif;
-			text-transform: uppercase;
-			letter-spacing: 0.5px;
-		}
+    .hero-content {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-sm);
+    }
 
-		.about-content {
-			display: grid;
-			grid-template-columns: 1fr auto;
-			gap: 2rem;
-			align-items: start;
-		}
+    .hero-roles {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      flex-wrap: wrap;
+    }
 
-		.p-note {
-			font-size: 1.1rem;
-			line-height: 1.7;
-			color: var(--theme-text);
-			margin: 0;
-		}
+    .role-item {
+      font-family: "JetBrains Mono", monospace;
+      font-size: var(--text-display);
+      font-weight: 600;
+      color: var(--theme-text);
+      letter-spacing: -0.02em;
+    }
 
-		.recent-posts {
-			margin-bottom: 2rem;
-		}
+    .role-divider {
+      color: var(--theme-accent);
+      font-size: var(--text-lg);
+      opacity: 0.5;
+    }
 
-		.posts-grid {
-			display: grid;
-			grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-			gap: 2rem;
-		}
+    /* About Section */
+    .about-section {
+      max-width: 680px;
+    }
 
-		.post-card {
-			background: var(--theme-bg);
-			border-radius: 12px;
-			overflow: hidden;
-			box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-			transition: transform 0.3s ease, box-shadow 0.3s ease;
-		}
+    .about-content {
+      color: var(--theme-text);
+    }
 
-		.post-card:hover {
-			transform: translateY(-4px);
-			box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-		}
+    .p-note {
+      font-size: var(--text-lg);
+      line-height: 1.8;
+      color: var(--theme-muted);
+    }
 
-		.post-card-image {
-			position: relative;
-			overflow: hidden;
-			height: 200px;
-		}
+    /* Motto Section */
+    .motto-section {
+      padding: var(--space-xl) 0;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
 
-		.post-card-image img {
-			width: 100%;
-			height: 100%;
-			object-fit: cover;
-			filter: grayscale(100%);
-			transition: filter 0.3s ease;
-		}
+    .motto-quote {
+      font-family: "JetBrains Mono", monospace;
+      font-size: var(--text-xl);
+      text-align: center;
+      color: var(--theme-text);
+      margin: 0;
+      padding: 0;
+      border: none;
+    }
 
-		.post-card:hover .post-card-image img {
-			filter: grayscale(0%);
-		}
+    .quote-mark {
+      color: var(--theme-accent);
+      font-size: 1.5em;
+      vertical-align: -0.1em;
+    }
 
-		.post-card-content {
-			padding: 1.5rem;
-		}
+    .cursor {
+      color: var(--theme-accent);
+      animation: blink 1s step-end infinite;
+    }
 
-		.post-card-date {
-			display: block;
-			font-size: 0.9rem;
-			color: var(--theme-accent);
-			font-weight: 600;
-			margin-bottom: 0.5rem;
-			font-family: 'Oswald', sans-serif;
-			text-transform: uppercase;
-			letter-spacing: 1px;
-		}
+    @keyframes blink {
+      0%,
+      100% {
+        opacity: 1;
+      }
+      50% {
+        opacity: 0;
+      }
+    }
 
-		.post-card-title {
-			margin: 0 0 0.75rem 0;
-			font-size: 1.5rem;
-			font-weight: 600;
-			font-family: 'Oswald', sans-serif;
-			text-transform: uppercase;
-			letter-spacing: 0.5px;
-		}
+    /* Posts Section */
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: var(--space-lg);
+      flex-wrap: wrap;
+      gap: var(--space-sm);
+    }
 
-		.post-card-title a {
-			color: var(--theme-text);
-			text-decoration: none;
-			transition: color 0.3s ease;
-		}
+    .section-title {
+      font-family: "JetBrains Mono", monospace;
+      font-size: var(--text-xl);
+      font-weight: 600;
+      color: var(--theme-text);
+      letter-spacing: -0.01em;
+    }
 
-		.post-card-title a:hover {
-			color: var(--theme-accent);
-		}
+    .posts-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: var(--space-md);
+    }
 
-		.post-card-description {
-			margin: 0 0 1rem 0;
-			color: var(--theme-quote);
-			font-style: italic;
-			line-height: 1.5;
-		}
+    .post-card {
+      display: flex;
+      flex-direction: column;
+    }
 
-		.post-card-tags {
-			display: flex;
-			flex-wrap: wrap;
-			gap: 0.5rem;
-		}
+    .post-card-image {
+      position: relative;
+      height: 160px;
+      overflow: hidden;
+      margin: calc(var(--space-md) * -1) calc(var(--space-md) * -1)
+        var(--space-sm) calc(var(--space-md) * -1);
+      border-radius: var(--radius-subtle) var(--radius-subtle) 0 0;
+    }
 
-		.tag {
-			background: var(--theme-accent);
-			color: white;
-			padding: 0.25rem 0.75rem;
-			border-radius: 20px;
-			font-size: 0.9rem;
-			font-weight: 500;
-			text-decoration: none;
-			transition: background-color 0.3s ease, transform 0.2s ease;
-		}
+    .post-card-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: grayscale(100%);
+      transition:
+        filter var(--transition-medium),
+        transform var(--transition-medium);
+    }
 
-		.tag:hover {
-			background: var(--theme-accent-dark, #1a4d3a);
-			transform: translateY(-1px);
-		}
+    .post-card:hover .post-card-image img {
+      filter: grayscale(0%);
+      transform: scale(1.02);
+    }
 
-		@media (max-width: 768px) {
-			.home-page {
-				padding: 1rem;
-			}
+    .post-date {
+      display: block;
+      font-family: "JetBrains Mono", monospace;
+      font-size: var(--text-xs);
+      color: var(--theme-muted);
+      margin-bottom: var(--space-xs);
+    }
 
-			.hero-content {
-				flex-direction: column;
-				text-align: center;
-				padding: 2rem;
-			}
+    .post-title {
+      font-family: "JetBrains Mono", monospace;
+      font-size: var(--text-lg);
+      font-weight: 600;
+      margin: 0 0 var(--space-xs) 0;
+      line-height: 1.3;
+      letter-spacing: -0.01em;
+    }
 
-			.hero-title {
-				font-size: 2rem;
-			}
+    .post-title a {
+      color: var(--theme-text);
+      transition: color var(--transition-fast);
+    }
 
-			.about-content {
-				grid-template-columns: 1fr;
-			}
+    .post-title a:hover {
+      color: var(--theme-accent);
+    }
 
-			.posts-grid {
-				grid-template-columns: 1fr;
-				gap: 1.5rem;
-			}
-		}
-	</style>
+    .post-description {
+      font-size: var(--text-sm);
+      color: var(--theme-muted);
+      line-height: 1.6;
+      margin: 0 0 var(--space-sm) 0;
+    }
+
+    .post-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-xs);
+      margin-top: auto;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .hero-grid {
+        grid-template-columns: 1fr;
+        text-align: center;
+      }
+
+      .hero-image-container {
+        margin: 0 auto;
+        width: 140px;
+        height: 140px;
+      }
+
+      .hero-roles {
+        justify-content: center;
+      }
+
+      .role-item {
+        font-size: var(--text-2xl);
+      }
+
+      .posts-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .section-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+  </style>
 </PageLayout>

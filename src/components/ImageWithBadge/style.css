@@ -1,8 +1,9 @@
 .container {
 	position: relative;
 	display: inline-block;
-	border-radius: 10px;
+	border-radius: var(--radius-subtle, 2px);
 	padding-bottom: 100%;
+	overflow: hidden;
 }
 
 .image {
@@ -12,16 +13,46 @@
 	width: 100%;
 	height: 100%;
 	object-fit: cover;
-	border-radius: 5px;
-	border-radius: 10px;
-	transition: filter 0.6s linear;
+	border-radius: var(--radius-subtle, 2px);
+	transition: filter 0.3s ease-out, transform 0.15s ease-out;
 	z-index: 0;
-  filter: grayscale(0.3);
+	filter: grayscale(0.3);
+	box-shadow:
+		2px 0 0 rgba(255, 71, 87, 0.2),
+		-2px 0 0 rgba(0, 217, 255, 0.2);
 }
 
 .active .image {
-  filter: grayscale(1);
+	filter: grayscale(1);
+	animation: badge-img-glitch 2s steps(1) infinite;
+	box-shadow:
+		4px 0 0 rgba(255, 71, 87, 0.4),
+		-4px 0 0 rgba(0, 217, 255, 0.4);
 }
+
+@keyframes badge-img-glitch {
+	0%, 85%, 100% {
+		filter: grayscale(1);
+		transform: translateX(0);
+	}
+	86% {
+		filter: grayscale(1) hue-rotate(45deg) saturate(1.5);
+		transform: translateX(-3px);
+	}
+	88% {
+		filter: grayscale(1) hue-rotate(-45deg) brightness(1.2);
+		transform: translateX(4px);
+	}
+	90% {
+		filter: grayscale(1) saturate(2);
+		transform: translateX(-2px) skewX(1deg);
+	}
+	92% {
+		filter: grayscale(1);
+		transform: translateX(0);
+	}
+}
+
 .overlay {
 	position: absolute;
 	bottom: -5px;
@@ -32,10 +63,11 @@
 	width: 30px;
 	height: 30px;
 	border-radius: 50%;
-	background-color: #1db954;
-	transition: all 0.2s linear 0s;
+	background-color: var(--color-success, #00FF87);
+	transition: all 0.2s ease-out;
 	transform-origin: bottom right;
-	z-index: 1;
+	z-index: 10;
+	border: 2px solid var(--theme-bg, #000);
 }
 
 .active .overlay {
@@ -43,18 +75,25 @@
 	right: calc(50% - calc(95% / 2));
 	width: 95%;
 	height: 95%;
-	border-radius: 10px;
-	background-color: rgba(29, 185, 84, 0.6);
+	border-radius: var(--radius-subtle, 2px);
+	background-color: rgba(0, 255, 135, 0.7);
+	border: none;
 }
 
 .logo {
 	width: 70%;
 	height: auto;
-	fill: white;
+	fill: var(--theme-bg, #000);
 }
 
 .play {
 	width: 30%;
 	height: auto;
-	fill: white;
+	fill: var(--theme-bg, #000);
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.active .image {
+		animation: none;
+	}
 }

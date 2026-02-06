@@ -1,3 +1,33 @@
-<a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:top-1.5 focus:left-1"
-	>skip to content
+---
+// Skip link for keyboard navigation - brutalist styled
+---
+
+<a href="#main" class="skip-link">
+	>> SKIP_TO_CONTENT
 </a>
+
+<style>
+	.skip-link {
+		position: absolute;
+		top: -100%;
+		left: 0;
+		z-index: 10000;
+		padding: 1rem 1.5rem;
+		background: var(--theme-accent);
+		color: var(--theme-bg);
+		font-family: 'JetBrains Mono', monospace;
+		font-weight: 700;
+		font-size: var(--text-sm);
+		border: var(--border-weight) solid var(--theme-bg);
+		border-radius: var(--radius-subtle);
+		text-decoration: none;
+		transition: top var(--transition-fast);
+	}
+
+	.skip-link:focus {
+		top: 0.5rem;
+		left: 0.5rem;
+		outline: 2px solid var(--theme-text);
+		outline-offset: 2px;
+	}
+</style>

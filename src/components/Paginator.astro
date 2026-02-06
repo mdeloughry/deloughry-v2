@@ -11,19 +11,89 @@ const { prevUrl, nextUrl } = Astro.props;
 
 {
 	(prevUrl || nextUrl) && (
-		<nav class="flex items-center gap-x-4">
+		<nav class="pagination" aria-label="Pagination navigation">
 			{prevUrl && (
-				<a class="mr-auto py-2 sm:hover:text-accent" href={prevUrl.url} rel="prefetch">
+				<a class="pagination-link prev" href={prevUrl.url} rel="prefetch">
 					{prevUrl.srLabel && <span class="sr-only">{prevUrl.srLabel}</span>}
-					{prevUrl.text ? prevUrl.text : "Previous"}
+					<span class="pagination-text" aria-hidden={prevUrl.srLabel ? "true" : undefined}>
+						{prevUrl.text ? prevUrl.text : "<< PREV"}
+					</span>
 				</a>
 			)}
 			{nextUrl && (
-				<a class="ml-auto py-2 sm:hover:text-accent" href={nextUrl.url} rel="prefetch">
+				<a class="pagination-link next" href={nextUrl.url} rel="prefetch">
 					{nextUrl.srLabel && <span class="sr-only">{nextUrl.srLabel}</span>}
-					{nextUrl.text ? nextUrl.text : "Next"}
+					<span class="pagination-text" aria-hidden={nextUrl.srLabel ? "true" : undefined}>
+						{nextUrl.text ? nextUrl.text : "NEXT >>"}
+					</span>
 				</a>
 			)}
 		</nav>
 	)
 }
+
+<style>
+	.pagination {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		padding: 2rem 0;
+		border-top: 2px solid var(--theme-accent);
+		margin-top: 2rem;
+	}
+
+	.pagination-link {
+		display: inline-flex;
+		align-items: center;
+		padding: 0.75rem 1.5rem;
+		border: var(--border-weight) solid var(--theme-accent);
+		border-radius: var(--radius-subtle);
+		background: transparent;
+		font-family: 'JetBrains Mono', monospace;
+		font-size: var(--text-sm);
+		color: var(--theme-accent);
+		text-decoration: none;
+		transition: background var(--transition-fast), color var(--transition-fast), transform var(--transition-fast), box-shadow var(--transition-fast);
+	}
+
+	.pagination-link:hover {
+		background: var(--theme-accent);
+		color: var(--theme-bg);
+		transform: translate(-2px, -2px);
+		box-shadow: 4px 4px 0 var(--glitch-cyan);
+	}
+
+	.pagination-link:focus-visible {
+		outline: 2px solid var(--theme-accent);
+		outline-offset: 4px;
+		background: var(--theme-accent);
+		color: var(--theme-bg);
+	}
+
+	.pagination-link.prev {
+		margin-right: auto;
+	}
+
+	.pagination-link.next {
+		margin-left: auto;
+	}
+
+	.sr-only {
+		position: absolute;
+		width: 1px;
+		height: 1px;
+		padding: 0;
+		margin: -1px;
+		overflow: hidden;
+		clip: rect(0, 0, 0, 0);
+		white-space: nowrap;
+		border: 0;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.pagination-link:hover {
+			transform: none;
+			box-shadow: none;
+		}
+	}
+</style>

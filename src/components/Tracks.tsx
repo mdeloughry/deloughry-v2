@@ -15,7 +15,7 @@ const Tracks: React.FC<TracksProps> = ({
       {
         tracks.flatMap((track, index) => (
           <li className="flex flex-row justify-between" key={track.id}>
-            <a className={`flex flex-row gap-1 flex-wrap mb-2 align-middle cactus-link no-underline`} href={track.externalUrl} title="View Track in Spotify" target="_BLANK">
+            <a className={`flex flex-row gap-1 flex-wrap mb-2 align-middle brutal-link no-underline`} href={track.externalUrl} title="View Track in Spotify" target="_BLANK">
               <span>{index + 1}.</span>
               <div className="flex flex-col flex-wrap flex-1">
                 <span>{track.name}</span>
