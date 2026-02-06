@@ -6,7 +6,7 @@
   background: var(--theme-bg);
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Exo 2', sans-serif;
   line-height: 1.6;
 }
 
@@ -65,7 +65,7 @@
   font-weight: 700;
   margin-bottom: 0.5rem;
   color: var(--theme-text);
-  font-family: 'Oswald', sans-serif;
+  font-family: 'Orbitron', sans-serif;
   text-transform: uppercase;
   letter-spacing: 1px;
 }
@@ -112,7 +112,7 @@
   cursor: pointer;
   font-weight: 600;
   transition: background-color 0.2s;
-  font-family: 'Oswald', sans-serif;
+  font-family: 'Orbitron', sans-serif;
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
@@ -150,7 +150,7 @@
   font-size: 1.5rem;
   color: var(--theme-accent);
   margin-bottom: 1rem;
-  font-family: 'Oswald', sans-serif;
+  font-family: 'Orbitron', sans-serif;
   text-transform: uppercase;
   letter-spacing: 1px;
 }
@@ -196,7 +196,7 @@
   font-size: 1.5rem;
   color: var(--theme-accent);
   margin-bottom: 1rem;
-  font-family: 'Oswald', sans-serif;
+  font-family: 'Orbitron', sans-serif;
   text-transform: uppercase;
   letter-spacing: 1px;
 }
@@ -231,7 +231,7 @@
 .shopping-list h2 {
   margin: 0 0 1rem 0;
   color: var(--theme-accent);
-  font-family: 'Oswald', sans-serif;
+  font-family: 'Orbitron', sans-serif;
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
@@ -331,7 +331,7 @@
   font-size: 1.5rem;
   color: var(--theme-accent);
   margin-bottom: 1.5rem;
-  font-family: 'Oswald', sans-serif;
+  font-family: 'Orbitron', sans-serif;
   text-transform: uppercase;
   letter-spacing: 1px;
 }

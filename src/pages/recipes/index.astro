@@ -22,6 +22,16 @@ const meta = {
 			<p class="recipes-subtitle">Discover delicious recipes with interactive timers and cook mode</p>
 		</header>
 
+		<div class="search-container">
+			<input
+				type="search"
+				id="q"
+				class="search-input"
+				placeholder="Search recipes..."
+				aria-label="Search recipes"
+			/>
+		</div>
+
 		<div class="recipes-grid" id="list">
 			{recipes.map((r, index) => (
 				<article class="recipe-card neon-card" style={`animation-delay: ${index * 0.06}s`}>
@@ -65,6 +75,61 @@ const meta = {
 
 		<script type="application/json" id="recipes-data">{JSON.stringify(recipes)}</script>
 	</div>
+
+	<script type="module">
+		import Fuse from 'https://cdn.jsdelivr.net/npm/fuse.js@7.0.0/+esm';
+		const data = JSON.parse(document.getElementById('recipes-data').textContent);
+		const fuse = new Fuse(data, { keys: ['title', 'tags', 'ingredients.name', 'description'] });
+		const q = document.getElementById('q');
+		const list = document.getElementById('list');
+
+		q.addEventListener('input', () => {
+			const term = q.value.trim();
+			const results = term ? fuse.search(term).map((r) => r.item) : data;
+			list.innerHTML = results
+				.map(
+					(r, index) => `
+						<article class="recipe-card neon-card" style="animation-delay: ${index * 0.06}s">
+							${r.image ? `
+								<div class="recipe-card-image">
+									<img src="${r.image}" alt="" aria-hidden="true" />
+									<div class="image-overlay" aria-hidden="true"></div>
+								</div>
+							` : ''}
+							<div class="recipe-card-content">
+								<h2 class="recipe-card-title">
+									<a href="/recipes/${r.slug}/">${r.title}</a>
+								</h2>
+								${r.description ? `<p class="recipe-card-description">${r.description}</p>` : ''}
+								${r.tags.length ? `
+									<div class="recipe-card-tags">
+										${r.tags.map(tag => {
+											const tagSlug = tag.toLowerCase().trim().replace(/\s+/g, '-');
+											const displayTag = tag.charAt(0).toUpperCase() + tag.slice(1).toLowerCase();
+											return `<a href="/recipes/tags/${tagSlug}" class="neon-tag" title="View recipes with tag: ${displayTag}">${displayTag}</a>`;
+										}).join('')}
+									</div>
+								` : ''}
+								${r.servings ? `
+									<div class="recipe-card-meta">
+										<span class="servings">
+											<svg class="servings-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+												<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+												<circle cx="9" cy="7" r="4" />
+												<path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+												<path d="M16 3.13a4 4 0 0 1 0 7.75" />
+											</svg>
+											${r.servings} servings
+										</span>
+									</div>
+								` : ''}
+							</div>
+						</article>
+					`
+				)
+				.join('');
+		});
+	</script>
 
 	<style>
 		.recipes-listing {
@@ -125,6 +190,38 @@ const meta = {
 			color: var(--theme-quote);
 			font-style: italic;
 			margin: 0;
+		}
+
+		.search-container {
+			margin-bottom: 2rem;
+			display: flex;
+			justify-content: center;
+		}
+
+		.search-input {
+			width: 100%;
+			max-width: 500px;
+			padding: 1rem 1.5rem;
+			border: 2px solid var(--neon-purple);
+			border-radius: 8px;
+			background: rgba(10, 10, 10, 0.9);
+			color: var(--theme-text);
+			font-size: 1.1rem;
+			font-family: 'Exo 2', sans-serif;
+			transition: all 0.3s ease;
+		}
+
+		.search-input::placeholder {
+			color: var(--theme-quote);
+			opacity: 0.7;
+		}
+
+		.search-input:focus {
+			outline: none;
+			border-color: var(--neon-cyan);
+			box-shadow:
+				0 0 10px rgba(0, 217, 255, 0.5),
+				0 0 20px rgba(0, 217, 255, 0.3);
 		}
 
 		.recipes-grid {
