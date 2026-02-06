@@ -14,9 +14,11 @@ export const prerender = true;
 
 <PageLayout meta={{ title: "Home" }}>
 	<div class="home-page">
+		<!-- Epic Hero Section -->
 		<header class="home-hero">
 			<div class="hero-content">
-				<div class="hero-image">
+				<div class="hero-image-wrapper">
+					<div class="image-glow" aria-hidden="true"></div>
 					<Image
 						src={MeImage}
 						height={MeImage.height}
@@ -25,31 +27,41 @@ export const prerender = true;
 						class="profile-photo"
 						transition:name={"profile-image"}
 					/>
+					<div class="image-scan-line" aria-hidden="true"></div>
 				</div>
 				<div class="hero-text">
 					<a class="u-url hidden" rel="me" href="https://deloughry.co.uk/">Matthew Peck-Deloughry</a>
 					<a class="u-url hidden" href="acct:matt@deloughry.co.uk"></a>
 					<h1 class="hero-title">
-						<span class="text-link">Developer.</span><br />
-						<span class="text-twitch">Streamer.</span><br />
-						<span class="text-twitter line-through">Tweeter.</span><span class="text-mastodon">Tooter.</span><br />
-						&amp; a little bit of everything <span class="text-accent dark:text-accent">Nerdy!</span><span class="font-bold">_</span>
+						<span class="title-line neon-text-cyan">Developer.</span>
+						<span class="title-line neon-text-purple">Streamer.</span>
+						<span class="title-line">
+							<span class="strikethrough text-neon-pink/50">Tweeter.</span>
+							<span class="neon-text">Tooter.</span>
+						</span>
+						<span class="title-line">
+							&amp; a little bit of everything
+							<span class="chrome-text">Nerdy!</span>
+							<span class="cursor" aria-hidden="true">_</span>
+						</span>
 					</h1>
 				</div>
 			</div>
 		</header>
 
-		<section class="about-section">
-			<div class="about-card">
-				<h2 class="section-title">
+		<!-- About Section -->
+		<section class="about-section" aria-labelledby="about-heading">
+			<div class="about-card neon-card">
+				<h2 id="about-heading" class="section-title">
+					<span class="title-decorator" aria-hidden="true">//</span>
 					Av' fun developing, Av' fun learning, then Av'a crack at engineering it!
 				</h2>
 				<div class="about-content">
 					<p class="p-note">
-						Aye up, I'm Matt (aka Dr_DinoMight 🦖🧨), a developer of something around 15 years (I think!?
-						They all blend into one and other now 😖).<br /><br />
+						Aye up, I'm Matt (aka Dr_DinoMight), a developer of something around 15 years (I think!?
+						They all blend into one and other now).<br /><br />
 						I'm a developer for the brilliant HMA Digital here in South Yorkshire, UK.<br /><br />
-						💬 I'm a Full Stack Developer who loves to tinker with anything and everything, I love to build,
+						I'm a Full Stack Developer who loves to tinker with anything and everything, I love to build,
 						be it personal 1 person projects or large scale community projects, as long as it's code it floats
 						my boat!<br /><br />
 					</p>
@@ -58,14 +70,19 @@ export const prerender = true;
 			</div>
 		</section>
 
-		<section class="recent-posts">
-			<h2 class="section-title">Recent Posts</h2>
+		<!-- Recent Posts Section -->
+		<section class="recent-posts" aria-labelledby="posts-heading">
+			<h2 id="posts-heading" class="section-title">
+				<span class="title-decorator" aria-hidden="true">//</span>
+				Recent Posts
+			</h2>
 			<div class="posts-grid">
-				{allPostsByDate.map((p) => (
-					<article class="post-card">
+				{allPostsByDate.map((p, index) => (
+					<article class="post-card neon-card" style={`animation-delay: ${index * 0.1}s`}>
 						{p.data.ogImage && (
 							<div class="post-card-image">
-								<img src={p.data.ogImage} alt={p.data.title} />
+								<img src={p.data.ogImage} alt="" aria-hidden="true" />
+								<div class="image-overlay" aria-hidden="true"></div>
 							</div>
 						)}
 						<div class="post-card-content">
@@ -82,8 +99,8 @@ export const prerender = true;
 							{p.data.description && <p class="post-card-description">{p.data.description}</p>}
 							{p.data.tags && p.data.tags.length > 0 && (
 								<div class="post-card-tags">
-									{p.data.tags.map((tag) => (
-										<a href={`/tags/${getTagSlug(tag)}`} class="tag" title={`View posts with tag: ${formatTagForDisplay(tag)}`}>
+									{p.data.tags.slice(0, 3).map((tag) => (
+										<a href={`/tags/${getTagSlug(tag)}`} class="neon-tag" title={`View posts with tag: ${formatTagForDisplay(tag)}`}>
 											{formatTagForDisplay(tag)}
 										</a>
 									))}
@@ -100,36 +117,88 @@ export const prerender = true;
 		.home-page {
 			max-width: 1200px;
 			margin: 0 auto;
-			padding: 2rem;
+			padding: 1rem;
 		}
 
+		/* Hero Section */
 		.home-hero {
 			margin-bottom: 4rem;
+			padding: 2rem 0;
 		}
 
 		.hero-content {
 			display: flex;
 			align-items: center;
 			gap: 3rem;
-			background: var(--theme-bg);
-			padding: 3rem;
-			border-radius: 12px;
 		}
 
-		.hero-image {
+		.hero-image-wrapper {
 			flex-shrink: 0;
+			position: relative;
+			width: 220px;
+			height: 220px;
+		}
+
+		.image-glow {
+			position: absolute;
+			inset: -10px;
+			background: linear-gradient(135deg, var(--neon-pink), var(--neon-cyan), var(--neon-purple));
+			border-radius: 16px;
+			opacity: 0.5;
+			filter: blur(20px);
+			animation: glow-pulse 3s ease-in-out infinite;
+			pointer-events: none;
+			user-select: none;
+		}
+
+		@keyframes glow-pulse {
+			0%, 100% { opacity: 0.3; transform: scale(1); }
+			50% { opacity: 0.6; transform: scale(1.05); }
 		}
 
 		.profile-photo {
-			width: 200px;
-			height: 200px;
+			position: relative;
+			z-index: 2;
+			width: 100%;
+			height: 100%;
 			border-radius: 12px;
-			box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-			transition: transform 0.3s ease;
+			border: 2px solid var(--neon-pink);
+			box-shadow:
+				0 0 10px var(--neon-pink),
+				0 0 20px var(--neon-pink),
+				inset 0 0 20px rgba(255, 107, 157, 0.1);
+			transition: all 0.3s ease;
+			object-fit: cover;
 		}
 
 		.profile-photo:hover {
-			transform: scale(1.05);
+			box-shadow:
+				0 0 20px var(--neon-pink),
+				0 0 40px var(--neon-pink),
+				0 0 60px var(--neon-cyan),
+				inset 0 0 30px rgba(255, 107, 157, 0.2);
+			transform: scale(1.02);
+		}
+
+		.image-scan-line {
+			position: absolute;
+			top: 0;
+			left: 0;
+			right: 0;
+			height: 2px;
+			background: linear-gradient(90deg, transparent, var(--neon-cyan), transparent);
+			opacity: 0.8;
+			z-index: 3;
+			animation: scan 2s ease-in-out infinite;
+			pointer-events: none;
+			user-select: none;
+		}
+
+		@keyframes scan {
+			0%, 100% { top: 0; opacity: 0; }
+			10% { opacity: 0.8; }
+			90% { opacity: 0.8; }
+			100% { top: 100%; opacity: 0; }
 		}
 
 		.hero-text {
@@ -137,33 +206,75 @@ export const prerender = true;
 		}
 
 		.hero-title {
-			font-size: 2.5rem;
+			font-size: 2.2rem;
 			font-weight: 700;
-			line-height: 1.2;
+			line-height: 1.3;
 			margin: 0;
-			font-family: 'Oswald', sans-serif;
+			font-family: 'Orbitron', sans-serif;
 			text-transform: uppercase;
-			letter-spacing: 1px;
+			letter-spacing: 2px;
 		}
 
+		.title-line {
+			display: block;
+			margin-bottom: 0.5rem;
+		}
+
+		.neon-text-cyan {
+			color: var(--neon-cyan);
+			text-shadow:
+				0 0 5px var(--neon-cyan),
+				0 0 10px var(--neon-cyan),
+				0 0 20px var(--neon-cyan);
+		}
+
+		.neon-text-purple {
+			color: var(--neon-purple);
+			text-shadow:
+				0 0 5px var(--neon-purple),
+				0 0 10px var(--neon-purple),
+				0 0 20px var(--neon-purple);
+		}
+
+		.strikethrough {
+			text-decoration: line-through;
+			opacity: 0.5;
+		}
+
+		.cursor {
+			color: var(--neon-chartreuse);
+			animation: blink 1s step-end infinite;
+		}
+
+		@keyframes blink {
+			0%, 100% { opacity: 1; }
+			50% { opacity: 0; }
+		}
+
+		/* About Section */
 		.about-section {
 			margin-bottom: 4rem;
 		}
 
 		.about-card {
-			background: var(--theme-bg);
-			padding: 3rem;
+			padding: 2.5rem;
 			border-radius: 12px;
 		}
 
 		.section-title {
-			font-size: 2rem;
+			font-size: 1.5rem;
 			font-weight: 600;
 			margin-bottom: 2rem;
-			color: var(--theme-accent);
-			font-family: 'Oswald', sans-serif;
+			color: var(--neon-pink);
+			font-family: 'Orbitron', sans-serif;
 			text-transform: uppercase;
-			letter-spacing: 0.5px;
+			letter-spacing: 1px;
+			text-shadow: 0 0 10px rgba(255, 107, 157, 0.5);
+		}
+
+		.title-decorator {
+			color: var(--neon-cyan);
+			margin-right: 0.5rem;
 		}
 
 		.about-content {
@@ -174,51 +285,72 @@ export const prerender = true;
 		}
 
 		.p-note {
-			font-size: 1.1rem;
-			line-height: 1.7;
+			font-size: 1rem;
+			line-height: 1.8;
 			color: var(--theme-text);
 			margin: 0;
+			opacity: 0.9;
 		}
 
+		/* Recent Posts */
 		.recent-posts {
 			margin-bottom: 2rem;
 		}
 
 		.posts-grid {
 			display: grid;
-			grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-			gap: 2rem;
+			grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+			gap: 1.5rem;
 		}
 
 		.post-card {
-			background: var(--theme-bg);
 			border-radius: 12px;
 			overflow: hidden;
-			box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-			transition: transform 0.3s ease, box-shadow 0.3s ease;
+			opacity: 0;
+			animation: fade-in 0.5s ease-out forwards;
 		}
 
-		.post-card:hover {
-			transform: translateY(-4px);
-			box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+		@keyframes fade-in {
+			from {
+				opacity: 0;
+				transform: translateY(20px);
+			}
+			to {
+				opacity: 1;
+				transform: translateY(0);
+			}
 		}
 
 		.post-card-image {
 			position: relative;
 			overflow: hidden;
-			height: 200px;
+			height: 180px;
 		}
 
 		.post-card-image img {
 			width: 100%;
 			height: 100%;
 			object-fit: cover;
-			filter: grayscale(100%);
-			transition: filter 0.3s ease;
+			transition: all 0.3s ease;
+			filter: saturate(0.8);
 		}
 
 		.post-card:hover .post-card-image img {
-			filter: grayscale(0%);
+			filter: saturate(1.2);
+			transform: scale(1.05);
+		}
+
+		.image-overlay {
+			position: absolute;
+			inset: 0;
+			background: linear-gradient(
+				180deg,
+				transparent 0%,
+				rgba(10, 10, 10, 0.3) 50%,
+				rgba(10, 10, 10, 0.8) 100%
+			);
+			pointer-events: none;
+			user-select: none;
 		}
 
 		.post-card-content {
@@ -227,20 +359,20 @@ export const prerender = true;
 
 		.post-card-date {
 			display: block;
-			font-size: 0.9rem;
-			color: var(--theme-accent);
-			font-weight: 600;
+			font-size: 0.8rem;
+			color: var(--neon-cyan);
+			font-weight: 500;
 			margin-bottom: 0.5rem;
-			font-family: 'Oswald', sans-serif;
+			font-family: 'Orbitron', sans-serif;
 			text-transform: uppercase;
 			letter-spacing: 1px;
 		}
 
 		.post-card-title {
 			margin: 0 0 0.75rem 0;
-			font-size: 1.5rem;
+			font-size: 1.3rem;
 			font-weight: 600;
-			font-family: 'Oswald', sans-serif;
+			font-family: 'Orbitron', sans-serif;
 			text-transform: uppercase;
 			letter-spacing: 0.5px;
 		}
@@ -248,11 +380,19 @@ export const prerender = true;
 		.post-card-title a {
 			color: var(--theme-text);
 			text-decoration: none;
-			transition: color 0.3s ease;
+			transition: all 0.3s ease;
 		}
 
 		.post-card-title a:hover {
-			color: var(--theme-accent);
+			color: var(--neon-pink);
+			text-shadow: 0 0 10px var(--neon-pink);
+		}
+
+		/* Focus state for post links - uses cyan */
+		.post-card-title a:focus-visible {
+			outline: none;
+			color: var(--neon-cyan);
+			text-shadow: 0 0 10px var(--neon-cyan);
 		}
 
 		.post-card-description {
@@ -260,6 +400,7 @@ export const prerender = true;
 			color: var(--theme-quote);
 			font-style: italic;
 			line-height: 1.5;
+			font-size: 0.9rem;
 		}
 
 		.post-card-tags {
@@ -268,35 +409,24 @@ export const prerender = true;
 			gap: 0.5rem;
 		}
 
-		.tag {
-			background: var(--theme-accent);
-			color: white;
-			padding: 0.25rem 0.75rem;
-			border-radius: 20px;
-			font-size: 0.9rem;
-			font-weight: 500;
-			text-decoration: none;
-			transition: background-color 0.3s ease, transform 0.2s ease;
-		}
-
-		.tag:hover {
-			background: var(--theme-accent-dark, #1a4d3a);
-			transform: translateY(-1px);
-		}
-
+		/* Mobile Responsive */
 		@media (max-width: 768px) {
 			.home-page {
-				padding: 1rem;
+				padding: 0.5rem;
 			}
 
 			.hero-content {
 				flex-direction: column;
 				text-align: center;
-				padding: 2rem;
+			}
+
+			.hero-image-wrapper {
+				width: 180px;
+				height: 180px;
 			}
 
 			.hero-title {
-				font-size: 2rem;
+				font-size: 1.5rem;
 			}
 
 			.about-content {
@@ -305,7 +435,54 @@ export const prerender = true;
 
 			.posts-grid {
 				grid-template-columns: 1fr;
-				gap: 1.5rem;
+			}
+		}
+
+		/* Reduced motion support */
+		@media (prefers-reduced-motion: reduce) {
+			.image-glow {
+				animation: none;
+				opacity: 0.4;
+			}
+
+			.image-scan-line {
+				animation: none;
+				display: none;
+			}
+
+			.cursor {
+				animation: none;
+				opacity: 1;
+			}
+
+			.profile-photo {
+				transition: none;
+			}
+
+			.profile-photo:hover {
+				transform: none;
+			}
+
+			.post-card {
+				animation: none;
+				opacity: 1;
+			}
+
+			.post-card-image img {
+				transition: none;
+			}
+
+			.post-card:hover .post-card-image img {
+				transform: none;
+			}
+
+			.post-card-title a {
+				transition: none;
+			}
+
+			.post-card-title a:hover,
+			.post-card-title a:focus-visible {
+				text-shadow: none;
 			}
 		}
 	</style>

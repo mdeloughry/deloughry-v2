@@ -28,26 +28,28 @@ const menuLinks = [
     title: "Bookmarks",
     path: "/bookmarks",
   },
-
 ];
 ---
 
-<footer
-  class="mt-auto flex w-full flex-col items-center justify-center gap-y-2 pb-4 pt-20 text-center align-top  sm:flex-row sm:justify-between sm:text-xs"
->
-  <div class="mr-0 sm:mr-4">
-    Copyright &copy; {year}
-    <span aria-label="rocket emoji">🦖</span>
+<footer class="footer-wrapper mt-auto flex w-full flex-col items-center justify-center gap-y-4 pb-8 pt-20 text-center align-top sm:flex-row sm:justify-between sm:text-xs">
+  <div class="footer-copyright mr-0 sm:mr-4 font-orbitron text-sm tracking-wider">
+    <span class="neon-text-subtle">Copyright</span> &copy; {year}
+    <span class="dino-icon" aria-hidden="true">
+      <svg class="inline-block w-5 h-5 ml-1" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z" fill="currentColor"/>
+      </svg>
+    </span>
   </div>
+
   <nav
-    aria-label="More on this site"
-    class="flex gap-x-2 sm:gap-x-0 sm:divide-x sm:divide-dashed sm:divide-accent"
+    aria-label="Footer navigation"
+    class="footer-nav flex flex-wrap justify-center gap-x-1 gap-y-2"
   >
     {
       menuLinks.flatMap((link) => (
         <a
           href={link.path}
-          class="cactus-link px-4 py-2 sm:px-2 sm:py-0 sm:hover:underline"
+          class="footer-link px-3 py-1 font-orbitron text-xs uppercase tracking-wider transition-all duration-300"
           aria-current={url.pathname === link.path ? "page" : false}
           rel="prefetch"
         >
@@ -57,3 +59,114 @@ const menuLinks = [
     }
   </nav>
 </footer>
+
+<style>
+  .footer-wrapper {
+    position: relative;
+    padding-top: 2rem;
+  }
+
+  /* Neon top border */
+  .footer-wrapper::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -2rem;
+    right: -2rem;
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      var(--neon-cyan) 20%,
+      var(--neon-pink) 50%,
+      var(--neon-cyan) 80%,
+      transparent 100%
+    );
+    box-shadow: 0 0 10px var(--neon-cyan), 0 0 20px var(--neon-pink);
+  }
+
+  .footer-copyright {
+    color: var(--theme-text);
+    opacity: 0.8;
+  }
+
+  .neon-text-subtle {
+    color: var(--neon-pink);
+    text-shadow: 0 0 5px rgba(255, 107, 157, 0.5);
+  }
+
+  .dino-icon {
+    color: var(--neon-chartreuse);
+    filter: drop-shadow(0 0 5px var(--neon-chartreuse));
+    transition: all 0.3s ease;
+  }
+
+  .footer-link {
+    color: var(--theme-text);
+    opacity: 0.7;
+    position: relative;
+    text-decoration: none;
+  }
+
+  .footer-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 1px;
+    background: var(--neon-cyan);
+    box-shadow: 0 0 5px var(--neon-cyan);
+    transition: all 0.3s ease;
+    transform: translateX(-50%);
+  }
+
+  .footer-link:hover {
+    color: var(--neon-cyan);
+    opacity: 1;
+    text-shadow: 0 0 10px var(--neon-cyan);
+  }
+
+  .footer-link:hover::after {
+    width: 80%;
+  }
+
+  /* Focus state - uses pink to differentiate from hover cyan */
+  .footer-link:focus-visible {
+    outline: none;
+    color: var(--neon-pink);
+    opacity: 1;
+    text-shadow: 0 0 10px var(--neon-pink);
+  }
+
+  .footer-link:focus-visible::after {
+    width: 80%;
+    background: var(--neon-pink);
+    box-shadow: 0 0 5px var(--neon-pink), 0 0 10px var(--neon-pink);
+  }
+
+  .footer-link[aria-current="page"] {
+    color: var(--neon-pink);
+    opacity: 1;
+  }
+
+  .footer-link[aria-current="page"]::after {
+    width: 80%;
+    background: var(--neon-pink);
+    box-shadow: 0 0 5px var(--neon-pink);
+  }
+
+  /* Reduced motion support */
+  @media (prefers-reduced-motion: reduce) {
+    .dino-icon,
+    .footer-link,
+    .footer-link::after {
+      transition: none;
+    }
+
+    .footer-link:hover,
+    .footer-link:focus-visible {
+      text-shadow: none;
+    }
+  }
+</style>

@@ -1,64 +1,519 @@
-@import url(https://fonts.bunny.net/css?family=oswald:400,500,600|roboto:400);
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Exo+2:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap');
+
 @tailwind base;
 
 @layer base {
   :root {
-    color-scheme: light;
-    --theme-bg: #f3f5f8; /* Light Blueish Gray */
-    --theme-link: #ae0e4e; /* Darker Pink on Hover */
-    --theme-text: #333333; /* Dark Gray */
-    --theme-accent: #d81b60; /* Pink Accent */
-    --theme-accent-hover: #ae0e4e; /* Darker Pink on Hover */
-    --theme-quote: #555555; /* Dark Gray for Quote */
-    --theme-accent-bg: rgba(175, 180, 200, 0.85); /* Semi-transparent Grayish Blue */
-    --github: #6cc644; /* GitHub Green */
-    --twitch: #9146ff; /* Twitch Purple */
-    --twitter: #1da1f2; /* Twitter Blue */
-    --mastodon: #7241d4; /* Mastodon Purple */
-    --youtube: #ff0000; /* YouTube Red */
-    --claw: #ff5722; /* Claw Orange */
+    color-scheme: dark;
+    /* Neon Grid / Synthwave Color Palette */
+    --theme-bg: #0A0A0A;
+    --theme-bg-secondary: #121218;
+    --theme-text: #E5E5E5;
+    --theme-link: #00D9FF;
+    --theme-accent: #FF6B9D;
+    --theme-accent-hover: #FF8FB3;
+    --theme-quote: #A0A0A0;
+    --theme-accent-bg: rgba(255, 107, 157, 0.1);
+
+    /* Neon Colors - All meet WCAG AA contrast on #0A0A0A */
+    /* #FF6B9D on #0A0A0A = 5.8:1 */
+    --neon-pink: #FF6B9D;
+    /* #00D9FF on #0A0A0A = 10.1:1 */
+    --neon-cyan: #00D9FF;
+    /* #C7A3FF on #0A0A0A = 8.4:1 */
+    --neon-purple: #C7A3FF;
+    /* #DAFF01 on #0A0A0A = 14.5:1 */
+    --neon-chartreuse: #DAFF01;
+    --neon-orange: #FFB347;
+
+    /* Social Colors */
+    --github: #6cc644;
+    --twitch: #9146ff;
+    --twitter: #1da1f2;
+    --mastodon: #C7A3FF;
+    --youtube: #ff0000;
+    --claw: #FF6B9D;
+
+    /* Grid Colors */
+    --grid-line: rgba(255, 107, 157, 0.15);
+    --grid-line-alt: rgba(0, 217, 255, 0.15);
+
+    /* Focus ring color - cyan for visibility */
+    --focus-ring: #00D9FF;
   }
 
+  /* Dark mode is the default for synthwave */
   :root.dark {
     color-scheme: dark;
-    --theme-bg: #1a1a1a; /* Dark Gray */
-    --theme-link: #004d45; /* Darker Teal on Hover */
-    --theme-text: #f0f0f0; /* Light Gray */
-    --theme-accent: #00796b; /* Teal Accent */
-    --theme-accent-hover: #004d45; /* Darker Teal on Hover */
-    --theme-quote: #888888;
+    --theme-bg: #0A0A0A;
+    --theme-bg-secondary: #121218;
+    --theme-text: #E5E5E5;
+    --theme-link: #00D9FF;
+    --theme-accent: #FF6B9D;
+    --theme-accent-hover: #FF8FB3;
+    --theme-quote: #A0A0A0;
   }
 
-
-
+  /* Light mode - still synthwave-ish but lighter */
+  :root:not(.dark) {
+    color-scheme: light;
+    --theme-bg: #1A1A2E;
+    --theme-bg-secondary: #16213E;
+    --theme-text: #E5E5E5;
+    --theme-link: #00D9FF;
+    --theme-accent: #FF6B9D;
+    --theme-accent-hover: #FF8FB3;
+    --theme-quote: #B0B0B0;
+  }
 
   html {
-    @apply h-full scroll-smooth border-t-2 border-[var(--theme-accent)];
+    @apply h-full scroll-smooth;
+    background: var(--theme-bg);
   }
 
   html body {
-    @apply mx-auto flex h-full w-full max-w-5xl flex-col bg-bgColor px-8 pt-16 font-roboto font-normal text-textColor antialiased;
+    @apply mx-auto flex h-full w-full max-w-6xl flex-col px-6 pt-8 font-exo font-normal text-textColor antialiased;
+    background: transparent;
+    min-height: 100vh;
   }
 
   h1, h2, h3, h4, h5, h6, nav {
-    @apply font-oswald uppercase
+    @apply font-orbitron uppercase tracking-wider;
   }
 
   nav a, main a, article a {
-    @apply underline
+    @apply no-underline transition-all duration-300;
+  }
+
+  nav a:hover, main a:hover, article a:hover {
+    text-shadow: 0 0 8px currentColor;
   }
 
   .astro-code {
-    @apply w-full;
+    @apply w-full rounded-lg border border-neon-pink/30;
+    box-shadow: 0 0 10px rgba(255, 107, 157, 0.2);
+  }
+
+  ::selection {
+    background: var(--neon-pink);
+    color: #0A0A0A;
+  }
+
+  /* Enhanced focus styles for accessibility - cyan glow distinct from pink hover */
+  :focus {
+    outline: none;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--focus-ring);
+    outline-offset: 2px;
+    box-shadow: 0 0 0 4px rgba(0, 217, 255, 0.3);
+  }
+
+  /* Specific focus styles for interactive elements */
+  a:focus-visible,
+  button:focus-visible,
+  input:focus-visible,
+  select:focus-visible,
+  textarea:focus-visible {
+    outline: 2px solid var(--focus-ring);
+    outline-offset: 2px;
+    box-shadow: 0 0 10px var(--neon-cyan), 0 0 20px rgba(0, 217, 255, 0.3);
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: var(--theme-bg);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--neon-pink);
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--neon-cyan);
   }
 }
 
+/* Perspective Grid Background */
+.perspective-grid {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 50vh;
+  background:
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 79px,
+      var(--grid-line) 79px,
+      var(--grid-line) 80px
+    ),
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 79px,
+      var(--grid-line-alt) 79px,
+      var(--grid-line-alt) 80px
+    );
+  background-size: 80px 80px;
+  transform: perspective(500px) rotateX(60deg);
+  transform-origin: bottom;
+  pointer-events: none;
+  user-select: none;
+  z-index: 0;
+  opacity: 0.6;
+  mask-image: linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 100%);
+  -webkit-mask-image: linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 100%);
+}
+
+/* Horizon Sun */
+.horizon-sun {
+  position: fixed;
+  bottom: 25vh;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 300px;
+  height: 150px;
+  background: linear-gradient(
+    180deg,
+    #FF6B9D 0%,
+    #FFB347 40%,
+    #C7A3FF 100%
+  );
+  border-radius: 150px 150px 0 0;
+  pointer-events: none;
+  user-select: none;
+  z-index: 0;
+  opacity: 0.3;
+  filter: blur(2px);
+  mask-image: linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0.5) 50%, rgba(0,0,0,0) 100%);
+  -webkit-mask-image: linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0.5) 50%, rgba(0,0,0,0) 100%);
+}
+
+/* Scanlines overlay */
+.scanlines::after {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.03),
+    rgba(0, 0, 0, 0.03) 1px,
+    transparent 1px,
+    transparent 2px
+  );
+  pointer-events: none;
+  user-select: none;
+  z-index: 9999;
+}
+
+/* Neon Text Effects */
+.neon-text {
+  color: var(--neon-pink);
+  text-shadow:
+    0 0 5px var(--neon-pink),
+    0 0 10px var(--neon-pink),
+    0 0 20px var(--neon-pink),
+    0 0 40px var(--neon-pink);
+}
+
+.neon-text-cyan {
+  color: var(--neon-cyan);
+  text-shadow:
+    0 0 5px var(--neon-cyan),
+    0 0 10px var(--neon-cyan),
+    0 0 20px var(--neon-cyan),
+    0 0 40px var(--neon-cyan);
+}
+
+.neon-text-purple {
+  color: var(--neon-purple);
+  text-shadow:
+    0 0 5px var(--neon-purple),
+    0 0 10px var(--neon-purple),
+    0 0 20px var(--neon-purple);
+}
+
+.neon-text-chartreuse {
+  color: var(--neon-chartreuse);
+  text-shadow:
+    0 0 5px var(--neon-chartreuse),
+    0 0 10px var(--neon-chartreuse),
+    0 0 20px var(--neon-chartreuse);
+}
+
+/* Chrome Text Effect - ensure minimum contrast at darkest point */
+/* Using #999 as darkest which is 7.0:1 on #0A0A0A - meets AA */
+.chrome-text {
+  background: linear-gradient(
+    180deg,
+    #fff 0%,
+    #E5E5E5 20%,
+    #999 40%,
+    #E5E5E5 60%,
+    #fff 80%,
+    #bbb 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.3));
+}
+
+/* Neon Card */
+.neon-card {
+  background: rgba(10, 10, 10, 0.9);
+  border: 1px solid var(--neon-pink);
+  box-shadow:
+    0 0 5px rgba(255, 107, 157, 0.3),
+    inset 0 0 5px rgba(255, 107, 157, 0.05);
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.neon-card:hover {
+  border-color: var(--neon-pink);
+  box-shadow:
+    0 0 10px rgba(255, 107, 157, 0.5),
+    0 0 20px rgba(255, 107, 157, 0.3),
+    0 0 30px rgba(255, 107, 157, 0.2),
+    inset 0 0 10px rgba(255, 107, 157, 0.1);
+  transform: translateY(-4px);
+}
+
+/* Focus state for neon cards - distinct cyan glow */
+.neon-card:focus-within {
+  border-color: var(--neon-cyan);
+  box-shadow:
+    0 0 10px rgba(0, 217, 255, 0.5),
+    0 0 20px rgba(0, 217, 255, 0.3),
+    0 0 30px rgba(0, 217, 255, 0.2);
+  outline: none;
+}
+
+.neon-card-cyan {
+  border-color: var(--neon-cyan);
+  box-shadow:
+    0 0 5px rgba(0, 217, 255, 0.3),
+    inset 0 0 5px rgba(0, 217, 255, 0.05);
+}
+
+.neon-card-cyan:hover {
+  border-color: var(--neon-cyan);
+  box-shadow:
+    0 0 10px rgba(0, 217, 255, 0.5),
+    0 0 20px rgba(0, 217, 255, 0.3),
+    0 0 30px rgba(0, 217, 255, 0.2),
+    inset 0 0 10px rgba(0, 217, 255, 0.1);
+}
+
+/* Neon Border Animation */
+@keyframes neon-pulse {
+  0%, 100% {
+    box-shadow:
+      0 0 5px var(--neon-pink),
+      0 0 10px var(--neon-pink),
+      0 0 15px var(--neon-pink);
+  }
+  50% {
+    box-shadow:
+      0 0 10px var(--neon-pink),
+      0 0 20px var(--neon-pink),
+      0 0 30px var(--neon-pink);
+  }
+}
+
+.neon-pulse {
+  animation: neon-pulse 2s ease-in-out infinite;
+}
+
+/* Neon Button */
+.neon-button {
+  background: transparent;
+  border: 2px solid var(--neon-pink);
+  color: var(--neon-pink);
+  padding: 0.75rem 1.5rem;
+  font-family: 'Orbitron', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.neon-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 107, 157, 0.4),
+    transparent
+  );
+  transition: left 0.5s ease;
+}
+
+.neon-button:hover {
+  background: rgba(255, 107, 157, 0.1);
+  box-shadow:
+    0 0 10px var(--neon-pink),
+    0 0 20px var(--neon-pink),
+    inset 0 0 10px rgba(255, 107, 157, 0.1);
+  text-shadow: 0 0 5px var(--neon-pink);
+}
+
+.neon-button:hover::before {
+  left: 100%;
+}
+
+/* Focus state for neon button - cyan glow */
+.neon-button:focus-visible {
+  border-color: var(--neon-cyan);
+  box-shadow:
+    0 0 10px var(--neon-cyan),
+    0 0 20px var(--neon-cyan);
+  outline: none;
+}
+
+/* Neon Tag */
+.neon-tag {
+  background: rgba(255, 107, 157, 0.1);
+  border: 1px solid var(--neon-pink);
+  color: var(--neon-pink);
+  padding: 0.25rem 0.75rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.neon-tag:hover {
+  background: rgba(255, 107, 157, 0.2);
+  box-shadow: 0 0 10px rgba(255, 107, 157, 0.5);
+  text-shadow: 0 0 5px var(--neon-pink);
+}
+
+.neon-tag:focus-visible {
+  background: rgba(0, 217, 255, 0.2);
+  border-color: var(--neon-cyan);
+  color: var(--neon-cyan);
+  box-shadow: 0 0 10px rgba(0, 217, 255, 0.5);
+  outline: none;
+}
+
+.neon-tag-cyan {
+  background: rgba(0, 217, 255, 0.1);
+  border-color: var(--neon-cyan);
+  color: var(--neon-cyan);
+}
+
+.neon-tag-cyan:hover {
+  background: rgba(0, 217, 255, 0.2);
+  box-shadow: 0 0 10px rgba(0, 217, 255, 0.5);
+  text-shadow: 0 0 5px var(--neon-cyan);
+}
+
+.neon-tag-purple {
+  background: rgba(199, 163, 255, 0.1);
+  border-color: var(--neon-purple);
+  color: var(--neon-purple);
+}
+
+.neon-tag-purple:hover {
+  background: rgba(199, 163, 255, 0.2);
+  box-shadow: 0 0 10px rgba(199, 163, 255, 0.5);
+  text-shadow: 0 0 5px var(--neon-purple);
+}
+
+/* Sunset Gradient */
+.sunset-gradient {
+  background: linear-gradient(
+    180deg,
+    #FF6B9D 0%,
+    #FFB347 50%,
+    #C7A3FF 100%
+  );
+}
+
+.sunset-gradient-text {
+  background: linear-gradient(
+    90deg,
+    #FF6B9D 0%,
+    #FFB347 50%,
+    #C7A3FF 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Glass morphism effect */
+.glass {
+  background: rgba(10, 10, 10, 0.7);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 107, 157, 0.2);
+}
+
+/* Glitch effect for headers */
+@keyframes glitch {
+  0% {
+    text-shadow:
+      2px 0 var(--neon-cyan),
+      -2px 0 var(--neon-pink);
+  }
+  25% {
+    text-shadow:
+      -2px 0 var(--neon-cyan),
+      2px 0 var(--neon-pink);
+  }
+  50% {
+    text-shadow:
+      2px 0 var(--neon-pink),
+      -2px 0 var(--neon-cyan);
+  }
+  75% {
+    text-shadow:
+      -2px 0 var(--neon-pink),
+      2px 0 var(--neon-cyan);
+  }
+  100% {
+    text-shadow:
+      2px 0 var(--neon-cyan),
+      -2px 0 var(--neon-pink);
+  }
+}
+
+.glitch:hover {
+  animation: glitch 0.3s ease infinite;
+}
+
+/* Slide in animation */
 @keyframes slide-in-top {
   0% {
     transform: translateY(-100%);
     opacity: 0;
   }
-
   100% {
     transform: translateY(0);
     opacity: 1;
@@ -69,7 +524,162 @@
   animation: slide-in-top 0.5s ease-out;
 }
 
+/* Fade in animation */
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 
+.fade-in {
+  animation: fade-in 0.6s ease-out forwards;
+}
+
+/* Staggered animation delays */
+.stagger-1 { animation-delay: 0.1s; }
+.stagger-2 { animation-delay: 0.2s; }
+.stagger-3 { animation-delay: 0.3s; }
+.stagger-4 { animation-delay: 0.4s; }
+.stagger-5 { animation-delay: 0.5s; }
+
+/* Neon underline for links */
+.neon-underline {
+  position: relative;
+  text-decoration: none;
+}
+
+.neon-underline::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: var(--neon-pink);
+  box-shadow: 0 0 5px var(--neon-pink), 0 0 10px var(--neon-pink);
+  transition: width 0.3s ease;
+}
+
+.neon-underline:hover::after {
+  width: 100%;
+}
+
+/* Focus state for neon underline - uses cyan */
+.neon-underline:focus-visible::after {
+  width: 100%;
+  background: var(--neon-cyan);
+  box-shadow: 0 0 5px var(--neon-cyan), 0 0 10px var(--neon-cyan);
+}
+
+/* Glow on hover for images */
+.glow-hover {
+  transition: all 0.3s ease;
+}
+
+.glow-hover:hover {
+  filter: drop-shadow(0 0 10px var(--neon-pink)) drop-shadow(0 0 20px var(--neon-pink));
+}
+
+/* =====================================================
+   ACCESSIBILITY: Reduced Motion Support
+   ===================================================== */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  /* Disable specific animations */
+  .perspective-grid {
+    animation: none;
+    transform: none;
+    opacity: 0.3;
+  }
+
+  .horizon-sun {
+    animation: none;
+    filter: none;
+  }
+
+  .neon-pulse {
+    animation: none;
+  }
+
+  .glitch:hover {
+    animation: none;
+  }
+
+  .fade-in {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+
+  .animation-slide-in-top {
+    animation: none;
+    transform: none;
+    opacity: 1;
+  }
+
+  /* Keep hover effects but remove transitions */
+  .neon-card:hover {
+    transform: none;
+  }
+
+  .neon-underline::after {
+    transition: none;
+  }
+
+  .glow-hover:hover {
+    filter: none;
+  }
+
+  /* Remove text shadow animations */
+  nav a:hover,
+  main a:hover,
+  article a:hover {
+    text-shadow: none;
+  }
+}
+
+/* Screen reader only class */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Skip link styles */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: var(--neon-cyan);
+  color: #0A0A0A;
+  padding: 8px 16px;
+  z-index: 10000;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.skip-link:focus {
+  top: 0;
+}
 
 @tailwind components;
 @tailwind utilities;

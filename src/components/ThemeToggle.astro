@@ -36,12 +36,12 @@
 	<button
 		type="button"
 		id="toggle-theme"
-		class="group relative h-9 w-9 rounded-md bg-zinc-200 p-2 ring-zinc-400 transition-all hover:ring-2 dark:bg-zinc-700"
+		class="theme-toggle-btn group relative h-10 w-10 rounded-lg p-2 transition-all duration-300"
 		aria-label="Toggle Dark Mode"
 	>
 		<svg
 			id="sun-svg"
-			class="absolute top-1/2 left-1/2 h-7 w-7 -translate-x-1/2 -translate-y-1/2 scale-0 opacity-0 transition-all group-aria-pressed:scale-100 group-aria-pressed:opacity-100"
+			class="absolute top-1/2 left-1/2 h-6 w-6 -translate-x-1/2 -translate-y-1/2 scale-0 opacity-0 transition-all group-aria-pressed:scale-100 group-aria-pressed:opacity-100"
 			aria-hidden="true"
 			focusable="false"
 			stroke-width="1.5"
@@ -72,7 +72,7 @@
 		</svg>
 		<svg
 			id="moon-svg"
-			class="absolute top-1/2 left-1/2 h-7 w-7 -translate-x-1/2 -translate-y-1/2 scale-0 opacity-0 transition-all group-aria-[pressed=false]:scale-100 group-aria-[pressed=false]:opacity-100"
+			class="absolute top-1/2 left-1/2 h-6 w-6 -translate-x-1/2 -translate-y-1/2 scale-0 opacity-0 transition-all group-aria-[pressed=false]:scale-100 group-aria-[pressed=false]:opacity-100"
 			aria-hidden="true"
 			focusable="false"
 			stroke-width="1.5"
@@ -102,3 +102,45 @@
 		</svg>
 	</button>
 </theme-toggle>
+
+<style>
+	.theme-toggle-btn {
+		background: rgba(255, 107, 157, 0.1);
+		border: 1px solid var(--neon-pink);
+		color: var(--neon-pink);
+	}
+
+	.theme-toggle-btn:hover {
+		background: rgba(255, 107, 157, 0.2);
+		box-shadow: 0 0 15px var(--neon-pink);
+	}
+
+	.theme-toggle-btn:focus-visible {
+		outline: none;
+		background: rgba(0, 217, 255, 0.2);
+		border-color: var(--neon-cyan);
+		box-shadow: 0 0 15px var(--neon-cyan);
+		color: var(--neon-cyan);
+	}
+
+	/* Sun icon in dark mode */
+	.theme-toggle-btn[aria-pressed="true"] {
+		color: var(--neon-chartreuse);
+		border-color: var(--neon-chartreuse);
+	}
+
+	.theme-toggle-btn[aria-pressed="true"]:hover {
+		box-shadow: 0 0 15px var(--neon-chartreuse);
+		background: rgba(218, 255, 1, 0.1);
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.theme-toggle-btn {
+			transition: none;
+		}
+
+		.theme-toggle-btn svg {
+			transition: none;
+		}
+	}
+</style>

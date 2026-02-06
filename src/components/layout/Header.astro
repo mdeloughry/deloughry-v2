@@ -56,35 +56,44 @@ const menuLinks = [
   document.addEventListener("astro:after-swap", toggleMenu);
 </script>
 
-<header id="main-header" class="group relative mb-8 flex items-center sm:pl-[4.5rem]">
+<header id="main-header" class="header-wrapper group relative mb-8 flex items-center sm:pl-[4.5rem]">
   <div class="flex sm:flex-col">
     <a
       href="https://deloughry.co.uk"
       rel="author"
-      class="inline-flex items-center grayscale hover:filter-none sm:relative sm:inline-block font-oswald noj-underline"
+      class="logo-link inline-flex items-center sm:relative sm:inline-block font-orbitron no-underline"
       aria-current={url.pathname === "/" ? "page" : false}
     >
-      <Image
-        src={logoImg}
-        height={logoImg.height}
-        width={logoImg.width}
-        alt="A dino skull"
-        loading="eager"
-        class="mr-3 w-8 sm:absolute sm:left-[-4.5rem] sm:mr-0 sm:w-16"
-        aria-hidden="true"
-      />
-      <span class="text-xl font-bold sm:text-2xl no-underline uppercase">Matthew Peck-Deloughry</span>
+      <div class="logo-glow">
+        <Image
+          src={logoImg}
+          height={logoImg.height}
+          width={logoImg.width}
+          alt="A dino skull"
+          loading="eager"
+          class="mr-3 w-8 sm:absolute sm:left-[-4.5rem] sm:mr-0 sm:w-16 transition-all duration-300"
+          aria-hidden="true"
+        />
+      </div>
+      <span class="site-title text-xl font-bold sm:text-2xl no-underline uppercase tracking-wider">
+        Matthew Peck-Deloughry
+      </span>
     </a>
     <nav
       id="navigation-menu"
-      class="absolute -inset-x-4 top-14 hidden flex-col items-end gap-y-4 rounded-md bg-bgColor h-screen sm:h-auto py-4 text-accent shadow group-[.menu-open]:z-50 group-[.menu-open]:flex sm:static sm:z-auto sm:-ml-4 sm:mt-1 sm:flex sm:flex-row sm:items-center sm:divide-x sm:divide-dashed sm:divide-accent sm:rounded-none sm:bg-transparent sm:py-0 sm:shadow-none sm:backdrop-blur-none"
+      class="nav-menu absolute -inset-x-4 top-14 hidden flex-col items-end gap-y-4 rounded-lg py-6 px-4 text-accent sm:h-auto sm:static sm:z-auto sm:-ml-4 sm:mt-1 sm:flex sm:flex-row sm:items-center sm:gap-x-1 sm:rounded-none sm:bg-transparent sm:py-0 sm:px-0 group-[.menu-open]:z-50 group-[.menu-open]:flex"
       aria-label="Main menu"
     >
       {
         menuLinks.flatMap((link) => (
           <a
             href={link.path}
-            class="px-4 py-4 hover:text-link sm:py-0 sm:hover:underline"
+            class:list={[
+              "nav-link px-3 py-2 font-orbitron text-sm uppercase tracking-wider transition-all duration-300",
+              url.pathname === link.path || (link.path !== "/" && url.pathname.startsWith(link.path))
+                ? "active"
+                : ""
+            ]}
             aria-current={url.pathname === link.path ? "page" : false}
             rel="prefetch"
           >
@@ -97,7 +106,7 @@ const menuLinks = [
   <ThemeToggle />
   <button
     id="toggle-navigation-menu"
-    class="group relative ml-8 h-7 w-7 sm:invisible sm:hidden"
+    class="menu-toggle group relative ml-8 h-9 w-9 rounded-md p-2 transition-all sm:invisible sm:hidden"
     type="button"
     aria-label="Open main menu"
     aria-expanded="false"
@@ -118,8 +127,7 @@ const menuLinks = [
     </svg>
     <svg
       id="cross-svg"
-      class="absolute left-1/2 top-1/2 h-full w-full -translate-x-1/2 -translate-y-1/2 scale-0 text-accent opacity-0 transition-all group-aria-expanded:scale-100 group-aria-expanded:opacity-100"
-      class="text-accent"
+      class="absolute left-1/2 top-1/2 h-full w-full -translate-x-1/2 -translate-y-1/2 scale-0 opacity-0 transition-all group-aria-expanded:scale-100 group-aria-expanded:opacity-100"
       aria-hidden="true"
       focusable="false"
       xmlns="http://www.w3.org/2000/svg"
@@ -132,3 +140,176 @@ const menuLinks = [
     </svg>
   </button>
 </header>
+
+<style>
+  .header-wrapper {
+    position: relative;
+    padding-bottom: 1rem;
+  }
+
+  /* Neon bottom border */
+  .header-wrapper::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: -2rem;
+    right: -2rem;
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      var(--neon-pink) 20%,
+      var(--neon-cyan) 50%,
+      var(--neon-pink) 80%,
+      transparent 100%
+    );
+    box-shadow: 0 0 10px var(--neon-pink), 0 0 20px var(--neon-cyan);
+  }
+
+  .logo-link {
+    transition: all 0.3s ease;
+  }
+
+  .logo-link:hover .logo-glow img {
+    filter: drop-shadow(0 0 10px var(--neon-pink)) drop-shadow(0 0 20px var(--neon-pink));
+  }
+
+  /* Focus state for logo - uses cyan */
+  .logo-link:focus-visible {
+    outline: 2px solid var(--neon-cyan);
+    outline-offset: 4px;
+    border-radius: 4px;
+  }
+
+  .logo-link:focus-visible .logo-glow img {
+    filter: drop-shadow(0 0 10px var(--neon-cyan)) drop-shadow(0 0 20px var(--neon-cyan));
+  }
+
+  .logo-link:focus-visible .site-title {
+    color: var(--neon-cyan);
+    text-shadow: 0 0 10px var(--neon-cyan), 0 0 20px var(--neon-cyan);
+  }
+
+  .site-title {
+    color: var(--theme-text);
+    transition: all 0.3s ease;
+  }
+
+  .logo-link:hover .site-title {
+    color: var(--neon-pink);
+    text-shadow: 0 0 10px var(--neon-pink), 0 0 20px var(--neon-pink);
+  }
+
+  /* Navigation menu styling */
+  .nav-menu {
+    background: rgba(10, 10, 10, 0.95);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 107, 157, 0.2);
+  }
+
+  @media (min-width: 640px) {
+    .nav-menu {
+      background: transparent;
+      backdrop-filter: none;
+      border: none;
+    }
+  }
+
+  .nav-link {
+    color: var(--theme-text);
+    position: relative;
+    text-decoration: none;
+  }
+
+  .nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background: var(--neon-pink);
+    box-shadow: 0 0 5px var(--neon-pink), 0 0 10px var(--neon-pink);
+    transition: all 0.3s ease;
+    transform: translateX(-50%);
+  }
+
+  .nav-link:hover {
+    color: var(--neon-pink);
+    text-shadow: 0 0 10px var(--neon-pink);
+  }
+
+  .nav-link:hover::after {
+    width: 80%;
+  }
+
+  /* Focus state for nav links - uses cyan to differentiate from hover */
+  .nav-link:focus-visible {
+    outline: none;
+    color: var(--neon-cyan);
+    text-shadow: 0 0 10px var(--neon-cyan);
+  }
+
+  .nav-link:focus-visible::after {
+    width: 80%;
+    background: var(--neon-cyan);
+    box-shadow: 0 0 5px var(--neon-cyan), 0 0 10px var(--neon-cyan);
+  }
+
+  .nav-link.active {
+    color: var(--neon-cyan);
+    text-shadow: 0 0 10px var(--neon-cyan);
+  }
+
+  .nav-link.active::after {
+    width: 80%;
+    background: var(--neon-cyan);
+    box-shadow: 0 0 5px var(--neon-cyan), 0 0 10px var(--neon-cyan);
+  }
+
+  /* Menu toggle button */
+  .menu-toggle {
+    background: rgba(255, 107, 157, 0.1);
+    border: 1px solid var(--neon-pink);
+    color: var(--neon-pink);
+  }
+
+  .menu-toggle:hover {
+    background: rgba(255, 107, 157, 0.2);
+    box-shadow: 0 0 10px var(--neon-pink);
+  }
+
+  /* Focus state for menu toggle - uses cyan */
+  .menu-toggle:focus-visible {
+    outline: none;
+    border-color: var(--neon-cyan);
+    background: rgba(0, 217, 255, 0.2);
+    box-shadow: 0 0 10px var(--neon-cyan), 0 0 20px var(--neon-cyan);
+    color: var(--neon-cyan);
+  }
+
+  /* Reduced motion support */
+  @media (prefers-reduced-motion: reduce) {
+    .logo-link,
+    .site-title,
+    .nav-link,
+    .nav-link::after,
+    .menu-toggle {
+      transition: none;
+    }
+
+    .logo-link:hover .logo-glow img,
+    .logo-link:focus-visible .logo-glow img {
+      filter: none;
+    }
+
+    .logo-link:hover .site-title,
+    .logo-link:focus-visible .site-title,
+    .nav-link:hover,
+    .nav-link:focus-visible,
+    .nav-link.active {
+      text-shadow: none;
+    }
+  }
+</style>

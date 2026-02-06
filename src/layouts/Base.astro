@@ -18,7 +18,7 @@ const {
 } = Astro.props;
 ---
 
-<html lang={siteConfig.lang}>
+<html lang={siteConfig.lang} class="dark">
 	<head>
 		<BaseHead title={title} description={description} ogImage={ogImage} articleDate={articleDate} />
 		<script define:vars={{ siteConfig }}>
@@ -30,7 +30,8 @@ const {
 				if (typeof localStorage !== "undefined" && localStorage.getItem("theme")) {
 					return localStorage.getItem("theme");
 				}
-				return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+				// Default to dark for synthwave aesthetic
+				return "dark";
 			}
 
 
@@ -62,14 +63,47 @@ const {
     <ViewTransitions />
     <script defer src="https://umami-ss8o8so.loki.m4p.uk/script.js" data-website-id="b5e92cd1-103c-4610-909f-d21ff2988762"></script>
 	</head>
-	<body>
-		<SkipLink />
-		<Header  transition:name="header"  />
-		<main id="main" class="flex-1">
-			<NowPlaying client:load transition:name="now-playing" transition:animate={"slide"} transition:persist/>
-			<slot />
-		</main>
-		<Footer />
+	<body class="scanlines">
+		<!-- Synthwave Background Elements -->
+		<div class="horizon-sun" aria-hidden="true"></div>
+		<div class="perspective-grid" aria-hidden="true"></div>
+
+		<!-- Main Content -->
+		<div class="relative z-10">
+			<SkipLink />
+			<Header transition:name="header" />
+			<main id="main" class="flex-1">
+				<NowPlaying client:load transition:name="now-playing" transition:animate={"slide"} transition:persist/>
+				<slot />
+			</main>
+			<Footer />
+		</div>
     <SpeedInsights />
 	</body>
 </html>
+
+<style>
+	/* Ensure content is above background elements */
+	body {
+		position: relative;
+		overflow-x: hidden;
+	}
+
+	/* Add subtle vignette effect */
+	body::before {
+		content: '';
+		position: fixed;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		background: radial-gradient(
+			ellipse at center,
+			transparent 0%,
+			transparent 50%,
+			rgba(0, 0, 0, 0.3) 100%
+		);
+		pointer-events: none;
+		z-index: 1;
+	}
+</style>
