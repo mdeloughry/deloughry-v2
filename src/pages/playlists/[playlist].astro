@@ -36,10 +36,10 @@ export const prerender = true;
 
 <PageLayout meta={meta}>
   <h1 class="title mb-6">{playlist.name}</h1>
-  <a href="/playlists" class="cactus-link mb-4">&lt; Back</a>
+  <a href="/playlists" class="brutal-link mb-4">&lt; Back</a>
   <div class="mt-6 flex flex-col gap-4 sm:flex-row">
     <div class="w-full sm:w-1/4">
-      <a href={playlist.externalUrl} class="cactus-link" target="_blank">
+      <a href={playlist.externalUrl} class="brutal-link" target="_blank">
         <ImageWithBadge
           client:load
           imageUrl={playlist.artwork[0]?.url ?? ""}

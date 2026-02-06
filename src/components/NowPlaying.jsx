@@ -59,7 +59,7 @@ export default function NowPlaying() {
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  <span className="truncaste text-accent font-oswald font-bold text-lg uupercase">{data?.song?.name}</span>
+                  <span className="truncate text-accent font-mono font-bold text-lg uppercase">{data?.song?.name}</span>
                   <span className="capsize truncate break-all text-xs text-zinc-700 dark:text-gray-200">
                     {data?.song?.artist}
                   </span>
