@@ -153,36 +153,44 @@ const meta = {
 		const q = document.getElementById('q');
 		const list = document.getElementById('list');
 		const allItems = Array.from(list.querySelectorAll('.recipe-item'));
+		// Store original order for reset
+		const originalOrder = allItems.map(item => item.cloneNode(true));
 
 		q.addEventListener('input', () => {
 			const term = q.value.trim();
 
 			if (!term) {
-				// Show all items
-				allItems.forEach((item, index) => {
-					item.style.display = '';
-					const numEl = item.querySelector('.recipe-number');
-					const numMobileEl = item.querySelector('.recipe-number-mobile');
+				// Reset to original order
+				list.innerHTML = '';
+				originalOrder.forEach((item, index) => {
+					const clone = item.cloneNode(true);
+					const numEl = clone.querySelector('.recipe-number');
+					const numMobileEl = clone.querySelector('.recipe-number-mobile');
 					if (numEl) numEl.textContent = `[${String(index + 1).padStart(2, '0')}]`;
 					if (numMobileEl) numMobileEl.textContent = `[${String(index + 1).padStart(2, '0')}] `;
+					list.appendChild(clone);
 				});
 				return;
 			}
 
-			const results = fuse.search(term).map((r) => r.item.slug);
+			// Get results in Fuse.js relevance order
+			const results = fuse.search(term);
 
-			let visibleIndex = 0;
-			allItems.forEach((item) => {
-				const recipe = JSON.parse(item.dataset.recipe);
-				if (results.includes(recipe.slug)) {
-					item.style.display = '';
-					visibleIndex++;
-					const numEl = item.querySelector('.recipe-number');
-					const numMobileEl = item.querySelector('.recipe-number-mobile');
-					if (numEl) numEl.textContent = `[${String(visibleIndex).padStart(2, '0')}]`;
-					if (numMobileEl) numMobileEl.textContent = `[${String(visibleIndex).padStart(2, '0')}] `;
-				} else {
-					item.style.display = 'none';
+			// Rebuild list in relevance order
+			list.innerHTML = '';
+			results.forEach((result, index) => {
+				const recipe = result.item;
+				const originalItem = allItems.find(item => {
+					const itemRecipe = JSON.parse(item.dataset.recipe);
+					return itemRecipe.slug === recipe.slug;
+				});
+				if (originalItem) {
+					const clone = originalItem.cloneNode(true);
+					const numEl = clone.querySelector('.recipe-number');
+					const numMobileEl = clone.querySelector('.recipe-number-mobile');
+					if (numEl) numEl.textContent = `[${String(index + 1).padStart(2, '0')}]`;
+					if (numMobileEl) numMobileEl.textContent = `[${String(index + 1).padStart(2, '0')}] `;
+					list.appendChild(clone);
 				}
 			});
 		});

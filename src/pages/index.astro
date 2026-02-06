@@ -36,9 +36,9 @@ export const prerender = true;
 					Matt Peck-Deloughry - Developer and Streamer. Welcome to my personal BBS, established 2024.
 				</h1>
 
-				<!-- Mobile version - visible alternative -->
-				<div class="sm:hidden text-center">
-					<h1 class="text-2xl text-accent font-bold mb-2">MATT</h1>
+				<!-- Mobile version - visible alternative (uses p tags since h1 is sr-only above) -->
+				<div class="sm:hidden text-center" aria-hidden="true">
+					<p class="text-2xl text-accent font-bold mb-2">MATT</p>
 					<p class="text-bbs-cyan text-sm">PECK-DELOUGHRY</p>
 					<p class="text-bbs-magenta text-xs">Developer // Streamer</p>
 					<p class="text-xs text-bbs-gray mt-2">[WELCOME TO MY PERSONAL BBS]</p>
