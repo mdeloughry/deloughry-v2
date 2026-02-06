@@ -90,7 +90,8 @@
   }
 
   .astro-code {
-    @apply w-full rounded-lg border border-neon-pink/30;
+    @apply w-full rounded-lg;
+    border: 1px solid rgba(255, 107, 157, 0.3);
     box-shadow: 0 0 10px rgba(255, 107, 157, 0.2);
   }
 
