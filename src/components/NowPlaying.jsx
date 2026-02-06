@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import useSWR from "swr";
 import SoundWave from "./SoundWave";
 import { ImageWithHeart } from "./ImageWithHeart";
@@ -16,7 +16,7 @@ export default function NowPlaying() {
   // 	},
   // });
 
-  const { data, mutate, error, isLoading } = useSWR("https://api.deloughry.co.uk/spotify/now-playing", fetcher, {
+  const { data, mutate } = useSWR("https://api.deloughry.co.uk/spotify/now-playing", fetcher, {
     onSuccess: (data) => {
       clearInterval(interval);
       setProgress(data?.song?.progress);
