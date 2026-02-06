@@ -257,6 +257,10 @@ const { headings } = await post.render();
 		padding-left: 1.5rem;
 	}
 
+	:global(.bbs-blog-post .prose ul li) {
+		position: relative;
+	}
+
 	:global(.bbs-blog-post .prose ul li::before) {
 		content: '> ';
 		color: var(--bbs-cyan);
