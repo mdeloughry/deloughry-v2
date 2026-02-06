@@ -104,7 +104,7 @@ const meta = {
 								${r.tags.length ? `
 									<div class="recipe-card-tags">
 										${r.tags.map(tag => {
-											const tagSlug = tag.toLowerCase().trim().replace(/\s+/g, '-');
+											const tagSlug = encodeURIComponent(tag.toLowerCase().trim());
 											const displayTag = tag.charAt(0).toUpperCase() + tag.slice(1).toLowerCase();
 											return `<a href="/recipes/tags/${tagSlug}" class="neon-tag" title="View recipes with tag: ${displayTag}">${displayTag}</a>`;
 										}).join('')}
