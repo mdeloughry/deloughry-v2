@@ -3,6 +3,13 @@ import ThemeToggle from "../ThemeToggle.astro";
 
 const url = new URL(Astro.request.url);
 
+// ASCII Art logo (escaped to avoid Astro parsing issues)
+const asciiLogo = ` __  __    _  _____ _____   ____  _____ _     ___  _   _  ____ _   _ ______   __
+|  \\/  |  / \\|_   _|_   _| |  _ \\| ____| |   / _ \\| | | |/ ___| | | |  _ \\ \\ / /
+| |\\/| | / _ \\ | |   | |   | | | |  _| | |  | | | | | | | |  _| |_| | |_) \\ V /
+| |  | |/ ___ \\| |   | |   | |_| | |___| |__| |_| | |_| | |_| |  _  |  _ \\  | |
+|_|  |_/_/   \\_\\_|   |_|   |____/|_____|_____\\___/ \\___/ \\____|_| |_|_| \\_\\|_|`;
+
 const menuLinks = [
   {
     title: "home",
@@ -83,13 +90,7 @@ const menuLinks = [
       class="block glitch-hover"
       aria-current={url.pathname === "/" ? "page" : false}
     >
-      <pre class="ascii-art text-xs sm:text-sm leading-none">
- __  __    _  _____ _____   ____  _____ _     ___  _   _  ____ _   _ ______   __
-|  \/  |  / \|_   _|_   _| |  _ \| ____| |   / _ \| | | |/ ___| | | |  _ \ \ / /
-| |\/| | / _ \ | |   | |   | | | |  _| | |  | | | | | | | |  _| |_| | |_) \ V /
-| |  | |/ ___ \| |   | |   | |_| | |___| |__| |_| | |_| | |_| |  _  |  _ < | |
-|_|  |_/_/   \_\_|   |_|   |____/|_____|_____\___/ \___/ \____|_| |_|_| \_\|_|
-      </pre>
+      <pre class="ascii-art text-xs sm:text-sm leading-none" set:text={asciiLogo} />
     </a>
   </div>
 
@@ -102,7 +103,7 @@ const menuLinks = [
     <span class="hidden sm:inline text-accent mr-2">$</span>
     {
       menuLinks.map((link, index) => (
-        <>
+        <Fragment>
           <a
             href={link.path}
             class:list={[
@@ -118,7 +119,7 @@ const menuLinks = [
             <span class="bracket">]</span>
           </a>
           {index < menuLinks.length - 1 && <span class="hidden sm:inline text-muted mx-1">|</span>}
-        </>
+        </Fragment>
       ))
     }
   </nav>
