@@ -18,7 +18,7 @@ const {
 } = Astro.props;
 ---
 
-<html lang={siteConfig.lang}>
+<html lang={siteConfig.lang} class="dark">
 	<head>
 		<BaseHead title={title} description={description} ogImage={ogImage} articleDate={articleDate} />
 		<script define:vars={{ siteConfig }}>
@@ -63,6 +63,12 @@ const {
     <script defer src="https://umami-ss8o8so.loki.m4p.uk/script.js" data-website-id="b5e92cd1-103c-4610-909f-d21ff2988762"></script>
 	</head>
 	<body>
+		<!-- CRT Scanlines Overlay -->
+		<div class="crt-overlay" aria-hidden="true"></div>
+
+		<!-- Matrix Rain Background -->
+		<canvas id="matrix-canvas" class="matrix-bg" aria-hidden="true"></canvas>
+
 		<SkipLink />
 		<Header  transition:name="header"  />
 		<main id="main" class="flex-1">
@@ -71,5 +77,66 @@ const {
 		</main>
 		<Footer />
     <SpeedInsights />
+
+		<!-- Matrix Rain Script -->
+		<script>
+			function initMatrix() {
+				const canvas = document.getElementById('matrix-canvas') as HTMLCanvasElement;
+				if (!canvas) return;
+
+				const ctx = canvas.getContext('2d');
+				if (!ctx) return;
+
+				// Set canvas size
+				function resize() {
+					canvas.width = window.innerWidth;
+					canvas.height = window.innerHeight;
+				}
+				resize();
+				window.addEventListener('resize', resize);
+
+				// Matrix characters
+				const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()_+-=[]{}|;:,.<>?~';
+				const fontSize = 14;
+				const columns = Math.floor(canvas.width / fontSize);
+				const drops: number[] = [];
+
+				// Initialize drops
+				for (let i = 0; i < columns; i++) {
+					drops[i] = Math.random() * -100;
+				}
+
+				function draw() {
+					// Semi-transparent black for trail effect
+					ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+					ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+					// Green text
+					ctx.fillStyle = '#00FF87';
+					ctx.font = `${fontSize}px 'JetBrains Mono', monospace`;
+
+					for (let i = 0; i < drops.length; i++) {
+						const char = chars[Math.floor(Math.random() * chars.length)];
+						const x = i * fontSize;
+						const y = drops[i] * fontSize;
+
+						ctx.fillText(char, x, y);
+
+						// Reset drop to top with random delay
+						if (y > canvas.height && Math.random() > 0.975) {
+							drops[i] = 0;
+						}
+						drops[i]++;
+					}
+				}
+
+				// Slow animation for subtlety
+				setInterval(draw, 100);
+			}
+
+			// Initialize on load and after page transitions
+			document.addEventListener('DOMContentLoaded', initMatrix);
+			document.addEventListener('astro:after-swap', initMatrix);
+		</script>
 	</body>
 </html>

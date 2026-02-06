@@ -29,198 +29,297 @@ const paginationProps = {
 	...(page.url.prev && {
 		prevUrl: {
 			url: page.url.prev,
-			text: `← Previous Posts`,
+			text: `<< prev`,
 		},
 	}),
 	...(page.url.next && {
 		nextUrl: {
 			url: page.url.next,
-			text: `Next Posts →`,
+			text: `next >>`,
 		},
 	}),
 };
+
+// Format file size-like metadata
+function formatAsSize(text: string): string {
+  const words = text?.split(' ').length || 0;
+  return `${words * 50}B`;
+}
+
+// Format date as ls -la style
+function formatLsDate(date: Date): string {
+  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  const month = months[date.getMonth()];
+  const day = date.getDate().toString().padStart(2, ' ');
+  const year = date.getFullYear();
+  return `${month} ${day} ${year}`;
+}
+
 export const prerender = true;
 ---
 
 <PageLayout meta={meta}>
-	<div class="posts-listing">
+	<div class="terminal-posts">
+		<!-- Command Header -->
+		<div class="section-header" aria-hidden="true">
+			<span class="prompt">$</span>
+			<span class="command">ls -la ./blog</span>
+		</div>
+
+		<!-- Page Title -->
 		<header class="posts-header">
-			<h1 class="posts-title">Posts</h1>
-			<p class="posts-subtitle">Thoughts, tutorials, and insights on web development and technology</p>
+			<h1 class="posts-title glow">
+				<span class="title-prefix" aria-hidden="true"># </span>POSTS<span class="cursor-inline" aria-hidden="true"></span>
+			</h1>
+			<p class="posts-subtitle">
+				<span class="comment" aria-hidden="true">// </span>Thoughts, tutorials, and insights on web development and technology
+			</p>
 		</header>
 
-		<div class="posts-grid">
+		<!-- Directory Listing -->
+		<div class="file-listing" role="list" aria-label="Blog posts">
+			<div class="file-header" aria-hidden="true">
+				<span class="col-perms">drwxr-xr-x</span>
+				<span class="col-size">SIZE</span>
+				<span class="col-date">DATE</span>
+				<span class="col-name">NAME</span>
+			</div>
+
 			{page.data.map((p) => (
-				<article class="post-card">
-					{p.data.ogImage && (
-						<div class="post-card-image">
-							<img src={p.data.ogImage} alt={p.data.title} />
-						</div>
-					)}
-					<div class="post-card-content">
-						<time datetime={p.data.publishDate.toISOString()} class="post-card-date">
-							{getFormattedDate(new Date(p.data.publishDate), { month: "short" })}
-						</time>
-						<h2 class="post-card-title">
-							<a href={`/posts/${p.slug}/`}>{p.data.title}</a>
-						</h2>
-						{p.data.description && <p class="post-card-description">{p.data.description}</p>}
+				<article class="file-row flicker-hover" role="listitem">
+					<span class="col-perms" aria-hidden="true">-rw-r--r--</span>
+					<span class="col-size" aria-hidden="true">{formatAsSize(p.data.description || '')}</span>
+					<time class="col-date" datetime={p.data.publishDate.toISOString()}>{formatLsDate(p.data.publishDate)}</time>
+					<div class="col-name">
+						<a href={`/posts/${p.slug}/`} class="file-link">
+							<span aria-hidden="true">{p.data.title.toLowerCase().replace(/\s+/g, '-')}.md</span>
+							<span class="sr-only">{p.data.title}</span>
+						</a>
 						{p.data.tags && p.data.tags.length > 0 && (
-							<div class="post-card-tags">
-								{p.data.tags.map((tag) => (
-									<a href={`/tags/${getTagSlug(tag)}`} class="tag" title={`View posts with tag: ${formatTagForDisplay(tag)}`}>
-										{formatTagForDisplay(tag)}
+							<span class="file-tags">
+								{p.data.tags.slice(0, 3).map((tag) => (
+									<a href={`/tags/${getTagSlug(tag)}`} class="terminal-tag" title={`View posts with tag: ${formatTagForDisplay(tag)}`}>
+										<span aria-hidden="true">[{formatTagForDisplay(tag)}]</span>
+										<span class="sr-only">Tag: {formatTagForDisplay(tag)}</span>
 									</a>
 								))}
-							</div>
+							</span>
+						)}
+						{p.data.description && (
+							<span class="file-desc">
+								<span class="comment" aria-hidden="true">// </span>{p.data.description.substring(0, 60)}...
+							</span>
 						)}
 					</div>
 				</article>
 			))}
+
+			<div class="file-footer" aria-live="polite">
+				<span class="text-quote">
+					Page {page.currentPage} of {page.lastPage} | total {page.total} files
+				</span>
+			</div>
 		</div>
 
-		<Pagination {...paginationProps} />
+		<!-- Pagination -->
+		<div class="pagination-wrapper">
+			<Pagination {...paginationProps} />
+		</div>
 	</div>
+</PageLayout>
 
-	<style>
-		.posts-listing {
-			max-width: 1200px;
-			margin: 0 auto;
-			padding: 2rem;
+<style>
+	.terminal-posts {
+		font-family: 'JetBrains Mono', monospace;
+	}
+
+	.section-header {
+		display: flex;
+		gap: 0.5rem;
+		margin-bottom: 1rem;
+	}
+
+	.prompt {
+		color: var(--theme-accent);
+	}
+
+	.command {
+		color: var(--theme-link);
+	}
+
+	.posts-header {
+		margin-bottom: 2rem;
+	}
+
+	.posts-title {
+		font-size: 2.5rem;
+		color: var(--theme-accent);
+		margin: 0 0 0.5rem 0;
+		display: flex;
+		align-items: center;
+	}
+
+	.title-prefix {
+		color: var(--theme-quote);
+	}
+
+	.posts-subtitle {
+		margin: 0;
+		font-size: 0.875rem;
+	}
+
+	.comment {
+		color: var(--theme-quote);
+	}
+
+	.glow {
+		text-shadow: 0 0 5px var(--theme-accent), 0 0 10px var(--theme-accent);
+	}
+
+	/* File Listing */
+	.file-listing {
+		border: 1px solid var(--theme-text);
+		overflow-x: auto;
+	}
+
+	.file-header {
+		display: grid;
+		grid-template-columns: 100px 60px 100px 1fr;
+		gap: 1rem;
+		padding: 0.75rem 1rem;
+		background: rgba(0, 255, 135, 0.05);
+		border-bottom: 1px dashed var(--theme-text);
+		font-size: 0.75rem;
+		color: var(--theme-quote);
+	}
+
+	.file-row {
+		display: grid;
+		grid-template-columns: 100px 60px 100px 1fr;
+		gap: 1rem;
+		padding: 0.75rem 1rem;
+		font-size: 0.875rem;
+		border-bottom: 1px dotted rgba(0, 255, 135, 0.2);
+		transition: background 0.2s ease;
+	}
+
+	.file-row:hover {
+		background: rgba(0, 255, 135, 0.05);
+	}
+
+	.col-perms {
+		color: var(--theme-quote);
+		font-size: 0.75rem;
+	}
+
+	.col-size {
+		color: var(--theme-quote);
+		text-align: right;
+	}
+
+	.col-date {
+		color: var(--theme-text);
+	}
+
+	.col-name {
+		display: flex;
+		flex-direction: column;
+		gap: 0.25rem;
+	}
+
+	.file-link {
+		color: var(--theme-link);
+		text-decoration: none;
+		transition: all 0.2s ease;
+	}
+
+	.file-link:hover {
+		color: var(--theme-accent);
+		text-shadow: 0 0 5px var(--theme-accent);
+	}
+
+	.file-tags {
+		display: flex;
+		gap: 0.25rem;
+		flex-wrap: wrap;
+	}
+
+	.terminal-tag {
+		color: var(--theme-text);
+		font-size: 0.7rem;
+		text-decoration: none;
+		transition: color 0.2s ease;
+	}
+
+	.terminal-tag:hover {
+		color: var(--theme-accent);
+	}
+
+	.file-desc {
+		font-size: 0.75rem;
+	}
+
+	.file-footer {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		padding: 0.75rem 1rem;
+		border-top: 1px dashed var(--theme-text);
+		font-size: 0.75rem;
+	}
+
+	.text-quote {
+		color: var(--theme-quote);
+	}
+
+	/* Pagination */
+	.pagination-wrapper {
+		margin-top: 2rem;
+		padding: 1rem;
+		border: 1px dashed var(--theme-text);
+		display: flex;
+		justify-content: center;
+	}
+
+	.pagination-wrapper :global(nav) {
+		display: flex;
+		gap: 2rem;
+	}
+
+	.pagination-wrapper :global(a) {
+		color: var(--theme-link);
+		text-decoration: none;
+		padding: 0.5rem 1rem;
+		border: 1px solid var(--theme-text);
+		transition: all 0.2s ease;
+	}
+
+	.pagination-wrapper :global(a:hover) {
+		color: var(--theme-accent);
+		border-color: var(--theme-accent);
+		text-shadow: 0 0 5px var(--theme-accent);
+	}
+
+	/* Responsive */
+	@media (max-width: 768px) {
+		.file-header,
+		.file-row {
+			grid-template-columns: 1fr;
+			gap: 0.25rem;
 		}
 
-		.posts-header {
-			text-align: center;
-			margin-bottom: 3rem;
+		.col-perms,
+		.col-size {
+			display: none;
+		}
+
+		.col-date {
+			font-size: 0.75rem;
+			color: var(--theme-quote);
 		}
 
 		.posts-title {
-			font-size: 3rem;
-			font-weight: 700;
-			margin-bottom: 1rem;
-			color: var(--theme-text);
-			font-family: 'Oswald', sans-serif;
-			text-transform: uppercase;
-			letter-spacing: 1px;
+			font-size: 2rem;
 		}
-
-		.posts-subtitle {
-			font-size: 1.2rem;
-			color: var(--theme-quote);
-			font-style: italic;
-		}
-
-		.posts-grid {
-			display: grid;
-			grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-			gap: 2rem;
-			margin-bottom: 3rem;
-		}
-
-		.post-card {
-			background: var(--theme-bg);
-			border-radius: 12px;
-			overflow: hidden;
-			box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-			transition: transform 0.3s ease, box-shadow 0.3s ease;
-		}
-
-		.post-card:hover {
-			transform: translateY(-4px);
-			box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-		}
-
-		.post-card-image {
-			position: relative;
-			overflow: hidden;
-			height: 200px;
-		}
-
-		.post-card-image img {
-			width: 100%;
-			height: 100%;
-			object-fit: cover;
-			filter: grayscale(100%);
-			transition: filter 0.3s ease;
-		}
-
-		.post-card:hover .post-card-image img {
-			filter: grayscale(0%);
-		}
-
-		.post-card-content {
-			padding: 1.5rem;
-		}
-
-		.post-card-date {
-			display: block;
-			font-size: 0.9rem;
-			color: var(--theme-accent);
-			font-weight: 600;
-			margin-bottom: 0.5rem;
-		}
-
-		.post-card-title {
-			margin: 0 0 0.75rem 0;
-			font-size: 1.5rem;
-			font-weight: 600;
-			font-family: 'Oswald', sans-serif;
-			text-transform: uppercase;
-			letter-spacing: 0.5px;
-		}
-
-		.post-card-title a {
-			color: var(--theme-text);
-			text-decoration: none;
-			transition: color 0.3s ease;
-		}
-
-		.post-card-title a:hover {
-			color: var(--theme-accent);
-		}
-
-		.post-card-description {
-			margin: 0 0 1rem 0;
-			color: var(--theme-quote);
-			font-style: italic;
-			line-height: 1.5;
-		}
-
-		.post-card-tags {
-			display: flex;
-			flex-wrap: wrap;
-			gap: 0.5rem;
-		}
-
-		.tag {
-			background: var(--theme-accent);
-			color: white;
-			padding: 0.25rem 0.75rem;
-			border-radius: 20px;
-			font-size: 0.9rem;
-			font-weight: 500;
-			text-decoration: none;
-			transition: background-color 0.3s ease, transform 0.2s ease;
-		}
-
-		.tag:hover {
-			background: var(--theme-accent-dark, #1a4d3a);
-			transform: translateY(-1px);
-		}
-
-		@media (max-width: 768px) {
-			.posts-listing {
-				padding: 1rem;
-			}
-
-			.posts-title {
-				font-size: 2rem;
-			}
-
-			.posts-grid {
-				grid-template-columns: 1fr;
-				gap: 1.5rem;
-			}
-		}
-	</style>
-</PageLayout>
+	}
+</style>

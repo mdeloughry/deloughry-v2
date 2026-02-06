@@ -10,212 +10,357 @@ const meta = {
   description: "A collection of tools, experiments, and work in progress",
 };
 export const prerender = true;
+
+// Get status color class
+function getStatusClass(status: string): string {
+  switch(status.toLowerCase()) {
+    case 'active':
+    case 'complete':
+    case 'completed':
+      return 'status-active';
+    case 'wip':
+    case 'in-progress':
+    case 'in progress':
+      return 'status-wip';
+    case 'archived':
+    case 'deprecated':
+      return 'status-archived';
+    default:
+      return 'status-default';
+  }
+}
 ---
 
 <PageLayout meta={meta}>
-  <div class="projects-page">
+  <div class="terminal-projects">
+    <!-- Command Header -->
+    <div class="section-header" aria-hidden="true">
+      <span class="prompt">$</span>
+      <span class="command">ls -la ./projects</span>
+    </div>
+
+    <!-- Page Title -->
     <header class="projects-header">
-      <h1 class="projects-title">Projects</h1>
-      <p class="projects-subtitle">A collection of tools, experiments, and work in progress</p>
+      <h1 class="projects-title glow">
+        <span class="title-prefix" aria-hidden="true"># </span>PROJECTS<span class="cursor-inline" aria-hidden="true"></span>
+      </h1>
+      <p class="projects-subtitle">
+        <span class="comment" aria-hidden="true">// </span>A collection of tools, experiments, and work in progress
+      </p>
     </header>
 
-    <div class="projects-grid">
+    <!-- Projects Grid -->
+    <div class="projects-grid" role="list" aria-label="Projects">
       {projects.map((project) => (
-        <article class="project-card">
-          <div class="project-content">
-            <h3 class="project-title">
+        <article class="project-card terminal-window" role="listitem">
+          <div class="terminal-header" aria-hidden="true">
+            <div class="terminal-dots">
+              <span class="terminal-dot red"></span>
+              <span class="terminal-dot yellow"></span>
+              <span class="terminal-dot green"></span>
+            </div>
+            <span class="terminal-title">~/{project.slug}/</span>
+          </div>
+          <div class="terminal-content">
+            <h2 class="project-title">
               <a
                 href={project.url || `/projects/${project.slug}`}
+                class="project-link flicker-hover"
                 {...(project.url ? { target: "_blank", rel: "noopener noreferrer" } : {})}
               >
                 {project.title}
+                {project.url && <span class="sr-only">(opens in new tab)</span>}
               </a>
-            </h3>
-            <p class="project-description">{project.description}</p>
+            </h2>
+            <p class="project-description">
+              <span class="comment" aria-hidden="true">// </span>{project.description}
+            </p>
+
             <div class="project-meta">
-              <span class="project-category">{formatTagForDisplay(project.category)}</span>
-              <span class="project-status">{formatTagForDisplay(project.status)}</span>
+              <span class="meta-item">
+                <span class="meta-key">category:</span>
+                <span class="meta-value">[{formatTagForDisplay(project.category)}]</span>
+              </span>
+              <span class="meta-item">
+                <span class="meta-key">status:</span>
+                <span class={`meta-value ${getStatusClass(project.status)}`}>{formatTagForDisplay(project.status)}</span>
+              </span>
             </div>
+
             {project.tags && project.tags.length > 0 && (
               <div class="project-tags">
+                <span class="tags-label">tags:</span>
                 {project.tags.map((tag) => (
-                  <a href={`/projects/tags/${getTagSlug(tag)}`} class="project-tag" title={`View projects with tag: ${formatTagForDisplay(tag)}`}>
-                    {formatTagForDisplay(tag)}
+                  <a href={`/projects/tags/${getTagSlug(tag)}`} class="terminal-tag" title={`View projects with tag: ${formatTagForDisplay(tag)}`}>
+                    [{formatTagForDisplay(tag)}]
                   </a>
                 ))}
               </div>
             )}
+
             {project.technologies && project.technologies.length > 0 && (
-              <div class="project-technologies">
-                {project.technologies.map((tech) => (
-                  <span class="technology-tag">{tech}</span>
-                ))}
+              <div class="project-tech">
+                <span class="tech-label">tech_stack:</span>
+                <div class="tech-list">
+                  {project.technologies.map((tech) => (
+                    <span class="tech-item">{tech}</span>
+                  ))}
+                </div>
               </div>
             )}
+
+            <div class="project-action">
+              <a
+                href={project.url || `/projects/${project.slug}`}
+                class="action-link"
+                {...(project.url ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+              >
+                <span aria-hidden="true">$ open ./README.md</span>
+                <span class="sr-only">View {project.title} project{project.url ? " (opens in new tab)" : ""}</span>
+              </a>
+            </div>
           </div>
         </article>
       ))}
     </div>
   </div>
+</PageLayout>
 
-  <style>
-    .projects-page {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 2rem;
-    }
+<style>
+  .terminal-projects {
+    font-family: 'JetBrains Mono', monospace;
+  }
 
-    .projects-header {
-      text-align: center;
-      margin-bottom: 3rem;
+  .section-header {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .prompt {
+    color: var(--theme-accent);
+  }
+
+  .command {
+    color: var(--theme-link);
+  }
+
+  .projects-header {
+    margin-bottom: 2rem;
+  }
+
+  .projects-title {
+    font-size: 2.5rem;
+    color: var(--theme-accent);
+    margin: 0 0 0.5rem 0;
+    display: flex;
+    align-items: center;
+  }
+
+  .title-prefix {
+    color: var(--theme-quote);
+  }
+
+  .projects-subtitle {
+    margin: 0;
+    font-size: 0.875rem;
+  }
+
+  .comment {
+    color: var(--theme-quote);
+  }
+
+  .glow {
+    text-shadow: 0 0 5px var(--theme-accent), 0 0 10px var(--theme-accent);
+  }
+
+  /* Projects Grid */
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 1.5rem;
+  }
+
+  /* Project Card */
+  .project-card {
+    border: 1px solid var(--theme-text);
+    transition: all 0.2s ease;
+  }
+
+  .project-card:hover {
+    border-color: var(--theme-accent);
+    box-shadow: 0 0 20px rgba(0, 255, 135, 0.1);
+  }
+
+  .terminal-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.5rem 1rem;
+    background: rgba(0, 255, 135, 0.05);
+    border-bottom: 1px solid var(--theme-text);
+  }
+
+  .terminal-dots {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .terminal-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+  }
+
+  .terminal-dot.red { background: #FF4757; box-shadow: 0 0 5px #FF4757; }
+  .terminal-dot.yellow { background: #DAFF01; box-shadow: 0 0 5px #DAFF01; }
+  .terminal-dot.green { background: #00FF87; box-shadow: 0 0 5px #00FF87; }
+
+  .terminal-title {
+    flex: 1;
+    color: var(--theme-quote);
+    font-size: 0.75rem;
+  }
+
+  .terminal-content {
+    padding: 1.25rem;
+  }
+
+  .project-title {
+    margin: 0 0 0.75rem 0;
+    font-size: 1.25rem;
+  }
+
+  .project-link {
+    color: var(--theme-link);
+    text-decoration: none;
+    transition: all 0.2s ease;
+  }
+
+  .project-link:hover {
+    color: var(--theme-accent);
+    text-shadow: 0 0 5px var(--theme-accent);
+  }
+
+  .project-description {
+    margin: 0 0 1rem 0;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    color: var(--theme-text);
+  }
+
+  .project-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px dashed var(--theme-text);
+  }
+
+  .meta-item {
+    font-size: 0.75rem;
+  }
+
+  .meta-key {
+    color: var(--theme-quote);
+  }
+
+  .meta-value {
+    color: var(--theme-text);
+  }
+
+  .status-active {
+    color: #00FF87;
+  }
+
+  .status-wip {
+    color: #DAFF01;
+  }
+
+  .status-archived {
+    color: #737373;
+  }
+
+  .project-tags {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+    font-size: 0.75rem;
+  }
+
+  .tags-label {
+    color: var(--theme-quote);
+  }
+
+  .terminal-tag {
+    color: var(--theme-text);
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+
+  .terminal-tag:hover {
+    color: var(--theme-accent);
+  }
+
+  .project-tech {
+    margin-bottom: 1rem;
+  }
+
+  .tech-label {
+    display: block;
+    font-size: 0.75rem;
+    color: var(--theme-quote);
+    margin-bottom: 0.25rem;
+  }
+
+  .tech-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .tech-item {
+    font-size: 0.7rem;
+    padding: 0.125rem 0.5rem;
+    border: 1px solid var(--theme-text);
+    color: var(--theme-link);
+    transition: all 0.2s ease;
+  }
+
+  .tech-item:hover {
+    border-color: var(--theme-accent);
+    color: var(--theme-accent);
+  }
+
+  .project-action {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px dashed var(--theme-text);
+  }
+
+  .action-link {
+    display: inline-block;
+    color: var(--theme-accent);
+    text-decoration: none;
+    font-size: 0.875rem;
+    transition: all 0.2s ease;
+  }
+
+  .action-link:hover {
+    text-shadow: 0 0 5px var(--theme-accent);
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .projects-grid {
+      grid-template-columns: 1fr;
     }
 
     .projects-title {
-      font-size: 3rem;
-      font-weight: 700;
-      margin-bottom: 1rem;
-      color: var(--theme-text);
-      font-family: 'Oswald', sans-serif;
-      text-transform: uppercase;
-      letter-spacing: 1px;
+      font-size: 2rem;
     }
-
-    .projects-subtitle {
-      font-size: 1.2rem;
-      color: var(--theme-quote);
-      font-style: italic;
-    }
-
-    .projects-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-      gap: 2rem;
-    }
-
-    .project-card {
-      background: var(--theme-bg);
-      border-radius: 12px;
-      overflow: hidden;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    .project-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-    }
-
-    .project-content {
-      padding: 2rem;
-    }
-
-    .project-title {
-      margin: 0 0 1rem 0;
-      font-size: 1.5rem;
-      font-weight: 600;
-      font-family: 'Oswald', sans-serif;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    .project-title a {
-      color: var(--theme-text);
-      text-decoration: none;
-      transition: color 0.3s ease;
-    }
-
-    .project-title a:hover {
-      color: var(--theme-accent);
-    }
-
-    .project-description {
-      margin: 0 0 1.5rem 0;
-      color: var(--theme-quote);
-      font-style: italic;
-      line-height: 1.5;
-    }
-
-    .project-meta {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-      margin-bottom: 1rem;
-    }
-
-    .project-category {
-      background: var(--theme-accent);
-      color: white;
-      padding: 0.25rem 0.75rem;
-      border-radius: 20px;
-      font-size: 0.9rem;
-      font-weight: 500;
-    }
-
-    .project-status {
-      background: var(--theme-quote);
-      color: white;
-      padding: 0.25rem 0.75rem;
-      border-radius: 20px;
-      font-size: 0.9rem;
-      font-weight: 500;
-    }
-
-    .project-tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-      margin-bottom: 1rem;
-    }
-
-    .project-tag {
-      background: var(--theme-accent);
-      color: white;
-      padding: 0.25rem 0.75rem;
-      border-radius: 20px;
-      font-size: 0.9rem;
-      font-weight: 500;
-      text-decoration: none;
-      transition: background-color 0.3s ease, transform 0.2s ease;
-    }
-
-    .project-tag:hover {
-      background: var(--theme-accent-dark, #1a4d3a);
-      transform: translateY(-1px);
-    }
-
-    .project-technologies {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-    }
-
-    .technology-tag {
-      background: var(--theme-bg);
-      color: var(--theme-text);
-      padding: 0.25rem 0.75rem;
-      border-radius: 20px;
-      font-size: 0.8rem;
-      font-weight: 500;
-      border: 1px solid var(--theme-accent);
-    }
-
-    @media (max-width: 768px) {
-      .projects-page {
-        padding: 1rem;
-      }
-
-      .projects-title {
-        font-size: 2rem;
-      }
-
-      .projects-grid {
-        grid-template-columns: 1fr;
-        gap: 1.5rem;
-      }
-
-      .project-content {
-        padding: 1.5rem;
-      }
-    }
-  </style>
-</PageLayout>
+  }
+</style>

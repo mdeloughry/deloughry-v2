@@ -11,19 +11,66 @@ const { prevUrl, nextUrl } = Astro.props;
 
 {
 	(prevUrl || nextUrl) && (
-		<nav class="flex items-center gap-x-4">
+		<nav class="pagination-nav" aria-label="Pagination">
 			{prevUrl && (
-				<a class="mr-auto py-2 sm:hover:text-accent" href={prevUrl.url} rel="prefetch">
+				<a class="pagination-link prev-link flicker-hover" href={prevUrl.url} rel="prefetch">
 					{prevUrl.srLabel && <span class="sr-only">{prevUrl.srLabel}</span>}
-					{prevUrl.text ? prevUrl.text : "Previous"}
+					<span class="link-arrow">&lt;&lt;</span>
+					<span class="link-text">{prevUrl.text ? prevUrl.text : "prev"}</span>
 				</a>
 			)}
 			{nextUrl && (
-				<a class="ml-auto py-2 sm:hover:text-accent" href={nextUrl.url} rel="prefetch">
+				<a class="pagination-link next-link flicker-hover" href={nextUrl.url} rel="prefetch">
 					{nextUrl.srLabel && <span class="sr-only">{nextUrl.srLabel}</span>}
-					{nextUrl.text ? nextUrl.text : "Next"}
+					<span class="link-text">{nextUrl.text ? nextUrl.text : "next"}</span>
+					<span class="link-arrow">&gt;&gt;</span>
 				</a>
 			)}
 		</nav>
 	)
 }
+
+<style>
+	.pagination-nav {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		gap: 2rem;
+		font-family: 'JetBrains Mono', monospace;
+	}
+
+	.pagination-link {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.5rem;
+		color: var(--theme-link);
+		text-decoration: none;
+		padding: 0.5rem 1rem;
+		border: 1px solid var(--theme-text);
+		transition: all 0.2s ease;
+		font-size: 0.875rem;
+	}
+
+	.pagination-link:hover {
+		color: var(--theme-accent);
+		border-color: var(--theme-accent);
+		text-shadow: 0 0 5px var(--theme-accent);
+		background: rgba(0, 255, 135, 0.05);
+	}
+
+	.prev-link {
+		margin-right: auto;
+	}
+
+	.next-link {
+		margin-left: auto;
+	}
+
+	.link-arrow {
+		color: var(--theme-accent);
+	}
+
+	.link-text {
+		color: inherit;
+	}
+</style>

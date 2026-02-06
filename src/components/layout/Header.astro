@@ -1,38 +1,43 @@
 ---
 import ThemeToggle from "../ThemeToggle.astro";
-import logoImg from "../../assets/logo-small.png";
-import { Image } from "astro:assets";
 
 const url = new URL(Astro.request.url);
 
 const menuLinks = [
   {
-    title: "Home",
+    title: "home",
     path: "/",
+    command: "cd ~",
   },
   {
-    title: "About",
+    title: "about",
     path: "/about",
+    command: "cat about.txt",
   },
   {
-    title: "Blog",
+    title: "posts",
     path: "/posts",
+    command: "ls ./blog",
   },
   {
-    title: "Recipes",
+    title: "recipes",
     path: "/recipes",
+    command: "cat recipes/*",
   },
   {
-    title: "Playlists",
+    title: "playlists",
     path: "/playlists",
+    command: "play --list",
   },
   {
-    title: "Projects",
+    title: "projects",
     path: "/projects",
+    command: "ls ./projects",
   },
   {
-    title: "Bookmarks",
+    title: "bookmarks",
     path: "/bookmarks",
+    command: "cat bookmarks.json",
   },
 ];
 ---
@@ -56,79 +61,198 @@ const menuLinks = [
   document.addEventListener("astro:after-swap", toggleMenu);
 </script>
 
-<header id="main-header" class="group relative mb-8 flex items-center sm:pl-[4.5rem]">
-  <div class="flex sm:flex-col">
+<header id="main-header" class="group relative mb-8">
+  <!-- Terminal Window Header -->
+  <div class="terminal-chrome">
+    <div class="terminal-bar">
+      <div class="terminal-dots-wrapper">
+        <span class="terminal-dot red"></span>
+        <span class="terminal-dot yellow"></span>
+        <span class="terminal-dot green"></span>
+      </div>
+      <span class="terminal-path">matt@mainframe:~$</span>
+      <ThemeToggle />
+    </div>
+  </div>
+
+  <!-- ASCII Art Name -->
+  <div class="ascii-name">
     <a
-      href="https://deloughry.co.uk"
+      href="/"
       rel="author"
-      class="inline-flex items-center grayscale hover:filter-none sm:relative sm:inline-block font-oswald noj-underline"
+      class="block glitch-hover"
       aria-current={url.pathname === "/" ? "page" : false}
     >
-      <Image
-        src={logoImg}
-        height={logoImg.height}
-        width={logoImg.width}
-        alt="A dino skull"
-        loading="eager"
-        class="mr-3 w-8 sm:absolute sm:left-[-4.5rem] sm:mr-0 sm:w-16"
-        aria-hidden="true"
-      />
-      <span class="text-xl font-bold sm:text-2xl no-underline uppercase">Matthew Peck-Deloughry</span>
+      <pre class="ascii-art text-xs sm:text-sm leading-none">
+ __  __    _  _____ _____   ____  _____ _     ___  _   _  ____ _   _ ______   __
+|  \/  |  / \|_   _|_   _| |  _ \| ____| |   / _ \| | | |/ ___| | | |  _ \ \ / /
+| |\/| | / _ \ | |   | |   | | | |  _| | |  | | | | | | | |  _| |_| | |_) \ V /
+| |  | |/ ___ \| |   | |   | |_| | |___| |__| |_| | |_| | |_| |  _  |  _ < | |
+|_|  |_/_/   \_\_|   |_|   |____/|_____|_____\___/ \___/ \____|_| |_|_| \_\|_|
+      </pre>
     </a>
-    <nav
-      id="navigation-menu"
-      class="absolute -inset-x-4 top-14 hidden flex-col items-end gap-y-4 rounded-md bg-bgColor h-screen sm:h-auto py-4 text-accent shadow group-[.menu-open]:z-50 group-[.menu-open]:flex sm:static sm:z-auto sm:-ml-4 sm:mt-1 sm:flex sm:flex-row sm:items-center sm:divide-x sm:divide-dashed sm:divide-accent sm:rounded-none sm:bg-transparent sm:py-0 sm:shadow-none sm:backdrop-blur-none"
-      aria-label="Main menu"
-    >
-      {
-        menuLinks.flatMap((link) => (
+  </div>
+
+  <!-- Navigation -->
+  <nav
+    id="navigation-menu"
+    class="nav-terminal absolute -inset-x-4 top-32 hidden flex-col items-start gap-y-1 bg-bgColor py-4 px-4 border border-textColor group-[.menu-open]:z-50 group-[.menu-open]:flex sm:static sm:z-auto sm:mt-4 sm:flex sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-1 sm:gap-y-2 sm:border-0 sm:bg-transparent sm:p-0"
+    aria-label="Main menu"
+  >
+    <span class="hidden sm:inline text-accent mr-2">$</span>
+    {
+      menuLinks.map((link, index) => (
+        <>
           <a
             href={link.path}
-            class="px-4 py-4 hover:text-link sm:py-0 sm:hover:underline"
+            class:list={[
+              "nav-link flicker-hover",
+              { "active": url.pathname === link.path || (link.path !== "/" && url.pathname.startsWith(link.path)) }
+            ]}
             aria-current={url.pathname === link.path ? "page" : false}
             rel="prefetch"
+            title={link.command}
           >
-            {link.title}
+            <span class="bracket">[</span>
+            <span class="link-text">{link.title}</span>
+            <span class="bracket">]</span>
           </a>
-        ))
-      }
-    </nav>
-  </div>
-  <ThemeToggle />
+          {index < menuLinks.length - 1 && <span class="hidden sm:inline text-muted mx-1">|</span>}
+        </>
+      ))
+    }
+  </nav>
+
+  <!-- Mobile Menu Button -->
   <button
     id="toggle-navigation-menu"
-    class="group relative ml-8 h-7 w-7 sm:invisible sm:hidden"
+    class="group/btn absolute right-0 top-2 h-8 w-8 sm:invisible sm:hidden border border-textColor flex items-center justify-center"
     type="button"
     aria-label="Open main menu"
     aria-expanded="false"
     aria-haspopup="menu"
   >
-    <svg
-      id="line-svg"
-      class="absolute left-1/2 top-1/2 h-full w-full -translate-x-1/2 -translate-y-1/2 transition-all group-aria-expanded:scale-0 group-aria-expanded:opacity-0"
-      aria-hidden="true"
-      focusable="false"
-      xmlns="http://www.w3.org/2000/svg"
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke-width="1.5"
-      stroke="currentColor"
-    >
-      <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 9h16.5m-16.5 6.75h16.5"></path>
-    </svg>
-    <svg
-      id="cross-svg"
-      class="absolute left-1/2 top-1/2 h-full w-full -translate-x-1/2 -translate-y-1/2 scale-0 text-accent opacity-0 transition-all group-aria-expanded:scale-100 group-aria-expanded:opacity-100"
-      class="text-accent"
-      aria-hidden="true"
-      focusable="false"
-      xmlns="http://www.w3.org/2000/svg"
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke-width="1.5"
-      stroke="currentColor"
-    >
-      <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
-    </svg>
+    <span class="text-textColor text-lg group-aria-expanded/btn:hidden">[=]</span>
+    <span class="text-accent text-lg hidden group-aria-expanded/btn:inline">[X]</span>
   </button>
 </header>
+
+<style>
+  .terminal-chrome {
+    margin-bottom: 1rem;
+  }
+
+  .terminal-bar {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.5rem 1rem;
+    background: rgba(0, 255, 135, 0.05);
+    border: 1px solid var(--theme-text);
+  }
+
+  .terminal-dots-wrapper {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .terminal-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+  }
+
+  .terminal-dot.red {
+    background: #FF4757;
+    box-shadow: 0 0 5px #FF4757;
+  }
+
+  .terminal-dot.yellow {
+    background: #DAFF01;
+    box-shadow: 0 0 5px #DAFF01;
+  }
+
+  .terminal-dot.green {
+    background: #00FF87;
+    box-shadow: 0 0 5px #00FF87;
+  }
+
+  .terminal-path {
+    flex: 1;
+    color: var(--theme-quote);
+    font-size: 0.875rem;
+  }
+
+  .ascii-name {
+    overflow-x: auto;
+    margin-bottom: 1rem;
+  }
+
+  .ascii-art {
+    color: var(--theme-accent);
+    text-shadow: 0 0 5px var(--theme-accent), 0 0 10px var(--theme-accent);
+    margin: 0;
+    display: inline-block;
+  }
+
+  .nav-link {
+    display: inline-flex;
+    align-items: center;
+    color: var(--theme-link);
+    text-decoration: none;
+    padding: 0.25rem 0;
+    transition: all 0.2s ease;
+  }
+
+  .nav-link .bracket {
+    color: var(--theme-quote);
+    transition: color 0.2s ease;
+  }
+
+  .nav-link .link-text {
+    padding: 0 0.25rem;
+  }
+
+  .nav-link:hover,
+  .nav-link.active {
+    color: var(--theme-accent);
+    text-shadow: 0 0 5px var(--theme-accent);
+  }
+
+  .nav-link:hover .bracket,
+  .nav-link.active .bracket {
+    color: var(--theme-accent);
+  }
+
+  .nav-link.active::before {
+    content: ">";
+    color: var(--theme-accent);
+    margin-right: 0.25rem;
+  }
+
+  .text-muted {
+    color: var(--theme-quote);
+  }
+
+  @media (max-width: 640px) {
+    .ascii-art {
+      font-size: 0.5rem;
+    }
+
+    .nav-terminal {
+      max-height: calc(100vh - 150px);
+      overflow-y: auto;
+    }
+
+    .nav-link {
+      width: 100%;
+      padding: 0.75rem 0;
+      border-bottom: 1px dashed rgba(0, 255, 135, 0.2);
+    }
+
+    .nav-link::before {
+      content: "$ ";
+      color: var(--theme-accent);
+    }
+  }
+</style>

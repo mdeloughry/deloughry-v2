@@ -1,59 +1,231 @@
 ---
 const year = new Date().getFullYear();
+const startYear = 2020;
+const uptimeDays = Math.floor((Date.now() - new Date(startYear, 0, 1).getTime()) / (1000 * 60 * 60 * 24));
 
 const url = new URL(Astro.request.url);
 
 const menuLinks = [
-  {
-    title: "Home",
-    path: "/",
-  },
-  {
-    title: "About",
-    path: "/about",
-  },
-  {
-    title: "Blog",
-    path: "/posts",
-  },
-  {
-    title: "Playlists",
-    path: "/playlists",
-  },
-  {
-    title: "Projects",
-    path: "/projects",
-  },
-  {
-    title: "Bookmarks",
-    path: "/bookmarks",
-  },
-
+  { title: "home", path: "/" },
+  { title: "about", path: "/about" },
+  { title: "posts", path: "/posts" },
+  { title: "playlists", path: "/playlists" },
+  { title: "projects", path: "/projects" },
+  { title: "bookmarks", path: "/bookmarks" },
 ];
 ---
 
-<footer
-  class="mt-auto flex w-full flex-col items-center justify-center gap-y-2 pb-4 pt-20 text-center align-top  sm:flex-row sm:justify-between sm:text-xs"
->
-  <div class="mr-0 sm:mr-4">
-    Copyright &copy; {year}
-    <span aria-label="rocket emoji">🦖</span>
+<footer class="footer-terminal mt-auto pt-16 pb-8">
+  <!-- ASCII Divider -->
+  <div class="ascii-divider" aria-hidden="true">
+    <pre class="text-xs text-textColor opacity-50">═══════════════════════════════════════════════════════════════════════════════</pre>
   </div>
-  <nav
-    aria-label="More on this site"
-    class="flex gap-x-2 sm:gap-x-0 sm:divide-x sm:divide-dashed sm:divide-accent"
-  >
-    {
-      menuLinks.flatMap((link) => (
-        <a
-          href={link.path}
-          class="cactus-link px-4 py-2 sm:px-2 sm:py-0 sm:hover:underline"
-          aria-current={url.pathname === link.path ? "page" : false}
-          rel="prefetch"
-        >
-          {link.title}
-        </a>
-      ))
-    }
-  </nav>
+
+  <div class="footer-content">
+    <!-- System Status -->
+    <div class="system-status">
+      <div class="status-line">
+        <span class="prompt-symbol">$</span>
+        <span class="command">uptime</span>
+      </div>
+      <div class="status-output">
+        <span class="text-textColor">System online for</span>
+        <span class="text-accent glow">{uptimeDays.toLocaleString()}</span>
+        <span class="text-textColor">days</span>
+      </div>
+    </div>
+
+    <!-- Navigation Links -->
+    <nav aria-label="Footer navigation" class="footer-nav">
+      <div class="nav-header">
+        <span class="prompt-symbol">$</span>
+        <span class="command">ls -la ./sitemap</span>
+      </div>
+      <div class="nav-links">
+        {
+          menuLinks.map((link) => (
+            <a
+              href={link.path}
+              class="footer-link flicker-hover"
+              aria-current={url.pathname === link.path ? "page" : false}
+              rel="prefetch"
+            >
+              <span class="link-prefix">./</span>{link.title}
+            </a>
+          ))
+        }
+      </div>
+    </nav>
+
+    <!-- Copyright -->
+    <div class="copyright">
+      <div class="copyright-line">
+        <span class="comment">/* Copyright &copy; {year} Matt Peck-Deloughry */</span>
+      </div>
+      <div class="connection-status">
+        <span class="text-quote">Connection:</span>
+        <span class="status-online">ACTIVE</span>
+        <span class="cursor-inline"></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Exit Message -->
+  <div class="exit-message" aria-hidden="true">
+    <pre class="text-xs text-quote">
+┌─────────────────────────────────────────────────────────────┐
+│  Thank you for visiting. Type 'exit' to leave the matrix.  │
+└─────────────────────────────────────────────────────────────┘
+    </pre>
+  </div>
 </footer>
+
+<style>
+  .footer-terminal {
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .ascii-divider {
+    overflow: hidden;
+    margin-bottom: 2rem;
+  }
+
+  .ascii-divider pre {
+    margin: 0;
+    white-space: nowrap;
+  }
+
+  .footer-content {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  @media (min-width: 640px) {
+    .footer-content {
+      grid-template-columns: auto 1fr auto;
+      align-items: start;
+    }
+  }
+
+  .system-status,
+  .footer-nav,
+  .copyright {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .status-line,
+  .nav-header {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    margin-bottom: 0.25rem;
+  }
+
+  .prompt-symbol {
+    color: var(--theme-accent);
+  }
+
+  .command {
+    color: var(--theme-link);
+  }
+
+  .status-output {
+    display: flex;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+  }
+
+  .nav-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1rem;
+  }
+
+  .footer-link {
+    color: var(--theme-text);
+    text-decoration: none;
+    font-size: 0.875rem;
+    transition: all 0.2s ease;
+  }
+
+  .footer-link:hover {
+    color: var(--theme-accent);
+    text-shadow: 0 0 5px var(--theme-accent);
+  }
+
+  .link-prefix {
+    color: var(--theme-quote);
+  }
+
+  .copyright {
+    text-align: left;
+  }
+
+  @media (min-width: 640px) {
+    .copyright {
+      text-align: right;
+    }
+  }
+
+  .copyright-line {
+    font-size: 0.75rem;
+  }
+
+  .comment {
+    color: var(--theme-quote);
+  }
+
+  .connection-status {
+    display: flex;
+    gap: 0.5rem;
+    font-size: 0.75rem;
+    justify-content: flex-start;
+  }
+
+  @media (min-width: 640px) {
+    .connection-status {
+      justify-content: flex-end;
+    }
+  }
+
+  .text-quote {
+    color: var(--theme-quote);
+  }
+
+  .status-online {
+    color: var(--theme-text);
+  }
+
+  .status-online::before {
+    content: "● ";
+    animation: blink 2s ease-in-out infinite;
+  }
+
+  @keyframes blink {
+    0%, 50% { opacity: 1; }
+    51%, 100% { opacity: 0.3; }
+  }
+
+  .glow {
+    text-shadow: 0 0 5px var(--theme-accent), 0 0 10px var(--theme-accent);
+  }
+
+  .exit-message {
+    margin-top: 2rem;
+    text-align: center;
+    opacity: 0.5;
+    transition: opacity 0.3s ease;
+  }
+
+  .exit-message:hover {
+    opacity: 1;
+  }
+
+  .exit-message pre {
+    display: inline-block;
+    margin: 0;
+  }
+</style>

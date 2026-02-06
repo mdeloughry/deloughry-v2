@@ -1,44 +1,152 @@
 ---
-import Twitch from "./assets/svgs/Twitch.astro";
-import Mastodon from "./assets/svgs/Mastodon.astro";
-import GitHub from "./assets/svgs/GitHub.astro";
+const socialLinks = [
+  {
+    name: "GitHub",
+    url: "https://github.com/DR-DinoMight",
+    command: "ssh git@github.com",
+    icon: "GH",
+  },
+  {
+    name: "Mastodon",
+    url: "https://phpc.social/@DrDinoMight",
+    command: "toot @DrDinoMight",
+    icon: "MA",
+  },
+  {
+    name: "Twitch",
+    url: "https://www.twitch.tv/dr_dinomight",
+    command: "stream --live",
+    icon: "TW",
+  },
+];
 ---
 
-<div class="flex flex-wrap items-center gap-x-4 sm:items-center">
-	<p>Find me on</p>
-	<ul class="flex flex-1 items-center gap-x-4 sm:flex-initial">
-		<li>
-			<a
-				class="inline-block p-2 sm:hover:text-link"
-				href="https://github.com/DR-DinoMight"
-				target="_blank"
-				rel="noopener noreferrer me authn"
-			>
-				<GitHub class="h-6 w-6 fill-accent hover:fill-github transition-all" />
-				<span class="sr-only">Github</span>
-			</a>
-		</li>
-		<li>
-			<a
-				class="inline-block p-2 sm:hover:text-link"
-				href="https://phpc.social/@DrDinoMight"
-				target="_blank"
-				rel="noopener noreferrer me"
-			>
-				<Mastodon class="h-6 w-6 fill-accent hover:fill-mastodon transition-all" />
-				<span class="sr-only">Mastodon</span>
-			</a>
-		</li>
-		<li>
-			<a
-				class="inline-block p-2 sm:hover:text-link"
-				href="https://www.twitch.tv/dr_dinomight"
-				target="_blank"
-				rel="noopener noreferrer me"
-			>
-				<Twitch class="h-6 w-6 fill-accent hover:fill-twitch transition-all" />
-				<span class="sr-only">Twitch</span>
-			</a>
-		</li>
-	</ul>
+<div class="social-terminal">
+  <div class="terminal-prompt">
+    <span class="prompt-symbol">$</span>
+    <span class="command">find ./connections</span>
+  </div>
+
+  <ul class="social-list" role="list">
+    {
+      socialLinks.map((link) => (
+        <li class="social-item">
+          <a
+            class="social-link flicker-hover"
+            href={link.url}
+            target="_blank"
+            rel="noopener noreferrer me"
+            title={link.command}
+          >
+            <span class="link-icon" aria-hidden="true">[{link.icon}]</span>
+            <span class="link-name">{link.name}</span>
+            <span class="link-arrow" aria-hidden="true">-&gt;</span>
+            <span class="link-url" aria-hidden="true">{link.url.replace('https://', '')}</span>
+            <span class="sr-only">(opens in new tab)</span>
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+
+  <div class="connection-hint">
+    <span class="text-quote">// hover for ssh command</span>
+  </div>
 </div>
+
+<style>
+  .social-terminal {
+    font-family: 'JetBrains Mono', monospace;
+    padding: 1rem;
+    border: 1px dashed var(--theme-text);
+    background: rgba(0, 255, 135, 0.02);
+  }
+
+  .terminal-prompt {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px dotted var(--theme-text);
+  }
+
+  .prompt-symbol {
+    color: var(--theme-accent);
+  }
+
+  .command {
+    color: var(--theme-link);
+  }
+
+  .social-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .social-item {
+    display: flex;
+  }
+
+  .social-link {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--theme-text);
+    text-decoration: none;
+    font-size: 0.875rem;
+    transition: all 0.2s ease;
+    padding: 0.25rem 0;
+    width: 100%;
+  }
+
+  .social-link:hover {
+    color: var(--theme-accent);
+    text-shadow: 0 0 5px var(--theme-accent);
+    padding-left: 0.5rem;
+  }
+
+  .link-icon {
+    color: var(--theme-link);
+    min-width: 3rem;
+  }
+
+  .link-name {
+    min-width: 5rem;
+    color: var(--theme-text);
+  }
+
+  .link-arrow {
+    color: var(--theme-quote);
+  }
+
+  .link-url {
+    color: var(--theme-quote);
+    font-size: 0.75rem;
+  }
+
+  .social-link:hover .link-icon,
+  .social-link:hover .link-name,
+  .social-link:hover .link-arrow,
+  .social-link:hover .link-url {
+    color: var(--theme-accent);
+  }
+
+  .connection-hint {
+    margin-top: 1rem;
+    font-size: 0.75rem;
+  }
+
+  .text-quote {
+    color: var(--theme-quote);
+  }
+
+  @media (max-width: 640px) {
+    .link-url {
+      display: none;
+    }
+  }
+</style>

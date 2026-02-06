@@ -1,13 +1,252 @@
 ---
 import PageLayout from "@/layouts/Base";
 const meta = {
-	title: "Oops! You found a missing page!",
-	description: "Oops! It looks like this page is lost in space!",
+	title: "404 | File Not Found",
+	description: "Error: The requested file was not found on this server.",
 };
 export const prerender = true;
 ---
 
 <PageLayout meta={meta}>
-	<h1 class="title mb-6">404 | Oops something went wrong</h1>
-	<p class="mb-8">Please use the navigation to find your way back</p>
+	<div class="error-page">
+		<div class="error-terminal">
+			<div class="terminal-header">
+				<div class="terminal-dots">
+					<span class="terminal-dot red"></span>
+					<span class="terminal-dot yellow"></span>
+					<span class="terminal-dot green"></span>
+				</div>
+				<span class="terminal-title">ERROR</span>
+			</div>
+			<div class="terminal-content">
+				<pre class="error-ascii">
+███████╗██████╗ ██████╗  ██████╗ ██████╗
+██╔════╝██╔══██╗██╔══██╗██╔═══██╗██╔══██╗
+█████╗  ██████╔╝██████╔╝██║   ██║██████╔╝
+██╔══╝  ██╔══██╗██╔══██╗██║   ██║██╔══██╗
+███████╗██║  ██║██║  ██║╚██████╔╝██║  ██║
+╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═╝
+				</pre>
+
+				<div class="error-code">
+					<span class="code-number glow">404</span>
+					<span class="code-text">FILE_NOT_FOUND</span>
+				</div>
+
+				<div class="error-message">
+					<div class="message-line">
+						<span class="prompt">$</span>
+						<span class="command">cat /requested/path</span>
+					</div>
+					<div class="message-output">
+						<span class="error-text">cat: /requested/path: No such file or directory</span>
+					</div>
+				</div>
+
+				<div class="error-suggestions">
+					<p class="suggestion-title">// Possible actions:</p>
+					<ul class="suggestion-list">
+						<li>
+							<span class="prompt">$</span>
+							<a href="/" class="suggestion-link">cd ~</a>
+							<span class="comment"># Return to home</span>
+						</li>
+						<li>
+							<span class="prompt">$</span>
+							<a href="/posts" class="suggestion-link">ls ./blog</a>
+							<span class="comment"># Browse posts</span>
+						</li>
+						<li>
+							<span class="prompt">$</span>
+							<a href="/projects" class="suggestion-link">ls ./projects</a>
+							<span class="comment"># View projects</span>
+						</li>
+					</ul>
+				</div>
+
+				<div class="cursor-block">
+					<span class="prompt">$</span>
+					<span class="cursor"></span>
+				</div>
+			</div>
+		</div>
+	</div>
 </PageLayout>
+
+<style>
+	.error-page {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		min-height: 60vh;
+		font-family: 'JetBrains Mono', monospace;
+	}
+
+	.error-terminal {
+		width: 100%;
+		max-width: 600px;
+		border: 1px solid var(--theme-text);
+	}
+
+	.terminal-header {
+		display: flex;
+		align-items: center;
+		gap: 1rem;
+		padding: 0.5rem 1rem;
+		background: rgba(255, 71, 87, 0.1);
+		border-bottom: 1px solid var(--theme-text);
+	}
+
+	.terminal-dots {
+		display: flex;
+		gap: 0.5rem;
+	}
+
+	.terminal-dot {
+		width: 10px;
+		height: 10px;
+		border-radius: 50%;
+	}
+
+	.terminal-dot.red { background: #FF4757; box-shadow: 0 0 5px #FF4757; }
+	.terminal-dot.yellow { background: #DAFF01; box-shadow: 0 0 5px #DAFF01; }
+	.terminal-dot.green { background: #00FF87; box-shadow: 0 0 5px #00FF87; }
+
+	.terminal-title {
+		flex: 1;
+		text-align: center;
+		color: #FF4757;
+		font-size: 0.875rem;
+		font-weight: bold;
+	}
+
+	.terminal-content {
+		padding: 1.5rem;
+	}
+
+	.error-ascii {
+		color: #FF4757;
+		font-size: 0.5rem;
+		line-height: 1.2;
+		margin: 0 0 1.5rem 0;
+		text-align: center;
+		overflow-x: auto;
+	}
+
+	.error-code {
+		text-align: center;
+		margin-bottom: 2rem;
+	}
+
+	.code-number {
+		display: block;
+		font-size: 4rem;
+		color: #FF4757;
+		line-height: 1;
+	}
+
+	.code-text {
+		display: block;
+		color: var(--theme-quote);
+		font-size: 1rem;
+		margin-top: 0.5rem;
+	}
+
+	.glow {
+		text-shadow: 0 0 10px #FF4757, 0 0 20px #FF4757;
+	}
+
+	.error-message {
+		margin-bottom: 2rem;
+		padding: 1rem;
+		border: 1px dashed #FF4757;
+		background: rgba(255, 71, 87, 0.05);
+	}
+
+	.message-line {
+		display: flex;
+		gap: 0.5rem;
+		margin-bottom: 0.5rem;
+	}
+
+	.prompt {
+		color: var(--theme-accent);
+	}
+
+	.command {
+		color: var(--theme-link);
+	}
+
+	.message-output {
+		padding-left: 1rem;
+	}
+
+	.error-text {
+		color: #FF4757;
+	}
+
+	.error-suggestions {
+		margin-bottom: 2rem;
+	}
+
+	.suggestion-title {
+		color: var(--theme-quote);
+		margin-bottom: 1rem;
+	}
+
+	.suggestion-list {
+		list-style: none;
+		padding: 0;
+		margin: 0;
+	}
+
+	.suggestion-list li {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+		margin-bottom: 0.5rem;
+		flex-wrap: wrap;
+	}
+
+	.suggestion-link {
+		color: var(--theme-link);
+		text-decoration: none;
+		transition: all 0.2s ease;
+	}
+
+	.suggestion-link:hover {
+		color: var(--theme-accent);
+		text-shadow: 0 0 5px var(--theme-accent);
+	}
+
+	.comment {
+		color: var(--theme-quote);
+		font-size: 0.875rem;
+	}
+
+	.cursor-block {
+		display: flex;
+		gap: 0.5rem;
+	}
+
+	.cursor::after {
+		content: "█";
+		animation: blink 1s step-end infinite;
+		color: var(--theme-accent);
+	}
+
+	@keyframes blink {
+		0%, 50% { opacity: 1; }
+		51%, 100% { opacity: 0; }
+	}
+
+	@media (max-width: 640px) {
+		.error-ascii {
+			font-size: 0.35rem;
+		}
+
+		.code-number {
+			font-size: 3rem;
+		}
+	}
+</style>
