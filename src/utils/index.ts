@@ -10,3 +10,4 @@ export {
 	getTagCategory,
 	getTagsByCategory
 } from "./tags";
+export { formatAsSize, formatLsDate } from "./terminal";

@@ -2,27 +2,12 @@
 import { getCollection } from "astro:content";
 import PageLayout from "@/layouts/Base";
 import SocialList from "@/components/SocialList";
-import { sortMDByDate, getTagSlug, formatTagForDisplay } from "@/utils";
+import { sortMDByDate, getTagSlug, formatTagForDisplay, formatAsSize, formatLsDate } from "@/utils";
 
 const MAX_POSTS = 10;
 const allPosts = await getCollection("post");
 const allPostsByDate = sortMDByDate(allPosts).slice(0, MAX_POSTS);
 export const prerender = true;
-
-// Format file size-like metadata
-function formatAsSize(text: string): string {
-  const words = text?.split(' ').length || 0;
-  return `${words * 50}B`;
-}
-
-// Format date as ls -la style
-function formatLsDate(date: Date): string {
-  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-  const month = months[date.getMonth()];
-  const day = date.getDate().toString().padStart(2, ' ');
-  const year = date.getFullYear();
-  return `${month} ${day} ${year}`;
-}
 ---
 
 <PageLayout meta={{ title: "Home" }}>

@@ -80,7 +80,32 @@ const {
 
 		<!-- Matrix Rain Script -->
 		<script>
+			// Store interval and resize handler references for cleanup
+			let matrixIntervalId: number | null = null;
+			let matrixResizeHandler: (() => void) | null = null;
+
+			function cleanupMatrix() {
+				// Clear any existing interval
+				if (matrixIntervalId !== null) {
+					clearInterval(matrixIntervalId);
+					matrixIntervalId = null;
+				}
+				// Remove resize listener if it exists
+				if (matrixResizeHandler !== null) {
+					window.removeEventListener('resize', matrixResizeHandler);
+					matrixResizeHandler = null;
+				}
+			}
+
 			function initMatrix() {
+				// Clean up any existing animation before starting a new one
+				cleanupMatrix();
+
+				// Respect reduced motion preference
+				if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+					return;
+				}
+
 				const canvas = document.getElementById('matrix-canvas') as HTMLCanvasElement;
 				if (!canvas) return;
 
@@ -93,7 +118,8 @@ const {
 					canvas.height = window.innerHeight;
 				}
 				resize();
-				window.addEventListener('resize', resize);
+				matrixResizeHandler = resize;
+				window.addEventListener('resize', matrixResizeHandler);
 
 				// Matrix characters
 				const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()_+-=[]{}|;:,.<>?~';
@@ -130,8 +156,8 @@ const {
 					}
 				}
 
-				// Slow animation for subtlety
-				setInterval(draw, 100);
+				// Slow animation for subtlety - store interval ID for cleanup
+				matrixIntervalId = setInterval(draw, 100);
 			}
 
 			// Initialize on load and after page transitions

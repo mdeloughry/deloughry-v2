@@ -4,7 +4,7 @@ import type { CollectionEntry } from "astro:content";
 import { getCollection } from "astro:content";
 import PageLayout from "@/layouts/Base";
 import Pagination from "@/components/Paginator";
-import { getUniqueTags, sortMDByDate, getFormattedDate, getTagSlug, formatTagForDisplay } from "@/utils";
+import { getUniqueTags, sortMDByDate, getFormattedDate, getTagSlug, formatTagForDisplay, formatAsSize, formatLsDate } from "@/utils";
 
 export async function getStaticPaths({ paginate }: GetStaticPathsOptions) {
 	const allPosts = await getCollection("post");
@@ -39,21 +39,6 @@ const paginationProps = {
 		},
 	}),
 };
-
-// Format file size-like metadata
-function formatAsSize(text: string): string {
-  const words = text?.split(' ').length || 0;
-  return `${words * 50}B`;
-}
-
-// Format date as ls -la style
-function formatLsDate(date: Date): string {
-  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-  const month = months[date.getMonth()];
-  const day = date.getDate().toString().padStart(2, ' ');
-  const year = date.getFullYear();
-  return `${month} ${day} ${year}`;
-}
 
 export const prerender = true;
 ---
