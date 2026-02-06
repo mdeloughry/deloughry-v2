@@ -178,6 +178,7 @@
    GLITCH TEXT EFFECTS
    Reserved ONLY for the site masthead/logo
    Refined, deliberate, and sparse
+   Auto-triggers every 5 seconds + on hover
    ============================================ */
 .glitch-text {
   position: relative;
@@ -199,14 +200,16 @@
 .glitch-text::before {
   color: var(--glitch-red);
   clip-path: polygon(0 0, 100% 0, 100% 35%, 0 35%);
+  animation: glitch-auto 5s ease-in-out infinite;
 }
 
 .glitch-text::after {
   color: var(--glitch-cyan);
   clip-path: polygon(0 65%, 100% 65%, 100% 100%, 0 100%);
+  animation: glitch-auto-reverse 5s ease-in-out infinite;
 }
 
-/* Glitch only triggers on hover - intentional and rare */
+/* Also trigger on hover for interactivity */
 .glitch-text:hover::before {
   animation: glitch-shift 0.4s ease-out forwards;
 }
@@ -215,6 +218,24 @@
   animation: glitch-shift-reverse 0.4s ease-out forwards;
 }
 
+/* Auto glitch - triggers briefly every 5 seconds */
+@keyframes glitch-auto {
+  0%, 90%, 100% { transform: translate(0, 0); opacity: 0; }
+  92% { transform: translate(var(--glitch-shift), 0); opacity: 0.7; }
+  94% { transform: translate(calc(var(--glitch-shift) * -1), 0); opacity: 0.5; }
+  96% { transform: translate(var(--glitch-shift), 0); opacity: 0.3; }
+  98% { transform: translate(0, 0); opacity: 0; }
+}
+
+@keyframes glitch-auto-reverse {
+  0%, 90%, 100% { transform: translate(0, 0); opacity: 0; }
+  92% { transform: translate(calc(var(--glitch-shift) * -1), 0); opacity: 0.7; }
+  94% { transform: translate(var(--glitch-shift), 0); opacity: 0.5; }
+  96% { transform: translate(calc(var(--glitch-shift) * -1), 0); opacity: 0.3; }
+  98% { transform: translate(0, 0); opacity: 0; }
+}
+
+/* Hover override animations */
 @keyframes glitch-shift {
   0% { transform: translate(0, 0); opacity: 0; }
   20% { transform: translate(var(--glitch-shift), 0); opacity: 0.7; }
