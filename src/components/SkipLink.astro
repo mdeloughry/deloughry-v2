@@ -1,3 +1,27 @@
-<a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:top-1.5 focus:left-1"
-	>skip to content
+<a href="#main" class="skip-link">
+	[SKIP TO CONTENT]
 </a>
+
+<style>
+	.skip-link {
+		position: absolute;
+		top: -100%;
+		left: 0;
+		z-index: 10000;
+		padding: 0.75rem 1.5rem;
+		background: var(--theme-bg);
+		color: var(--theme-accent);
+		border: 2px solid var(--theme-accent);
+		text-decoration: none;
+		font-family: 'JetBrains Mono', monospace;
+		font-size: 0.875rem;
+	}
+
+	.skip-link:focus {
+		top: 0.5rem;
+		left: 0.5rem;
+		outline: none;
+		text-shadow: 0 0 5px var(--theme-accent);
+		box-shadow: 0 0 10px rgba(218, 255, 1, 0.3);
+	}
+</style>

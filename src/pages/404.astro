@@ -9,8 +9,8 @@ export const prerender = true;
 
 <PageLayout meta={meta}>
 	<div class="error-page">
-		<div class="error-terminal">
-			<div class="terminal-header">
+		<div class="error-terminal" role="alert">
+			<div class="terminal-header" aria-hidden="true">
 				<div class="terminal-dots">
 					<span class="terminal-dot red"></span>
 					<span class="terminal-dot yellow"></span>
@@ -19,7 +19,7 @@ export const prerender = true;
 				<span class="terminal-title">ERROR</span>
 			</div>
 			<div class="terminal-content">
-				<pre class="error-ascii">
+				<pre class="error-ascii" aria-hidden="true">
 ███████╗██████╗ ██████╗  ██████╗ ██████╗
 ██╔════╝██╔══██╗██╔══██╗██╔═══██╗██╔══██╗
 █████╗  ██████╔╝██████╔╝██║   ██║██████╔╝
@@ -29,11 +29,13 @@ export const prerender = true;
 				</pre>
 
 				<div class="error-code">
-					<span class="code-number glow">404</span>
-					<span class="code-text">FILE_NOT_FOUND</span>
+					<h1>
+						<span class="code-number glow">404</span>
+						<span class="code-text">FILE_NOT_FOUND</span>
+					</h1>
 				</div>
 
-				<div class="error-message">
+				<div class="error-message" aria-hidden="true">
 					<div class="message-line">
 						<span class="prompt">$</span>
 						<span class="command">cat /requested/path</span>
@@ -43,28 +45,38 @@ export const prerender = true;
 					</div>
 				</div>
 
-				<div class="error-suggestions">
-					<p class="suggestion-title">// Possible actions:</p>
+				<nav class="error-suggestions" aria-label="Navigation options">
+					<p class="suggestion-title" aria-hidden="true">// Possible actions:</p>
+					<h2 class="sr-only">Where would you like to go?</h2>
 					<ul class="suggestion-list">
 						<li>
-							<span class="prompt">$</span>
-							<a href="/" class="suggestion-link">cd ~</a>
-							<span class="comment"># Return to home</span>
+							<span class="prompt" aria-hidden="true">$</span>
+							<a href="/" class="suggestion-link">
+								<span aria-hidden="true">cd ~</span>
+								<span class="sr-only">Go to home page</span>
+							</a>
+							<span class="comment" aria-hidden="true"># Return to home</span>
 						</li>
 						<li>
-							<span class="prompt">$</span>
-							<a href="/posts" class="suggestion-link">ls ./blog</a>
-							<span class="comment"># Browse posts</span>
+							<span class="prompt" aria-hidden="true">$</span>
+							<a href="/posts" class="suggestion-link">
+								<span aria-hidden="true">ls ./blog</span>
+								<span class="sr-only">Browse blog posts</span>
+							</a>
+							<span class="comment" aria-hidden="true"># Browse posts</span>
 						</li>
 						<li>
-							<span class="prompt">$</span>
-							<a href="/projects" class="suggestion-link">ls ./projects</a>
-							<span class="comment"># View projects</span>
+							<span class="prompt" aria-hidden="true">$</span>
+							<a href="/projects" class="suggestion-link">
+								<span aria-hidden="true">ls ./projects</span>
+								<span class="sr-only">View projects</span>
+							</a>
+							<span class="comment" aria-hidden="true"># View projects</span>
 						</li>
 					</ul>
-				</div>
+				</nav>
 
-				<div class="cursor-block">
+				<div class="cursor-block" aria-hidden="true">
 					<span class="prompt">$</span>
 					<span class="cursor"></span>
 				</div>
