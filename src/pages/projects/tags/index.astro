@@ -15,9 +15,9 @@ export const prerender = true;
 
 <PageLayout meta={meta}>
 	<div class="project-tags-page">
-		<header class="project-tags-header">
-			<h1 class="project-tags-title">Project Tags</h1>
-			<p class="project-tags-subtitle">Browse projects by tags and categories</p>
+		<header class="page-header">
+			<h1 class="page-title"><span class="accent-slash">//</span> Project Tags</h1>
+			<p class="page-subtitle">Browse projects by tags and categories</p>
 		</header>
 
 		<div class="tags-grid">
@@ -41,92 +41,76 @@ export const prerender = true;
 
 	<style>
 		.project-tags-page {
-			max-width: 1200px;
-			margin: 0 auto;
-			padding: 2rem;
+			display: flex;
+			flex-direction: column;
+			gap: var(--space-xl);
 		}
 
-		.project-tags-header {
-			text-align: center;
-			margin-bottom: 3rem;
-		}
-
-		.project-tags-title {
-			font-size: 3rem;
-			font-weight: 700;
-			margin-bottom: 1rem;
-			color: var(--theme-text);
-			font-family: 'Oswald', sans-serif;
-			text-transform: uppercase;
-			letter-spacing: 1px;
-		}
-
-		.project-tags-subtitle {
-			font-size: 1.2rem;
-			color: var(--theme-quote);
-			font-style: italic;
-		}
+		/* Page header and title styles from global.css */
 
 		.tags-grid {
 			display: grid;
-			grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-			gap: 1.5rem;
+			grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+			gap: var(--space-md);
 		}
 
 		.tag-card {
-			background: var(--theme-bg);
-			border-radius: 12px;
+			background: var(--theme-bg-secondary);
+			border: var(--border-weight) solid rgba(255, 255, 255, 0.08);
+			border-radius: var(--radius-subtle);
 			overflow: hidden;
-			box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-			transition: transform 0.3s ease, box-shadow 0.3s ease;
+			transition: border-color var(--transition-fast), transform var(--transition-fast), box-shadow var(--transition-fast);
 		}
 
 		.tag-card:hover {
-			transform: translateY(-4px);
-			box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+			border-color: var(--theme-accent);
+			transform: translate(-3px, -3px);
+			box-shadow: 3px 3px 0 var(--theme-accent);
 		}
 
 		.tag-link {
 			display: block;
-			padding: 1.5rem;
+			padding: var(--space-md);
 			text-decoration: none;
 			color: inherit;
 			text-align: center;
 		}
 
 		.tag-name {
-			margin: 0 0 0.5rem 0;
-			font-size: 1.2rem;
+			margin: 0 0 var(--space-xs) 0;
+			font-family: 'JetBrains Mono', monospace;
+			font-size: var(--text-base);
 			font-weight: 600;
 			color: var(--theme-accent);
-			font-family: 'Oswald', sans-serif;
-			text-transform: uppercase;
-			letter-spacing: 0.5px;
+			letter-spacing: -0.01em;
 		}
 
 		.tag-count {
 			margin: 0;
-			font-size: 0.9rem;
-			color: var(--theme-quote);
-			font-style: italic;
+			font-family: 'JetBrains Mono', monospace;
+			font-size: var(--text-xs);
+			color: var(--theme-muted);
 		}
 
 		@media (max-width: 768px) {
-			.project-tags-page {
-				padding: 1rem;
-			}
-
-			.project-tags-title {
-				font-size: 2rem;
-			}
-
 			.tags-grid {
-				grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-				gap: 1rem;
+				grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+				gap: var(--space-sm);
 			}
 
 			.tag-link {
-				padding: 1rem;
+				padding: var(--space-sm);
+			}
+
+			.tag-name {
+				font-size: var(--text-sm);
+			}
+		}
+
+		@media (prefers-reduced-motion: reduce) {
+			.tag-card:hover {
+				transform: none;
+				box-shadow: none;
 			}
 		}
 	</style>

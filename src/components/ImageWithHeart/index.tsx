@@ -3,16 +3,19 @@ import "./style.css";
 interface Props {
   image: string;
   isLiked: boolean;
+  className?: string;
 }
 
 export const ImageWithHeart: React.FC<Props> = ({ image, isLiked, className }) => {
   return (
-    <div className={className}>
-      <img src={image} className="h-full w-full" alt="Currently now-playing image" />
+    <div className={`${className} crt-filter`}>
+      <img src={image} alt="Currently now-playing image" />
+      <div className="crt-tear" />
+
       {isLiked && (
-        <div className="absolute inset-0 flex items-center justify-center bg-[rgba(0,0,0,0.3)] ">
+        <div className="absolute inset-0 flex items-center justify-center bg-[rgba(0,0,0,0.3)] z-20">
           <svg
-            className="thumbsUp h-[70%] w-[70%] fill-accent-bg stroke-accent shadow-lg"
+            className="thumbsUp h-[70%] w-[70%]"
             fill="none"
             stroke="currentColor"
             strokeWidth="2"

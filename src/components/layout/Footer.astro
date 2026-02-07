@@ -1,59 +1,61 @@
 ---
 const year = new Date().getFullYear();
-
 const url = new URL(Astro.request.url);
 
 const menuLinks = [
-  {
-    title: "Home",
-    path: "/",
-  },
-  {
-    title: "About",
-    path: "/about",
-  },
-  {
-    title: "Blog",
-    path: "/posts",
-  },
-  {
-    title: "Playlists",
-    path: "/playlists",
-  },
-  {
-    title: "Projects",
-    path: "/projects",
-  },
-  {
-    title: "Bookmarks",
-    path: "/bookmarks",
-  },
-
+  { title: "Home", path: "/" },
+  { title: "About", path: "/about" },
+  { title: "Blog", path: "/posts" },
+  { title: "Projects", path: "/projects" },
+  { title: "Bookmarks", path: "/bookmarks" },
 ];
 ---
 
-<footer
-  class="mt-auto flex w-full flex-col items-center justify-center gap-y-2 pb-4 pt-20 text-center align-top  sm:flex-row sm:justify-between sm:text-xs"
->
-  <div class="mr-0 sm:mr-4">
-    Copyright &copy; {year}
-    <span aria-label="rocket emoji">🦖</span>
+<footer class="mt-auto border-t-4 border-accent pt-8 pb-6">
+  <div class="flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
+    <!-- Branding -->
+    <div class="flex flex-col gap-2">
+      <span class="glitch-text font-mono text-2xl font-bold text-accent" data-text="MPD_">
+        MPD_
+      </span>
+      <span class="font-mono text-xs text-muted tracking-widest">
+        &copy; {year} // ALL_RIGHTS_RESERVED
+      </span>
+    </div>
+
+    <!-- Navigation -->
+    <nav
+      aria-label="Footer navigation"
+      class="flex flex-wrap gap-x-1 gap-y-2"
+    >
+      {menuLinks.map((link, index) => (
+        <>
+          {index > 0 && <span class="text-accent font-mono">|</span>}
+          <a
+            href={link.path}
+            class="font-mono text-xs uppercase tracking-wider text-muted transition-colors hover:text-accent"
+            aria-current={url.pathname === link.path ? "page" : false}
+            rel="prefetch"
+          >
+            {link.title}
+          </a>
+        </>
+      ))}
+    </nav>
   </div>
-  <nav
-    aria-label="More on this site"
-    class="flex gap-x-2 sm:gap-x-0 sm:divide-x sm:divide-dashed sm:divide-accent"
-  >
-    {
-      menuLinks.flatMap((link) => (
-        <a
-          href={link.path}
-          class="cactus-link px-4 py-2 sm:px-2 sm:py-0 sm:hover:underline"
-          aria-current={url.pathname === link.path ? "page" : false}
-          rel="prefetch"
-        >
-          {link.title}
-        </a>
-      ))
-    }
-  </nav>
+
+  <!-- Glitchy decorative element -->
+  <div class="mt-8 flex items-center gap-2 opacity-30">
+    <div class="h-px flex-1 bg-accent"></div>
+    <span class="font-mono text-xs text-accent glitch-random">
+      SYS_OK
+    </span>
+    <div class="h-px flex-1 bg-accent"></div>
+  </div>
 </footer>
+
+<style>
+  footer a[aria-current="page"] {
+    color: var(--theme-accent);
+  }
+</style>

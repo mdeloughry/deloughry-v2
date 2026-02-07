@@ -4,41 +4,150 @@ import Mastodon from "./assets/svgs/Mastodon.astro";
 import GitHub from "./assets/svgs/GitHub.astro";
 ---
 
-<div class="flex flex-wrap items-center gap-x-4 sm:items-center">
-	<p>Find me on</p>
-	<ul class="flex flex-1 items-center gap-x-4 sm:flex-initial">
+<nav class="social-list" aria-label="Social media links">
+	<span class="social-label font-mono text-sm text-muted uppercase tracking-wider" aria-hidden="true">
+		FIND_ME >>
+	</span>
+	<ul class="social-links">
 		<li>
 			<a
-				class="inline-block p-2 sm:hover:text-link"
+				class="social-link social-link--github"
 				href="https://github.com/DR-DinoMight"
 				target="_blank"
 				rel="noopener noreferrer me authn"
+				aria-label="GitHub profile (opens in new tab)"
 			>
-				<GitHub class="h-6 w-6 fill-accent hover:fill-github transition-all" />
-				<span class="sr-only">Github</span>
+				<GitHub class="social-icon" aria-hidden="true" />
+				<span class="social-name">GITHUB</span>
+				<span class="sr-only"> (opens in new tab)</span>
 			</a>
 		</li>
 		<li>
 			<a
-				class="inline-block p-2 sm:hover:text-link"
+				class="social-link social-link--mastodon"
 				href="https://phpc.social/@DrDinoMight"
 				target="_blank"
 				rel="noopener noreferrer me"
+				aria-label="Mastodon profile (opens in new tab)"
 			>
-				<Mastodon class="h-6 w-6 fill-accent hover:fill-mastodon transition-all" />
-				<span class="sr-only">Mastodon</span>
+				<Mastodon class="social-icon" aria-hidden="true" />
+				<span class="social-name">MASTODON</span>
+				<span class="sr-only"> (opens in new tab)</span>
 			</a>
 		</li>
 		<li>
 			<a
-				class="inline-block p-2 sm:hover:text-link"
+				class="social-link social-link--twitch"
 				href="https://www.twitch.tv/dr_dinomight"
 				target="_blank"
 				rel="noopener noreferrer me"
+				aria-label="Twitch channel (opens in new tab)"
 			>
-				<Twitch class="h-6 w-6 fill-accent hover:fill-twitch transition-all" />
-				<span class="sr-only">Twitch</span>
+				<Twitch class="social-icon" aria-hidden="true" />
+				<span class="social-name">TWITCH</span>
+				<span class="sr-only"> (opens in new tab)</span>
 			</a>
 		</li>
 	</ul>
-</div>
+</nav>
+
+<style>
+	.social-list {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 1rem;
+	}
+
+	.social-links {
+		display: flex;
+		gap: 0.75rem;
+		list-style: none;
+		padding: 0;
+		margin: 0;
+	}
+
+	.social-link {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+		padding: 0.5rem 1rem;
+		border: 2px solid currentColor;
+		border-radius: 2px;
+		font-family: 'JetBrains Mono', monospace;
+		font-size: 0.75rem;
+		font-weight: 500;
+		text-decoration: none;
+		transition: background 0.15s ease, color 0.15s ease;
+	}
+
+	.social-link:hover {
+		color: var(--theme-bg);
+	}
+
+	.social-link:focus-visible {
+		outline: 2px solid currentColor;
+		outline-offset: 2px;
+	}
+
+	.social-link:hover .social-icon {
+		fill: var(--theme-bg);
+	}
+
+	.social-icon {
+		width: 1rem;
+		height: 1rem;
+		fill: currentColor;
+		transition: fill 0.15s ease;
+	}
+
+	/* Brand colors */
+	.social-link--github {
+		color: var(--color-success);
+	}
+	.social-link--github:hover {
+		background: var(--color-success);
+	}
+
+	.social-link--mastodon {
+		color: var(--color-purple);
+	}
+	.social-link--mastodon:hover {
+		background: var(--color-purple);
+	}
+
+	.social-link--twitch {
+		color: var(--color-purple);
+	}
+	.social-link--twitch:hover {
+		background: var(--color-purple);
+	}
+
+	.social-name {
+		display: none;
+	}
+
+	.sr-only {
+		position: absolute;
+		width: 1px;
+		height: 1px;
+		padding: 0;
+		margin: -1px;
+		overflow: hidden;
+		clip: rect(0, 0, 0, 0);
+		white-space: nowrap;
+		border: 0;
+	}
+
+	@media (min-width: 640px) {
+		.social-name {
+			display: inline;
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.social-link:hover {
+			transform: none;
+		}
+	}
+</style>

@@ -29,7 +29,7 @@ const ImageWithBadge = ({ imageUrl, underText }: ImageWithBadgeTypes) => {
   return (
     <div>
       <div
-        className={`container ${hovered ? "active" : ""}`}
+        className={`crt-filter container ${hovered ? "active" : ""}`}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
       >
@@ -40,7 +40,7 @@ const ImageWithBadge = ({ imageUrl, underText }: ImageWithBadgeTypes) => {
             <SpotifyLogo className="logo" />
           )}
         </div>
-        <img className="image" src={imageUrl} alt="" />
+        <img className="image crt-image" src={imageUrl} alt="" />
       </div>
 
       {underText}

@@ -1,39 +1,14 @@
 ---
-import ThemeToggle from "../ThemeToggle.astro";
-import logoImg from "../../assets/logo-small.png";
-import { Image } from "astro:assets";
-
 const url = new URL(Astro.request.url);
 
 const menuLinks = [
-  {
-    title: "Home",
-    path: "/",
-  },
-  {
-    title: "About",
-    path: "/about",
-  },
-  {
-    title: "Blog",
-    path: "/posts",
-  },
-  {
-    title: "Recipes",
-    path: "/recipes",
-  },
-  {
-    title: "Playlists",
-    path: "/playlists",
-  },
-  {
-    title: "Projects",
-    path: "/projects",
-  },
-  {
-    title: "Bookmarks",
-    path: "/bookmarks",
-  },
+  { title: "Home", path: "/" },
+  { title: "About", path: "/about" },
+  { title: "Blog", path: "/posts" },
+  { title: "Recipes", path: "/recipes" },
+  { title: "Playlists", path: "/playlists" },
+  { title: "Projects", path: "/projects" },
+  { title: "Bookmarks", path: "/bookmarks" },
 ];
 ---
 
@@ -71,79 +46,93 @@ const menuLinks = [
   document.addEventListener("astro:after-swap", setupMenu);
 </script>
 
-<header id="main-header" class="group relative mb-8 flex items-center sm:pl-[4.5rem]">
-  <div class="flex sm:flex-col">
+<header id="main-header" class="group mb-16 pb-8 border-b border-white/10">
+  <div class="flex flex-col gap-6">
+    <!-- Logo / Name -->
     <a
-      href="https://deloughry.co.uk"
-      rel="author"
-      class="inline-flex items-center grayscale hover:filter-none sm:relative sm:inline-block font-oswald noj-underline"
+      href="/"
+      class="inline-block"
       aria-current={url.pathname === "/" ? "page" : false}
     >
-      <Image
-        src={logoImg}
-        height={logoImg.height}
-        width={logoImg.width}
-        alt="A dino skull"
-        loading="eager"
-        class="mr-3 w-8 sm:absolute sm:left-[-4.5rem] sm:mr-0 sm:w-16"
-        aria-hidden="true"
-      />
-      <span class="text-xl font-bold sm:text-2xl no-underline uppercase">Matthew Peck-Deloughry</span>
+      <h1 class="glitch-text text-hero font-mono font-bold text-accent leading-none tracking-tighter" data-text="MPD">
+        MPD
+      </h1>
+      <span class="block text-sm font-mono text-muted tracking-wide mt-3 opacity-70">
+        Matthew Peck-Deloughry
+      </span>
     </a>
+
+    <!-- Navigation -->
     <nav
       id="navigation-menu"
-      class="absolute -inset-x-4 top-14 hidden flex-col items-end gap-y-4 rounded-md bg-bgColor h-screen sm:h-auto py-4 text-accent shadow group-[.menu-open]:z-50 group-[.menu-open]:flex sm:static sm:z-auto sm:-ml-4 sm:mt-1 sm:flex sm:flex-row sm:items-center sm:divide-x sm:divide-dashed sm:divide-accent sm:rounded-none sm:bg-transparent sm:py-0 sm:shadow-none sm:backdrop-blur-none"
+      class="absolute -inset-x-4 top-full hidden flex-col gap-0 bg-bgColor border border-white/10 p-4 group-[.menu-open]:z-50 group-[.menu-open]:flex md:static md:flex md:flex-row md:items-center md:gap-6 md:border-0 md:bg-transparent md:p-0"
       aria-label="Main menu"
     >
-      {
-        menuLinks.flatMap((link) => (
-          <a
-            href={link.path}
-            class="px-4 py-4 hover:text-link sm:py-0 sm:hover:underline"
-            aria-current={url.pathname === link.path ? "page" : false}
-            rel="prefetch"
-          >
-            {link.title}
-          </a>
-        ))
-      }
+      {menuLinks.map((link) => (
+        <a
+          href={link.path}
+          class="nav-link py-2 font-mono text-sm text-muted transition-colors hover:text-textColor"
+          aria-current={url.pathname === link.path ? "page" : false}
+          rel="prefetch"
+        >
+          {link.title}
+        </a>
+      ))}
     </nav>
   </div>
-  <ThemeToggle />
+
+  <!-- Mobile menu button -->
   <button
     id="toggle-navigation-menu"
-    class="group relative ml-8 h-7 w-7 sm:invisible sm:hidden"
+    class="group/btn absolute right-4 top-8 h-10 w-10 border border-white/20 rounded bg-transparent md:hidden"
     type="button"
     aria-label="Open main menu"
     aria-expanded="false"
     aria-haspopup="menu"
   >
+    <!-- Hamburger icon -->
     <svg
-      id="line-svg"
-      class="absolute left-1/2 top-1/2 h-full w-full -translate-x-1/2 -translate-y-1/2 transition-all group-aria-expanded:scale-0 group-aria-expanded:opacity-0"
+      class="absolute left-1/2 top-1/2 h-5 w-5 -translate-x-1/2 -translate-y-1/2 text-textColor transition-all group-aria-expanded/btn:scale-0 group-aria-expanded/btn:opacity-0"
       aria-hidden="true"
-      focusable="false"
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
       viewBox="0 0 24 24"
       stroke-width="1.5"
       stroke="currentColor"
     >
-      <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 9h16.5m-16.5 6.75h16.5"></path>
+      <path stroke-linecap="round" d="M4 6h16M4 12h16M4 18h16"></path>
     </svg>
+    <!-- Close icon -->
     <svg
-      id="cross-svg"
-      class="absolute left-1/2 top-1/2 h-full w-full -translate-x-1/2 -translate-y-1/2 scale-0 text-accent opacity-0 transition-all group-aria-expanded:scale-100 group-aria-expanded:opacity-100"
-      class="text-accent"
+      class="absolute left-1/2 top-1/2 h-5 w-5 -translate-x-1/2 -translate-y-1/2 scale-0 text-textColor opacity-0 transition-all group-aria-expanded/btn:scale-100 group-aria-expanded/btn:opacity-100"
       aria-hidden="true"
-      focusable="false"
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
       viewBox="0 0 24 24"
       stroke-width="1.5"
       stroke="currentColor"
     >
-      <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
+      <path stroke-linecap="round" d="M6 18L18 6M6 6l12 12"></path>
     </svg>
   </button>
 </header>
+
+<style>
+  .nav-link {
+    position: relative;
+  }
+
+  .nav-link[aria-current="page"] {
+    color: var(--theme-text);
+  }
+
+  .nav-link[aria-current="page"]::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background: var(--theme-accent);
+  }
+</style>

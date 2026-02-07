@@ -12,37 +12,64 @@ const meta = {
 ---
 
 <BaseLayout meta={meta}>
-	<div class="recipes-listing">
-		<header class="recipes-header">
-			<h1>Recipes</h1>
-			<p class="recipes-subtitle">Discover delicious recipes with interactive timers and cook mode</p>
+	<div class="recipes-page">
+		<!-- Header -->
+		<header class="page-header">
+			<h1 class="page-title"><span class="accent-slash">//</span> Recipes</h1>
+			<p class="page-subtitle">{recipes.length} dishes</p>
 		</header>
 
-		<div class="recipes-grid" id="list">
+		<!-- Search -->
+		<div class="search-container">
+			<label for="q" class="sr-only">Search recipes</label>
+			<div class="search-wrapper">
+				<svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+					<circle cx="11" cy="11" r="8"></circle>
+					<path d="M21 21l-4.35-4.35"></path>
+				</svg>
+				<input
+					type="search"
+					id="q"
+					placeholder="Search recipes..."
+					class="search-input"
+				/>
+			</div>
+		</div>
+
+		<!-- Recipes Grid -->
+		<div class="recipes-grid stagger-reveal" id="list">
 			{recipes.map((r) => (
-				<article class="recipe-card">
+				<article class="brutal-card recipe-card">
 					{r.image && (
-						<div class="recipe-card-image">
-							<img src={r.image} alt={r.title} />
+						<div class="recipe-image">
+							<img src={r.image} alt={r.title} loading="lazy" />
 						</div>
 					)}
-					<div class="recipe-card-content">
-						<h2 class="recipe-card-title">
-							<a href={`/recipes/${r.slug}/`}>{r.title}</a>
+					<div class="recipe-content">
+						<div class="recipe-header">
+							{r.servings && (
+								<span class="servings-badge">{r.servings} servings</span>
+							)}
+						</div>
+						<h2 class="recipe-title">
+							<a href={`/recipes/${r.slug}/`}>
+								{r.title}
+							</a>
 						</h2>
-						{r.description && <p class="recipe-card-description">{r.description}</p>}
-						{r.tags.length ? (
-							<div class="recipe-card-tags">
+						{r.description && (
+							<p class="recipe-description">{r.description}</p>
+						)}
+						{r.tags.length > 0 && (
+							<div class="recipe-tags">
 								{r.tags.map((tag) => (
-									<a href={`/recipes/tags/${getTagSlug(tag)}`} class="tag" title={`View recipes with tag: ${formatTagForDisplay(tag)}`}>
+									<a
+										href={`/recipes/tags/${getTagSlug(tag)}`}
+										class="brutal-tag"
+										title={`View recipes with tag: ${formatTagForDisplay(tag)}`}
+									>
 										{formatTagForDisplay(tag)}
 									</a>
 								))}
-							</div>
-						) : null}
-						{r.servings && (
-							<div class="recipe-card-meta">
-								<span class="servings">{r.servings} servings</span>
 							</div>
 						)}
 					</div>
@@ -55,36 +82,54 @@ const meta = {
 
 	<script type="module">
 		import Fuse from 'https://cdn.jsdelivr.net/npm/fuse.js@7.0.0/+esm';
+		import DOMPurify from 'https://cdn.jsdelivr.net/npm/dompurify@3.0.6/+esm';
 		const data = JSON.parse(document.getElementById('recipes-data').textContent);
 		const fuse = new Fuse(data, { keys: ['title', 'tags', 'ingredients.name', 'description'] });
 		const q = document.getElementById('q');
 		const list = document.getElementById('list');
 
+		function getTagSlug(tag) {
+			return encodeURIComponent(tag.toLowerCase().trim());
+		}
+
+		function escapeHtml(text) {
+			const div = document.createElement('div');
+			div.textContent = text;
+			return div.innerHTML;
+		}
+
+		function formatTagForDisplay(tag) {
+			return tag
+				.split('-')
+				.map(word => word.charAt(0).toUpperCase() + word.slice(1))
+				.join(' ');
+		}
+
 		q.addEventListener('input', () => {
 			const term = q.value.trim();
 			const results = term ? fuse.search(term).map((r) => r.item) : data;
-			list.innerHTML = results
+			const html = results
 				.map(
 					(r) => `
-						<article class="recipe-card">
+						<article class="brutal-card recipe-card">
 							${r.image ? `
-								<div class="recipe-card-image">
-									<img src="${r.image}" alt="${r.title}" />
+								<div class="recipe-image">
+									<img src="${escapeHtml(r.image)}" alt="${escapeHtml(r.title)}" loading="lazy" />
 								</div>
 							` : ''}
-							<div class="recipe-card-content">
-								<h2 class="recipe-card-title">
-									<a href="/recipes/${r.slug}/">${r.title}</a>
+							<div class="recipe-content">
+								<div class="recipe-header">
+									${r.servings ? `<span class="servings-badge">${escapeHtml(String(r.servings))} servings</span>` : ''}
+								</div>
+								<h2 class="recipe-title">
+									<a href="/recipes/${escapeHtml(r.slug)}/">
+										${escapeHtml(r.title)}
+									</a>
 								</h2>
-								${r.description ? `<p class="recipe-card-description">${r.description}</p>` : ''}
+								${r.description ? `<p class="recipe-description">${escapeHtml(r.description)}</p>` : ''}
 								${r.tags.length ? `
-									<div class="recipe-card-tags">
-										${r.tags.map(tag => `<a href="/recipes/tags/${encodeURIComponent(tag.toLowerCase().trim())}" class="tag" title="View recipes with tag: ${tag}">${tag}</a>`).join('')}
-									</div>
-								` : ''}
-								${r.servings ? `
-									<div class="recipe-card-meta">
-										<span class="servings">${r.servings} servings</span>
+									<div class="recipe-tags">
+										${r.tags.map(tag => `<a href="/recipes/tags/${getTagSlug(tag)}" class="brutal-tag" title="View recipes with tag: ${escapeHtml(formatTagForDisplay(tag))}">${escapeHtml(formatTagForDisplay(tag))}</a>`).join('')}
 									</div>
 								` : ''}
 							</div>
@@ -92,181 +137,170 @@ const meta = {
 					`
 				)
 				.join('');
+			list.innerHTML = DOMPurify.sanitize(html);
 		});
 	</script>
 
 	<style>
-		.recipes-listing {
-			max-width: 1200px;
-			margin: 0 auto;
-			padding: 2rem;
-		}
-
-		.recipes-header {
-			text-align: center;
-			margin-bottom: 3rem;
-		}
-
-		.recipes-header h1 {
-			font-size: 3rem;
-			font-weight: 700;
-			margin-bottom: 1rem;
-			color: var(--theme-text);
-			font-family: 'Oswald', sans-serif;
-			text-transform: uppercase;
-			letter-spacing: 1px;
-		}
-
-		.recipes-subtitle {
-			font-size: 1.2rem;
-			color: var(--theme-quote);
-			font-style: italic;
-		}
-
-		.search-container {
-			margin-bottom: 3rem;
+		.recipes-page {
 			display: flex;
-			justify-content: center;
+			flex-direction: column;
+			gap: var(--space-xl);
+		}
+
+		/* Header */
+		.page-header {
+			padding-bottom: var(--space-lg);
+			border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+		}
+
+		/* Page title styles from global.css */
+
+		/* Search */
+		.search-container {
+			max-width: 400px;
+		}
+
+		.search-wrapper {
+			display: flex;
+			align-items: center;
+			gap: var(--space-sm);
+			border: var(--border-weight) solid rgba(255, 255, 255, 0.1);
+			border-radius: var(--radius-subtle);
+			background: var(--theme-bg-secondary);
+			padding: 0 var(--space-sm);
+			transition: border-color var(--transition-fast);
+		}
+
+		.search-wrapper:focus-within {
+			border-color: var(--theme-accent);
+		}
+
+		.search-icon {
+			color: var(--theme-muted);
+			flex-shrink: 0;
 		}
 
 		.search-input {
-			width: 100%;
-			max-width: 500px;
-			padding: 1rem 1.5rem;
-			border: 2px solid var(--theme-accent);
-			border-radius: 8px;
-			background: var(--theme-bg);
+			flex: 1;
+			background: transparent;
+			border: none;
+			padding: 0.625rem 0;
+			font-family: 'Outfit', system-ui, sans-serif;
+			font-size: var(--text-base);
 			color: var(--theme-text);
-			font-size: 1.1rem;
-			font-family: 'Roboto', sans-serif;
-			transition: border-color 0.3s ease;
+		}
+
+		.search-input::placeholder {
+			color: var(--theme-muted);
 		}
 
 		.search-input:focus {
 			outline: none;
-			border-color: var(--theme-accent-hover);
 		}
 
+		.sr-only {
+			position: absolute;
+			width: 1px;
+			height: 1px;
+			padding: 0;
+			margin: -1px;
+			overflow: hidden;
+			clip: rect(0, 0, 0, 0);
+			white-space: nowrap;
+			border: 0;
+		}
+
+		/* Recipes Grid */
 		.recipes-grid {
 			display: grid;
-			grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-			gap: 2rem;
+			grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+			gap: var(--space-md);
 		}
 
 		.recipe-card {
-			background: var(--theme-bg);
-			border-radius: 12px;
-			overflow: hidden;
-			box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-			transition: transform 0.3s ease, box-shadow 0.3s ease;
+			display: flex;
+			flex-direction: column;
 		}
 
-		.recipe-card:hover {
-			transform: translateY(-4px);
-			box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-		}
-
-		.recipe-card-image {
+		.recipe-image {
 			position: relative;
+			height: 160px;
 			overflow: hidden;
-			height: 200px;
+			margin: calc(var(--space-md) * -1) calc(var(--space-md) * -1) var(--space-sm) calc(var(--space-md) * -1);
+			border-radius: var(--radius-subtle) var(--radius-subtle) 0 0;
 		}
 
-		.recipe-card-image img {
+		.recipe-image img {
 			width: 100%;
 			height: 100%;
 			object-fit: cover;
 			filter: grayscale(100%);
-			transition: filter 0.3s ease;
+			transition: filter var(--transition-medium), transform var(--transition-medium);
 		}
 
-		.recipe-card:hover .recipe-card-image img {
+		.recipe-card:hover .recipe-image img {
 			filter: grayscale(0%);
+			transform: scale(1.02);
 		}
 
-		.recipe-card-content {
-			padding: 1.5rem;
+		.recipe-content {
+			display: flex;
+			flex-direction: column;
+			flex: 1;
+			gap: var(--space-xs);
 		}
 
-		.recipe-card-title {
-			margin: 0 0 0.75rem 0;
-			font-size: 1.5rem;
+		.recipe-header {
+			display: flex;
+			justify-content: flex-start;
+			align-items: center;
+		}
+
+		.servings-badge {
+			font-family: 'JetBrains Mono', monospace;
+			font-size: var(--text-xs);
+			color: var(--theme-muted);
+		}
+
+		.recipe-title {
+			font-family: 'JetBrains Mono', monospace;
+			font-size: var(--text-lg);
 			font-weight: 600;
-			font-family: 'Oswald', sans-serif;
-			text-transform: uppercase;
-			letter-spacing: 0.5px;
+			margin: 0;
+			line-height: 1.3;
+			letter-spacing: -0.01em;
 		}
 
-		.recipe-card-title a {
+		.recipe-title a {
 			color: var(--theme-text);
-			text-decoration: none;
-			transition: color 0.3s ease;
+			transition: color var(--transition-fast);
 		}
 
-		.recipe-card-title a:hover {
+		.recipe-title a:hover {
 			color: var(--theme-accent);
 		}
 
-		.recipe-card-description {
-			margin: 0 0 1rem 0;
-			color: var(--theme-quote);
-			font-style: italic;
-			line-height: 1.5;
+		.recipe-description {
+			font-size: var(--text-sm);
+			color: var(--theme-muted);
+			line-height: 1.6;
+			margin: 0;
 		}
 
-		.recipe-card-tags {
+		.recipe-tags {
 			display: flex;
 			flex-wrap: wrap;
-			gap: 0.5rem;
-			margin-bottom: 1rem;
+			gap: var(--space-xs);
+			margin-top: auto;
+			padding-top: var(--space-xs);
 		}
 
-		.tag {
-			background: var(--theme-accent);
-			color: white;
-			padding: 0.25rem 0.75rem;
-			border-radius: 20px;
-			font-size: 0.9rem;
-			font-weight: 500;
-			text-decoration: none;
-			transition: background-color 0.3s ease, transform 0.2s ease;
-		}
-
-		.tag:hover {
-			background: var(--theme-accent-dark, #1a4d3a);
-			transform: translateY(-1px);
-		}
-
-		.recipe-card-meta {
-			display: flex;
-			align-items: center;
-			gap: 1rem;
-		}
-
-		.servings {
-			color: var(--theme-accent);
-			font-weight: 600;
-			font-size: 0.9rem;
-		}
-
+		/* Responsive */
 		@media (max-width: 768px) {
-			.recipes-listing {
-				padding: 1rem;
-			}
-
-			.recipes-header h1 {
-				font-size: 2rem;
-			}
-
 			.recipes-grid {
 				grid-template-columns: 1fr;
-				gap: 1.5rem;
 			}
 		}
 	</style>
 </BaseLayout>
-
-
-</BaseLayout>
-
-

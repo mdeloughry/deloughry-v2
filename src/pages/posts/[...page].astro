@@ -29,13 +29,13 @@ const paginationProps = {
 	...(page.url.prev && {
 		prevUrl: {
 			url: page.url.prev,
-			text: `← Previous Posts`,
+			text: `<< PREV`,
 		},
 	}),
 	...(page.url.next && {
 		nextUrl: {
 			url: page.url.next,
-			text: `Next Posts →`,
+			text: `NEXT >>`,
 		},
 	}),
 };
@@ -43,32 +43,42 @@ export const prerender = true;
 ---
 
 <PageLayout meta={meta}>
-	<div class="posts-listing">
-		<header class="posts-header">
-			<h1 class="posts-title">Posts</h1>
-			<p class="posts-subtitle">Thoughts, tutorials, and insights on web development and technology</p>
+	<div class="posts-page">
+		<!-- Header -->
+		<header class="page-header">
+			<h1 class="page-title"><span class="accent-slash">//</span> Posts</h1>
+			<p class="page-subtitle">{page.total} articles</p>
 		</header>
 
-		<div class="posts-grid">
+		<!-- Posts Grid -->
+		<div class="posts-grid stagger-reveal">
 			{page.data.map((p) => (
-				<article class="post-card">
+				<article class="brutal-card post-card">
 					{p.data.ogImage && (
-						<div class="post-card-image">
-							<img src={p.data.ogImage} alt={p.data.title} />
+						<div class="post-image">
+							<img src={p.data.ogImage} alt={p.data.title} loading="lazy" />
 						</div>
 					)}
-					<div class="post-card-content">
-						<time datetime={p.data.publishDate.toISOString()} class="post-card-date">
+					<div class="post-content">
+						<time datetime={p.data.publishDate.toISOString()} class="post-date">
 							{getFormattedDate(new Date(p.data.publishDate), { month: "short" })}
 						</time>
-						<h2 class="post-card-title">
-							<a href={`/posts/${p.slug}/`}>{p.data.title}</a>
+						<h2 class="post-title">
+							<a href={`/posts/${p.slug}/`}>
+								{p.data.title}
+							</a>
 						</h2>
-						{p.data.description && <p class="post-card-description">{p.data.description}</p>}
+						{p.data.description && (
+							<p class="post-description">{p.data.description}</p>
+						)}
 						{p.data.tags && p.data.tags.length > 0 && (
-							<div class="post-card-tags">
+							<div class="post-tags">
 								{p.data.tags.map((tag) => (
-									<a href={`/tags/${getTagSlug(tag)}`} class="tag" title={`View posts with tag: ${formatTagForDisplay(tag)}`}>
+									<a
+										href={`/tags/${getTagSlug(tag)}`}
+										class="brutal-tag"
+										title={`View posts with tag: ${formatTagForDisplay(tag)}`}
+									>
 										{formatTagForDisplay(tag)}
 									</a>
 								))}
@@ -79,147 +89,108 @@ export const prerender = true;
 			))}
 		</div>
 
+		<!-- Pagination -->
 		<Pagination {...paginationProps} />
 	</div>
 
 	<style>
-		.posts-listing {
-			max-width: 1200px;
-			margin: 0 auto;
-			padding: 2rem;
+		.posts-page {
+			display: flex;
+			flex-direction: column;
+			gap: var(--space-xl);
 		}
 
-		.posts-header {
-			text-align: center;
-			margin-bottom: 3rem;
+		/* Header */
+		.page-header {
+			padding-bottom: var(--space-lg);
+			border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 		}
 
-		.posts-title {
-			font-size: 3rem;
-			font-weight: 700;
-			margin-bottom: 1rem;
-			color: var(--theme-text);
-			font-family: 'Oswald', sans-serif;
-			text-transform: uppercase;
-			letter-spacing: 1px;
-		}
+		/* Page title styles from global.css */
 
-		.posts-subtitle {
-			font-size: 1.2rem;
-			color: var(--theme-quote);
-			font-style: italic;
-		}
-
+		/* Posts Grid */
 		.posts-grid {
 			display: grid;
-			grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-			gap: 2rem;
-			margin-bottom: 3rem;
+			grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+			gap: var(--space-md);
 		}
 
 		.post-card {
-			background: var(--theme-bg);
-			border-radius: 12px;
-			overflow: hidden;
-			box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-			transition: transform 0.3s ease, box-shadow 0.3s ease;
+			display: flex;
+			flex-direction: column;
 		}
 
-		.post-card:hover {
-			transform: translateY(-4px);
-			box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-		}
-
-		.post-card-image {
+		.post-image {
 			position: relative;
+			height: 160px;
 			overflow: hidden;
-			height: 200px;
+			margin: calc(var(--space-md) * -1) calc(var(--space-md) * -1) var(--space-sm) calc(var(--space-md) * -1);
+			border-radius: var(--radius-subtle) var(--radius-subtle) 0 0;
 		}
 
-		.post-card-image img {
+		.post-image img {
 			width: 100%;
 			height: 100%;
 			object-fit: cover;
 			filter: grayscale(100%);
-			transition: filter 0.3s ease;
+			transition: filter var(--transition-medium), transform var(--transition-medium);
 		}
 
-		.post-card:hover .post-card-image img {
+		.post-card:hover .post-image img {
 			filter: grayscale(0%);
+			transform: scale(1.02);
 		}
 
-		.post-card-content {
-			padding: 1.5rem;
+		.post-content {
+			display: flex;
+			flex-direction: column;
+			flex: 1;
 		}
 
-		.post-card-date {
-			display: block;
-			font-size: 0.9rem;
-			color: var(--theme-accent);
+		.post-date {
+			display: inline-block;
+			font-family: 'JetBrains Mono', monospace;
+			font-size: var(--text-xs);
+			color: var(--theme-muted);
+			margin-bottom: var(--space-xs);
+		}
+
+		.post-title {
+			font-family: 'JetBrains Mono', monospace;
+			font-size: var(--text-lg);
 			font-weight: 600;
-			margin-bottom: 0.5rem;
+			margin: 0 0 var(--space-xs) 0;
+			line-height: 1.3;
+			letter-spacing: -0.01em;
 		}
 
-		.post-card-title {
-			margin: 0 0 0.75rem 0;
-			font-size: 1.5rem;
-			font-weight: 600;
-			font-family: 'Oswald', sans-serif;
-			text-transform: uppercase;
-			letter-spacing: 0.5px;
-		}
-
-		.post-card-title a {
+		.post-title a {
 			color: var(--theme-text);
-			text-decoration: none;
-			transition: color 0.3s ease;
+			transition: color var(--transition-fast);
 		}
 
-		.post-card-title a:hover {
+		.post-title a:hover {
 			color: var(--theme-accent);
 		}
 
-		.post-card-description {
-			margin: 0 0 1rem 0;
-			color: var(--theme-quote);
-			font-style: italic;
-			line-height: 1.5;
+		.post-description {
+			font-size: var(--text-sm);
+			color: var(--theme-muted);
+			line-height: 1.6;
+			margin: 0 0 var(--space-sm) 0;
 		}
 
-		.post-card-tags {
+		.post-tags {
 			display: flex;
 			flex-wrap: wrap;
-			gap: 0.5rem;
+			gap: var(--space-xs);
+			margin-top: auto;
 		}
 
-		.tag {
-			background: var(--theme-accent);
-			color: white;
-			padding: 0.25rem 0.75rem;
-			border-radius: 20px;
-			font-size: 0.9rem;
-			font-weight: 500;
-			text-decoration: none;
-			transition: background-color 0.3s ease, transform 0.2s ease;
-		}
-
-		.tag:hover {
-			background: var(--theme-accent-dark, #1a4d3a);
-			transform: translateY(-1px);
-		}
-
+		/* Responsive */
 		@media (max-width: 768px) {
-			.posts-listing {
-				padding: 1rem;
-			}
-
-			.posts-title {
-				font-size: 2rem;
-			}
-
 			.posts-grid {
 				grid-template-columns: 1fr;
-				gap: 1.5rem;
 			}
 		}
 	</style>
