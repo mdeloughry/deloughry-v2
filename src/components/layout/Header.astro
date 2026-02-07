@@ -39,21 +39,36 @@ const menuLinks = [
 
 <script>
   import { toggleClass } from "@/utils";
-  function toggleMenu() {
-    console.log('DOMContentLoaded');
-    const header = document.getElementById("main-header") as HTMLElement;
-    const toggleMenuButton = document.getElementById("toggle-navigation-menu") as HTMLButtonElement;
-    let menuOpen = false;
 
-    toggleMenuButton.addEventListener("click", () => {
+  function setupMenu() {
+    const header = document.getElementById("main-header");
+    const toggleMenuButton = document.getElementById("toggle-navigation-menu");
+    const nav = document.getElementById("navigation-menu");
+
+    if (!header || !toggleMenuButton) return;
+
+    // Remove any existing listener by cloning
+    const newButton = toggleMenuButton.cloneNode(true) as HTMLButtonElement;
+    toggleMenuButton.parentNode?.replaceChild(newButton, toggleMenuButton);
+
+    newButton.addEventListener("click", () => {
+      const isOpen = header.classList.contains("menu-open");
       toggleClass(header, "menu-open");
-      menuOpen = !menuOpen;
-      toggleMenuButton.setAttribute("aria-expanded", menuOpen.toString());
+      newButton.setAttribute("aria-expanded", (!isOpen).toString());
     });
 
+    // Close menu when clicking a nav link
+    nav?.querySelectorAll("a").forEach((link) => {
+      link.addEventListener("click", () => {
+        header.classList.remove("menu-open");
+        newButton.setAttribute("aria-expanded", "false");
+      });
+    });
   }
-  document.addEventListener("DOMContentLoaded", toggleMenu);
-  document.addEventListener("astro:after-swap", toggleMenu);
+
+  // Run on initial load and after Astro page transitions
+  setupMenu();
+  document.addEventListener("astro:after-swap", setupMenu);
 </script>
 
 <header id="main-header" class="group relative mb-8 flex items-center sm:pl-[4.5rem]">

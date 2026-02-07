@@ -33,8 +33,56 @@ const { headings } = await post.render();
 		document.documentElement.scrollTo({ top: 0, behavior: "smooth" });
 	});
 
-	const observer = new IntersectionObserver(callback);
-	observer.observe(targetHeader);
+	if (targetHeader) {
+		const observer = new IntersectionObserver(callback);
+		observer.observe(targetHeader);
+	}
+
+	// TOC toggle for mobile
+	function setupTocToggle() {
+		const tocToggle = document.querySelector(".toc-toggle") as HTMLButtonElement;
+		const tocList = document.getElementById("toc-list") as HTMLUListElement;
+		const tocAside = document.querySelector(".blog-post-toc") as HTMLElement;
+
+		if (!tocToggle || !tocList) return;
+
+		// Check if we're on mobile
+		const isMobile = () => window.matchMedia("(max-width: 1024px)").matches;
+
+		// Set initial state based on screen size
+		const setInitialState = () => {
+			if (isMobile()) {
+				tocToggle.setAttribute("aria-expanded", "false");
+				tocAside?.classList.remove("toc-expanded");
+			} else {
+				tocToggle.setAttribute("aria-expanded", "true");
+				tocAside?.classList.add("toc-expanded");
+			}
+		};
+
+		setInitialState();
+
+		// Handle resize
+		window.addEventListener("resize", setInitialState);
+
+		tocToggle.addEventListener("click", () => {
+			const isExpanded = tocToggle.getAttribute("aria-expanded") === "true";
+			tocToggle.setAttribute("aria-expanded", (!isExpanded).toString());
+			tocAside?.classList.toggle("toc-expanded");
+		});
+
+		// Close TOC when clicking a link on mobile
+		tocList.querySelectorAll("a").forEach((link) => {
+			link.addEventListener("click", () => {
+				if (isMobile()) {
+					tocToggle.setAttribute("aria-expanded", "false");
+					tocAside?.classList.remove("toc-expanded");
+				}
+			});
+		});
+	}
+
+	setupTocToggle();
 </script>
 
 <BaseLayout meta={{ title, description, articleDate, ogImage: socialImage }}>
@@ -77,8 +125,13 @@ const { headings } = await post.render();
 			</div>
 
 			<aside class="blog-post-toc">
-				<h2 class="toc-title">Table of Contents</h2>
-				<ul class="toc-list">
+				<button class="toc-toggle" aria-expanded="false" aria-controls="toc-list">
+					<h2 class="toc-title">Table of Contents</h2>
+					<svg class="toc-chevron" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true">
+						<path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+					</svg>
+				</button>
+				<ul id="toc-list" class="toc-list">
 					{
 						headings.flatMap(({ slug, text }) => (
 							<li class="toc-item">
@@ -246,20 +299,45 @@ const { headings } = await post.render();
 			height: fit-content;
 		}
 
+		.toc-toggle {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			width: 100%;
+			background: none;
+			border: none;
+			cursor: pointer;
+			padding: 0;
+			text-align: left;
+		}
+
 		.toc-title {
 			font-size: 1.2rem;
 			font-weight: 600;
-			margin-bottom: 1rem;
+			margin: 0;
 			color: var(--theme-accent);
 			font-family: 'Oswald', sans-serif;
 			text-transform: uppercase;
 			letter-spacing: 0.5px;
 		}
 
+		.toc-chevron {
+			width: 1.25rem;
+			height: 1.25rem;
+			color: var(--theme-accent);
+			transition: transform 0.3s ease;
+			flex-shrink: 0;
+		}
+
+		.toc-expanded .toc-chevron {
+			transform: rotate(180deg);
+		}
+
 		.toc-list {
 			list-style: none;
 			padding: 0;
 			margin: 0;
+			margin-top: 1rem;
 		}
 
 		.toc-item {
@@ -320,6 +398,43 @@ const { headings } = await post.render();
 
 			.blog-post-toc {
 				position: static;
+				order: -1;
+				background: rgba(175, 180, 200, 0.05);
+				border-radius: 8px;
+				padding: 1rem;
+				border: 1px solid rgba(175, 180, 200, 0.2);
+			}
+
+			.toc-toggle {
+				cursor: pointer;
+			}
+
+			.toc-toggle:hover .toc-title {
+				color: var(--theme-link);
+			}
+
+			.toc-list {
+				display: none;
+				max-height: 0;
+				overflow: hidden;
+				transition: max-height 0.3s ease, opacity 0.3s ease;
+				opacity: 0;
+			}
+
+			.toc-expanded .toc-list {
+				display: block;
+				max-height: 500px;
+				opacity: 1;
+			}
+		}
+
+		@media (min-width: 1025px) {
+			.toc-chevron {
+				display: none;
+			}
+
+			.toc-toggle {
+				cursor: default;
 			}
 		}
 
