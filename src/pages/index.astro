@@ -2,7 +2,7 @@
 import { getCollection } from "astro:content";
 import PageLayout from "@/layouts/Base";
 import SocialList from "@/components/SocialList";
-import MeImage from "../assets/image.webp";
+import MeImage from "../assets/profile-glitch.webp";
 import { sortMDByDate, getTagSlug, formatTagForDisplay } from "@/utils";
 import { Image } from "astro:assets";
 
@@ -25,7 +25,7 @@ export const prerender = true;
             width={MeImage.width}
             alt="Matthew Peck-Deloughry"
             class="hero-image crt-image"
-            transition:name={"profile-image"}
+            transition:name="profile-image"
           />
         </div>
 

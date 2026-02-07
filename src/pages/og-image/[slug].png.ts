@@ -1,9 +1,9 @@
 import type { APIContext, GetStaticPathsResult } from "astro";
+import { getCollection, getEntry } from "astro:content";
 import satori from "satori";
-import siteConfig from "@/site-config";
-import { getPlaylistfromDB, getPlaylistsfromDB } from "@/data/models/playlist";
 import { Resvg } from "@resvg/resvg-js";
-import { JSDOM } from 'jsdom';
+import siteConfig from "@/site-config";
+import { getFormattedDate } from "@/utils";
 import { readFileSync } from 'fs';
 import { resolve } from 'path';
 import * as sharp from 'sharp';
@@ -43,7 +43,16 @@ function getOgOptions() {
   };
 }
 
-function markup(title: string, description: string, trackCount: number, artwork: string) {
+function markup(title: string, pubDate: string, tags: string[] = []) {
+  const tagElements = tags.slice(0, 3).map(tag => ({
+    type: 'div',
+    props: {
+      tw: 'flex text-base text-[#DAFF01] mr-3 border border-[#DAFF01] px-3 py-1',
+      style: { borderRadius: '2px' },
+      children: `#${tag}`,
+    },
+  }));
+
   return {
     type: 'div',
     props: {
@@ -51,31 +60,31 @@ function markup(title: string, description: string, trackCount: number, artwork:
       style: { fontFamily: 'JetBrains Mono', position: 'relative' },
       children: [
         // Glitch lines
-        { type: 'div', props: { tw: 'flex', style: { position: 'absolute', top: 0, left: 0, width: '100%', height: '4px', background: '#FF4757', opacity: 0.6 } } },
-        { type: 'div', props: { tw: 'flex', style: { position: 'absolute', top: '8px', left: 0, width: '100%', height: '4px', background: '#00D9FF', opacity: 0.4 } } },
+        { type: 'div', props: { tw: 'flex', style: { position: 'absolute', top: 0, left: 0, width: '100%', height: '6px', background: '#FF4757', opacity: 0.6 } } },
+        { type: 'div', props: { tw: 'flex', style: { position: 'absolute', top: '10px', left: 0, width: '100%', height: '3px', background: '#00D9FF', opacity: 0.4 } } },
+        { type: 'div', props: { tw: 'flex', style: { position: 'absolute', top: '60px', right: 0, width: '40%', height: '2px', background: '#DAFF01', opacity: 0.5 } } },
+        { type: 'div', props: { tw: 'flex', style: { position: 'absolute', bottom: '100px', left: 0, width: '50%', height: '2px', background: '#FF4757', opacity: 0.3 } } },
         // Main content
         {
           type: 'div',
           props: {
-            tw: 'flex items-center flex-1 w-full p-12',
+            tw: 'flex flex-1 w-full p-12 items-center',
             children: [
-              // Album artwork with glitch effect
+              // MPD box with glitch effect
               {
                 type: 'div',
                 props: {
-                  tw: 'flex',
+                  tw: 'flex mr-10',
                   style: { position: 'relative' },
                   children: [
-                    { type: 'div', props: { tw: 'flex', style: { position: 'absolute', top: '4px', left: '4px', width: '256px', height: '256px', background: '#FF4757', opacity: 0.5, borderRadius: '2px' } } },
-                    { type: 'div', props: { tw: 'flex', style: { position: 'absolute', top: '-4px', left: '-4px', width: '256px', height: '256px', background: '#00D9FF', opacity: 0.3, borderRadius: '2px' } } },
+                    { type: 'div', props: { tw: 'flex', style: { position: 'absolute', top: '5px', left: '5px', width: '140px', height: '140px', background: '#FF4757', opacity: 0.5, borderRadius: '4px' } } },
+                    { type: 'div', props: { tw: 'flex', style: { position: 'absolute', top: '-5px', left: '-5px', width: '140px', height: '140px', background: '#00D9FF', opacity: 0.3, borderRadius: '4px' } } },
                     {
-                      type: 'img',
+                      type: 'div',
                       props: {
-                        src: artwork,
-                        width: 256,
-                        height: 256,
-                        tw: 'flex border-2 border-[#DAFF01]',
-                        style: { borderRadius: '2px', objectFit: 'cover', position: 'relative' },
+                        tw: 'flex items-center justify-center w-[140px] h-[140px] border-3 border-[#DAFF01] bg-black',
+                        style: { borderRadius: '4px', position: 'relative' },
+                        children: { type: 'span', props: { tw: 'text-[#DAFF01] text-5xl font-bold', children: 'MPD' } },
                       },
                     },
                   ],
@@ -85,16 +94,16 @@ function markup(title: string, description: string, trackCount: number, artwork:
               {
                 type: 'div',
                 props: {
-                  tw: 'flex flex-col pl-10 flex-1',
+                  tw: 'flex flex-col flex-1 justify-center',
                   children: [
-                    // Category label
+                    // Date
                     {
                       type: 'div',
                       props: {
                         tw: 'flex items-center mb-3',
                         children: [
                           { type: 'span', props: { tw: 'text-[#DAFF01] text-xl mr-2', children: '//' } },
-                          { type: 'span', props: { tw: 'text-[#8A8A8A] text-xl', children: 'Spotify Playlist' } },
+                          { type: 'span', props: { tw: 'text-[#8A8A8A] text-xl', children: pubDate } },
                         ],
                       },
                     },
@@ -107,30 +116,14 @@ function markup(title: string, description: string, trackCount: number, artwork:
                         children: title,
                       },
                     },
-                    // Description
-                    ...(description ? [{
+                    // Tags
+                    ...(tags.length > 0 ? [{
                       type: 'div',
                       props: {
-                        tw: 'flex text-lg text-[#8A8A8A] mb-4',
-                        style: { lineHeight: 1.4 },
-                        children: description,
+                        tw: 'flex flex-wrap',
+                        children: tagElements,
                       },
                     }] : []),
-                    // Track count
-                    {
-                      type: 'div',
-                      props: {
-                        tw: 'flex',
-                        children: {
-                          type: 'div',
-                          props: {
-                            tw: 'flex text-lg text-[#DAFF01] border border-[#DAFF01] px-4 py-2',
-                            style: { borderRadius: '2px' },
-                            children: `${trackCount} tracks`,
-                          },
-                        },
-                      },
-                    },
                   ],
                 },
               },
@@ -141,7 +134,7 @@ function markup(title: string, description: string, trackCount: number, artwork:
         {
           type: 'div',
           props: {
-            tw: 'flex items-center justify-between w-full p-12 border-t-2 border-[#DAFF01]',
+            tw: 'flex items-center justify-between w-full p-10 border-t-2 border-[#DAFF01]',
             children: [
               {
                 type: 'div',
@@ -155,14 +148,14 @@ function markup(title: string, description: string, trackCount: number, artwork:
                         tw: 'flex mr-4',
                         style: { position: 'relative' },
                         children: [
-                          { type: 'div', props: { tw: 'flex', style: { position: 'absolute', top: '3px', left: '3px', width: '56px', height: '56px', background: '#FF4757', opacity: 0.5, borderRadius: '2px' } } },
-                          { type: 'div', props: { tw: 'flex', style: { position: 'absolute', top: '-3px', left: '-3px', width: '56px', height: '56px', background: '#00D9FF', opacity: 0.3, borderRadius: '2px' } } },
+                          { type: 'div', props: { tw: 'flex', style: { position: 'absolute', top: '3px', left: '3px', width: '48px', height: '48px', background: '#FF4757', opacity: 0.5, borderRadius: '2px' } } },
+                          { type: 'div', props: { tw: 'flex', style: { position: 'absolute', top: '-3px', left: '-3px', width: '48px', height: '48px', background: '#00D9FF', opacity: 0.3, borderRadius: '2px' } } },
                           {
                             type: 'img',
                             props: {
                               src: profileImageDataUrl,
-                              width: 56,
-                              height: 56,
+                              width: 48,
+                              height: 48,
                               tw: 'flex border-2 border-[#DAFF01]',
                               style: { borderRadius: '2px', objectFit: 'cover', position: 'relative' },
                             },
@@ -187,14 +180,15 @@ function markup(title: string, description: string, trackCount: number, artwork:
                 type: 'div',
                 props: {
                   tw: 'flex items-center',
-                  children: { type: 'span', props: { tw: 'text-lg text-[#00FF87] font-semibold', children: '♫ Spotify' } },
+                  children: { type: 'span', props: { tw: 'text-lg text-[#DAFF01]', children: 'deloughry.co.uk' } },
                 },
               },
             ],
           },
         },
-        // Bottom glitch line
+        // Bottom glitch lines
         { type: 'div', props: { tw: 'flex', style: { position: 'absolute', bottom: 0, left: 0, width: '100%', height: '4px', background: '#00D9FF', opacity: 0.5 } } },
+        { type: 'div', props: { tw: 'flex', style: { position: 'absolute', bottom: '7px', left: 0, width: '70%', height: '2px', background: '#FF4757', opacity: 0.3 } } },
       ],
     },
   };
@@ -203,22 +197,14 @@ function markup(title: string, description: string, trackCount: number, artwork:
 export async function GET({ params: { slug } }: APIContext) {
   try {
     await loadAssets();
-    if (typeof slug !== "string") {
-      return new Response("Not Found", { status: 404 });
-    }
+    const post = await getEntry("post", slug!);
+    const title = post?.data.title ?? siteConfig.title;
+    const tags = post?.data.tags ?? [];
+    const postDate = getFormattedDate(post?.data.publishDate ?? Date.now(), {
+      weekday: "long",
+    });
 
-    const playlist = await getPlaylistfromDB(slug);
-    const title = playlist?.name ?? siteConfig.title;
-    const description = playlist?.description ?? '';
-    const trackCount = playlist?.tracks?.length ?? 0;
-    const artwork = (playlist?.artwork[0]?.url && playlist?.artwork[0]?.url.length > 0)
-      ? playlist?.artwork[0]?.url
-      : 'https://res.cloudinary.com/dr-dinomight/image/upload/v1676719004/192x192_hdl78r.png';
-
-    const svg = await satori(
-      markup(parseString(title), parseString(description), trackCount, artwork) as any,
-      getOgOptions() as any
-    );
+    const svg = await satori(markup(title, postDate, tags) as any, getOgOptions() as any);
     const png = new Resvg(svg).render().asPng();
 
     return new Response(png, {
@@ -232,12 +218,7 @@ export async function GET({ params: { slug } }: APIContext) {
   }
 }
 
-function parseString(text: string): string {
-  const { window } = new JSDOM(`<!doctype html><body>${text}</body></html>`);
-  return window.document.body.textContent || '';
-}
-
 export async function getStaticPaths(): Promise<GetStaticPathsResult> {
-  const playlists = await getPlaylistsfromDB();
-  return playlists.map(({ id }) => ({ params: { slug: id } }));
+  const posts = await getCollection("post");
+  return posts.filter(({ data }) => !data.ogImage).map(({ slug }) => ({ params: { slug } }));
 }
