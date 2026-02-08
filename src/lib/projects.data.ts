@@ -22,16 +22,6 @@ export const projects: Project[] = [
 		technologies: ['JavaScript', 'HTML', 'CSS']
 	},
 	{
-		slug: 'twitch-globe',
-		title: 'Twitch Globe',
-		description: 'Interactive 3D globe visualization showing Twitch streamers around the world.',
-		url: 'https://globe.m4p.uk/',
-		tags: ['visualization', 'twitch', '3d', 'interactive', 'streaming'],
-		category: 'visualization',
-		status: 'live',
-		technologies: ['Three.js', 'JavaScript', 'WebGL']
-	},
-	{
 		slug: 'game-of-life',
 		title: 'Game of Life',
 		description: 'Conway\'s Game of Life implementation with interactive cellular automaton simulation.',

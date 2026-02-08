@@ -1,5 +1,4 @@
 ---
-import Twitch from "./assets/svgs/Twitch.astro";
 import Mastodon from "./assets/svgs/Mastodon.astro";
 import GitHub from "./assets/svgs/GitHub.astro";
 ---
@@ -32,19 +31,6 @@ import GitHub from "./assets/svgs/GitHub.astro";
 			>
 				<Mastodon class="social-icon" aria-hidden="true" />
 				<span class="social-name">MASTODON</span>
-				<span class="sr-only"> (opens in new tab)</span>
-			</a>
-		</li>
-		<li>
-			<a
-				class="social-link social-link--twitch"
-				href="https://www.twitch.tv/dr_dinomight"
-				target="_blank"
-				rel="noopener noreferrer me"
-				aria-label="Twitch channel (opens in new tab)"
-			>
-				<Twitch class="social-icon" aria-hidden="true" />
-				<span class="social-name">TWITCH</span>
 				<span class="sr-only"> (opens in new tab)</span>
 			</a>
 		</li>
@@ -113,13 +99,6 @@ import GitHub from "./assets/svgs/GitHub.astro";
 		color: var(--color-purple);
 	}
 	.social-link--mastodon:hover {
-		background: var(--color-purple);
-	}
-
-	.social-link--twitch {
-		color: var(--color-purple);
-	}
-	.social-link--twitch:hover {
 		background: var(--color-purple);
 	}
 

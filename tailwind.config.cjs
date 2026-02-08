@@ -60,7 +60,6 @@ module.exports = {
         "glitch-cyan": "var(--glitch-cyan)",
 
         // Social colors
-        twitch: "var(--twitch)",
         twitter: "var(--twitter)",
         mastodon: "var(--mastodon)",
         youtube: "var(--youtube)",

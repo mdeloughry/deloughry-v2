@@ -176,7 +176,7 @@ function markup(title: string, description: string, trackCount: number, artwork:
                         tw: 'flex flex-col',
                         children: [
                           { type: 'span', props: { tw: 'text-lg font-semibold text-white', children: siteConfig.title } },
-                          { type: 'span', props: { tw: 'text-sm text-[#8A8A8A]', children: 'Developer // Streamer // Maker' } },
+                          { type: 'span', props: { tw: 'text-sm text-[#8A8A8A]', children: 'Developer // Gamer // Maker' } },
                         ],
                       },
                     },

@@ -2,9 +2,7 @@
 import { getCollection } from "astro:content";
 import PageLayout from "@/layouts/Base";
 import SocialList from "@/components/SocialList";
-import MeImage from "../assets/profile-glitch.webp";
 import { sortMDByDate, getTagSlug, formatTagForDisplay } from "@/utils";
-import { Image } from "astro:assets";
 
 const MAX_POSTS = 6;
 const allPosts = await getCollection("post");
@@ -14,34 +12,108 @@ export const prerender = true;
 
 <PageLayout meta={{ title: "Home" }}>
   <div class="home-page">
-    <!-- Hero Section - Clean and confident -->
+    <!-- Hero Section - Terminal Login Sequence -->
     <section class="hero-section">
-      <div class="hero-grid">
-        <!-- Profile Image -->
-        <div class="hero-image-container crt-filter">
-          <Image
-            src={MeImage}
-            height={MeImage.height}
-            width={MeImage.width}
-            alt="Matthew Peck-Deloughry"
-            class="hero-image crt-image"
-            transition:name="profile-image"
-          />
+      <div class="hero-terminal">
+        <!-- Scanline overlay -->
+        <div class="scanlines" aria-hidden="true"></div>
+
+        <!-- Terminal header -->
+        <div class="terminal-header">
+          <span class="terminal-dot red"></span>
+          <span class="terminal-dot yellow"></span>
+          <span class="terminal-dot green"></span>
+          <span class="terminal-title">deloughry.co.uk — login</span>
         </div>
 
-        <!-- Hero Text -->
-        <div class="hero-content">
+        <!-- Terminal content -->
+        <div class="terminal-body">
           <a class="u-url hidden" rel="me" href="https://deloughry.co.uk/"
             >Matthew Peck-Deloughry</a
           >
           <a class="u-url hidden" href="acct:matt@deloughry.co.uk"></a>
 
-          <div class="hero-roles">
-            <span class="role-item text-accent glow-accent">Developer</span>
-            <span class="role-divider" aria-hidden="true">//</span>
-            <span class="role-item text-purple glow-purple">Streamer</span>
-            <span class="role-divider" aria-hidden="true">//</span>
-            <span class="role-item text-cyan glow-cyan">Maker</span>
+          <!-- Login sequence -->
+          <div class="login-sequence">
+            <div class="login-line login-prompt-line">
+              <span class="login-label">login:</span>
+              <span class="typed-text username-type">mdeloughry</span>
+            </div>
+            <div class="login-line password-line">
+              <span class="login-label">password:</span>
+              <span class="typed-text password-type">••••••••••••</span>
+            </div>
+            <div class="login-line auth-line">
+              <span class="auth-message">Authenticating</span><span
+                class="auth-dots">...</span
+              >
+            </div>
+          </div>
+
+          <!-- Profile + Info Grid -->
+          <div class="profile-grid">
+            <!-- Profile image with CRT reveal -->
+            <div class="hero-image-wrapper">
+              <div class="crt-reveal">
+                <div class="glitch-frame">
+                  <div class="frame-corner top-left"></div>
+                  <div class="frame-corner top-right"></div>
+                  <div class="frame-corner bottom-left"></div>
+                  <div class="frame-corner bottom-right"></div>
+                </div>
+                <div class="hero-image-container">
+                  <img
+                    src="/images/profile-glitch.webp"
+                    alt="Matthew Peck-Deloughry"
+                    class="hero-image"
+                    width="160"
+                    height="160"
+                  />
+                  <div class="crt-scanline"></div>
+                </div>
+              </div>
+              <div class="image-label">
+                <span class="label-status">[</span><span class="label-ok"
+                  >OK</span
+                ><span class="label-status">]</span> IDENTIFIED
+              </div>
+            </div>
+
+            <!-- Boot sequence to the right -->
+            <div class="boot-sequence">
+              <div class="boot-line whoami-cmd">
+                <span class="prompt">$</span>
+                <span class="command">whoami</span>
+              </div>
+              <div class="boot-line whoami-output">
+                <span class="output">Dr_DinoMight</span>
+              </div>
+              <div class="boot-line roles-cmd">
+                <span class="prompt">$</span>
+                <span class="command">cat roles.txt</span>
+              </div>
+              <div class="roles-output">
+                <div class="role-line role-1">
+                  <span class="role-marker">[01]</span>
+                  <span class="role-item text-accent">Developer</span>
+                  <span class="role-status">ACTIVE</span>
+                </div>
+                <div class="role-line role-2">
+                  <span class="role-marker">[02]</span>
+                  <span class="role-item text-purple">Gamer</span>
+                  <span class="role-status">PLAYING</span>
+                </div>
+                <div class="role-line role-3">
+                  <span class="role-marker">[03]</span>
+                  <span class="role-item text-cyan">Maker</span>
+                  <span class="role-status">BUILDING</span>
+                </div>
+              </div>
+              <div class="boot-line final-prompt">
+                <span class="prompt">$</span>
+                <span class="cursor-blink">_</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -49,30 +121,34 @@ export const prerender = true;
 
     <!-- About Section -->
     <section class="about-section">
-      <div class="about-content">
-        <p class="p-note">
-          Aye up, I'm Matt (aka Dr_DinoMight), a developer of around 15 years.
-          Full Stack Developer who loves to tinker with anything and everything.
-          I love to build, be it personal projects or large scale community
-          projects. As long as it's code it floats my boat!
-        </p>
-        <div class="mt-8">
-          <SocialList />
+      <div class="about-card">
+        <div class="about-header">
+          <span class="about-label">// README.md</span>
+        </div>
+        <div class="about-content">
+          <p class="p-note">
+            Aye up, I'm <span class="highlight">Matt</span> (aka <span class="highlight-alt">Dr_DinoMight</span>), a developer of around 15 years.
+            Full Stack Developer who loves to tinker with anything and everything.
+            I love to build, be it personal projects or large scale community
+            projects. As long as it's code it floats my boat!
+          </p>
+          <div class="social-wrapper">
+            <SocialList />
+          </div>
         </div>
       </div>
     </section>
 
     <!-- Motto Section -->
     <section class="motto-section">
-      <blockquote class="motto-quote">
-        <span class="quote-mark" aria-hidden="true">"</span>
-        <span class="quote-text">
-          Av' fun developing, Av' fun learning, then Av'a crack at engineering
-          it!
-        </span>
-        <span class="quote-mark" aria-hidden="true">"</span>
-        <span class="cursor" aria-hidden="true">_</span>
-      </blockquote>
+      <div class="motto-card">
+        <span class="motto-prefix">$</span>
+        <span class="motto-command">echo</span>
+        <blockquote class="motto-text">
+          <span class="quote-mark">"</span>Av' fun developing, Av' fun learning,
+          then Av'a crack at engineering it!<span class="quote-mark">"</span>
+        </blockquote>
+      </div>
     </section>
 
     <!-- Recent Posts Section -->
@@ -135,25 +211,304 @@ export const prerender = true;
     .home-page {
       display: flex;
       flex-direction: column;
-      gap: var(--space-2xl);
+      gap: var(--space-lg);
     }
 
-    /* Hero Section */
+    /* Hero Section - Terminal Style */
     .hero-section {
       padding: var(--space-lg) 0;
     }
 
-    .hero-grid {
+    .hero-terminal {
+      position: relative;
+      background: var(--theme-bg-secondary);
+      border: 2px solid var(--theme-accent);
+      border-radius: var(--radius-subtle);
+      overflow: hidden;
+    }
+
+    /* Scanline overlay */
+    .scanlines {
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0, 0, 0, 0.15) 2px,
+        rgba(0, 0, 0, 0.15) 4px
+      );
+      pointer-events: none;
+      z-index: 10;
+    }
+
+    /* Terminal header */
+    .terminal-header {
+      display: flex;
+      align-items: center;
+      gap: var(--space-xs);
+      padding: var(--space-xs) var(--space-sm);
+      background: var(--theme-bg);
+      border-bottom: 1px solid var(--theme-accent);
+    }
+
+    .terminal-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+    }
+
+    .terminal-dot.red {
+      background: var(--color-error);
+    }
+    .terminal-dot.yellow {
+      background: var(--color-warning);
+    }
+    .terminal-dot.green {
+      background: var(--color-success);
+    }
+
+    .terminal-title {
+      margin-left: auto;
+      font-family: "JetBrains Mono", monospace;
+      font-size: var(--text-xs);
+      color: var(--theme-muted);
+    }
+
+    /* Terminal body */
+    .terminal-body {
+      position: relative;
+      padding: var(--space-lg);
+      font-family: "JetBrains Mono", monospace;
+    }
+
+    /* ============================================
+       LOGIN SEQUENCE - Phase 1 (0s - 3s)
+       Absolutely positioned to overlay profile grid
+       ============================================ */
+    .login-sequence {
+      position: absolute;
+      top: var(--space-lg);
+      left: var(--space-lg);
+      right: var(--space-lg);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-xs);
+      background: var(--theme-bg-secondary);
+      z-index: 5;
+      animation: fadeOut 0.3s ease forwards;
+      animation-delay: 3s;
+    }
+
+    @keyframes fadeOut {
+      to {
+        opacity: 0;
+        visibility: hidden;
+      }
+    }
+
+    .login-line {
+      display: flex;
+      gap: var(--space-sm);
+      opacity: 0;
+    }
+
+    .login-label {
+      color: var(--theme-muted);
+    }
+
+    .typed-text {
+      color: var(--theme-text);
+      overflow: hidden;
+      white-space: nowrap;
+      border-right: 2px solid var(--theme-accent);
+      width: 0;
+    }
+
+    /* Login prompt appears, then username types */
+    .login-prompt-line {
+      animation: fadeIn 0.1s ease forwards;
+      animation-delay: 0.2s;
+    }
+
+    .username-type {
+      animation:
+        typeText 0.8s steps(10) 0.4s forwards,
+        cursorBlink 0.5s step-end 0.4s 2,
+        hideCursor 0.1s ease 1.3s forwards;
+    }
+
+    /* Password prompt appears, then dots type */
+    .password-line {
+      animation: fadeIn 0.1s ease forwards;
+      animation-delay: 1.4s;
+    }
+
+    .password-type {
+      animation:
+        typeText 0.6s steps(12) 1.6s forwards,
+        cursorBlink 0.5s step-end 1.6s 2,
+        hideCursor 0.1s ease 2.3s forwards;
+    }
+
+    /* Auth message */
+    .auth-line {
+      animation: fadeIn 0.1s ease forwards;
+      animation-delay: 2.4s;
+    }
+
+    .auth-message {
+      color: var(--color-warning);
+    }
+
+    .auth-dots {
+      color: var(--color-warning);
+      animation: dotsAnimation 0.6s steps(3) 2.5s 2;
+    }
+
+    @keyframes typeText {
+      from {
+        width: 0;
+      }
+      to {
+        width: 100%;
+      }
+    }
+
+    @keyframes cursorBlink {
+      0%,
+      100% {
+        border-color: var(--theme-accent);
+      }
+      50% {
+        border-color: transparent;
+      }
+    }
+
+    @keyframes hideCursor {
+      to {
+        border-color: transparent;
+      }
+    }
+
+    @keyframes fadeIn {
+      to {
+        opacity: 1;
+      }
+    }
+
+    @keyframes dotsAnimation {
+      0% {
+        opacity: 0.3;
+      }
+      33% {
+        opacity: 0.6;
+      }
+      66% {
+        opacity: 0.9;
+      }
+      100% {
+        opacity: 1;
+      }
+    }
+
+    /* ============================================
+       PROFILE GRID - Image + Boot Sequence
+       ============================================ */
+    .profile-grid {
       display: grid;
       grid-template-columns: auto 1fr;
-      gap: var(--space-xl);
-      align-items: center;
+      gap: var(--space-lg);
+      align-items: start;
+      opacity: 0;
+      animation: fadeIn 0.1s ease forwards;
+      animation-delay: 3.2s;
+    }
+
+    /* ============================================
+       IMAGE REVEAL - Phase 2 (3s - 4s)
+       ============================================ */
+    .hero-image-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: var(--space-xs);
+    }
+
+    .crt-reveal {
+      position: relative;
+    }
+
+    .glitch-frame {
+      position: absolute;
+      inset: -8px;
+      pointer-events: none;
+      opacity: 0;
+      animation: frameFlicker 0.3s ease forwards;
+      animation-delay: 3.4s;
+    }
+
+    @keyframes frameFlicker {
+      0% {
+        opacity: 0;
+      }
+      20% {
+        opacity: 1;
+      }
+      40% {
+        opacity: 0.3;
+      }
+      60% {
+        opacity: 1;
+      }
+      80% {
+        opacity: 0.6;
+      }
+      100% {
+        opacity: 1;
+      }
+    }
+
+    .frame-corner {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      border: 2px solid var(--theme-accent);
+    }
+
+    .frame-corner.top-left {
+      top: 0;
+      left: 0;
+      border-right: none;
+      border-bottom: none;
+    }
+
+    .frame-corner.top-right {
+      top: 0;
+      right: 0;
+      border-left: none;
+      border-bottom: none;
+    }
+
+    .frame-corner.bottom-left {
+      bottom: 0;
+      left: 0;
+      border-right: none;
+      border-top: none;
+    }
+
+    .frame-corner.bottom-right {
+      bottom: 0;
+      right: 0;
+      border-left: none;
+      border-top: none;
     }
 
     .hero-image-container {
       position: relative;
-      width: 180px;
-      height: 180px;
+      width: 160px;
+      height: 160px;
+      overflow: hidden;
     }
 
     .hero-image {
@@ -161,82 +516,321 @@ export const prerender = true;
       height: 100%;
       object-fit: cover;
       border-radius: var(--radius-subtle);
-      filter: grayscale(100%) contrast(1.05);
+      filter: grayscale(100%) contrast(1.1);
       transition: filter var(--transition-slow);
+      clip-path: inset(100% 0 0 0);
+      animation: crtReveal 0.5s ease forwards;
+      animation-delay: 3.4s;
+    }
+
+    @keyframes crtReveal {
+      0% {
+        clip-path: inset(100% 0 0 0);
+        filter: grayscale(100%) contrast(1.5) brightness(1.5);
+      }
+      30% {
+        clip-path: inset(70% 0 0 0);
+        filter: grayscale(100%) contrast(1.3) brightness(1.3);
+      }
+      60% {
+        clip-path: inset(30% 0 0 0);
+        filter: grayscale(100%) contrast(1.2) brightness(1.1);
+      }
+      100% {
+        clip-path: inset(0 0 0 0);
+        filter: grayscale(100%) contrast(1.1) brightness(1);
+      }
+    }
+
+    .crt-scanline {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(
+        to bottom,
+        transparent,
+        rgba(218, 255, 1, 0.4),
+        transparent
+      );
+      opacity: 0;
+      animation: scanlineMove 0.5s ease forwards;
+      animation-delay: 3.4s;
+    }
+
+    @keyframes scanlineMove {
+      0% {
+        top: 0;
+        opacity: 1;
+      }
+      100% {
+        top: 100%;
+        opacity: 0;
+      }
     }
 
     .hero-image-container:hover .hero-image {
       filter: grayscale(0%) contrast(1);
     }
 
-    .hero-content {
-      display: flex;
-      flex-direction: column;
-      gap: var(--space-sm);
+    .image-label {
+      font-size: var(--text-sm);
+      color: var(--color-success);
+      opacity: 0;
+      animation: labelReveal 0.3s ease forwards;
+      animation-delay: 4s;
     }
 
-    .hero-roles {
+    .label-status {
+      color: var(--theme-muted);
+    }
+
+    .label-ok {
+      color: var(--color-success);
+    }
+
+    @keyframes labelReveal {
+      0% {
+        opacity: 0;
+        transform: translateY(-5px);
+      }
+      50% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      70% {
+        opacity: 0.3;
+      }
+      100% {
+        opacity: 1;
+      }
+    }
+
+    /* ============================================
+       BOOT SEQUENCE - Phase 3 (4.2s onwards)
+       ============================================ */
+    .boot-sequence {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-xs);
+    }
+
+    .boot-line {
+      display: flex;
+      gap: var(--space-xs);
+      opacity: 0;
+    }
+
+    .whoami-cmd {
+      animation: typeIn 0.3s ease forwards;
+      animation-delay: 4.4s;
+    }
+
+    .whoami-output {
+      animation: typeIn 0.3s ease forwards;
+      animation-delay: 4.7s;
+    }
+
+    .roles-cmd {
+      animation: typeIn 0.3s ease forwards;
+      animation-delay: 5.1s;
+    }
+
+    .final-prompt {
+      animation: typeIn 0.3s ease forwards;
+      animation-delay: 6.2s;
+    }
+
+    @keyframes typeIn {
+      from {
+        opacity: 0;
+        transform: translateX(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    .prompt {
+      color: var(--theme-accent);
+      font-weight: 700;
+    }
+
+    .command {
+      color: var(--theme-text);
+    }
+
+    .output {
+      color: var(--color-cyan);
+      font-size: var(--text-2xl);
+      font-weight: 600;
+    }
+
+    /* Roles output */
+    .roles-output {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-xs);
+      padding: var(--space-sm) 0;
+    }
+
+    .role-line {
       display: flex;
       align-items: center;
       gap: var(--space-sm);
-      flex-wrap: wrap;
+      opacity: 0;
+      animation: slideIn 0.4s ease forwards;
+    }
+
+    .role-1 {
+      animation-delay: 5.4s;
+    }
+    .role-2 {
+      animation-delay: 5.6s;
+    }
+    .role-3 {
+      animation-delay: 5.8s;
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateX(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    .role-marker {
+      color: var(--theme-muted);
+      font-size: var(--text-sm);
     }
 
     .role-item {
-      font-family: "JetBrains Mono", monospace;
-      font-size: var(--text-display);
-      font-weight: 600;
-      color: var(--theme-text);
+      font-size: var(--text-2xl);
+      font-weight: 700;
       letter-spacing: -0.02em;
     }
 
-    .role-divider {
+    .role-status {
+      margin-left: auto;
+      font-size: var(--text-xs);
+      padding: 2px 8px;
+      border: 1px solid currentColor;
+      border-radius: var(--radius-subtle);
+      opacity: 0.7;
+    }
+
+    .role-1 .role-status {
       color: var(--theme-accent);
-      font-size: var(--text-lg);
-      opacity: 0.5;
+    }
+    .role-2 .role-status {
+      color: var(--color-purple);
+    }
+    .role-3 .role-status {
+      color: var(--color-cyan);
+    }
+
+    .cursor-blink {
+      color: var(--theme-accent);
+      animation: blink 1s step-end infinite;
+      animation-delay: 6.2s;
     }
 
     /* About Section */
     .about-section {
-      max-width: 680px;
+      width: 100%;
+    }
+
+    .about-card {
+      background: var(--theme-bg-secondary);
+      border: 2px solid var(--theme-border, rgba(255, 255, 255, 0.1));
+      border-radius: var(--radius-subtle);
+      overflow: hidden;
+    }
+
+    .about-header {
+      padding: var(--space-xs) var(--space-md);
+      background: var(--theme-bg);
+      border-bottom: 1px solid var(--theme-border, rgba(255, 255, 255, 0.1));
+    }
+
+    .about-label {
+      font-family: "JetBrains Mono", monospace;
+      font-size: var(--text-sm);
+      color: var(--theme-accent);
     }
 
     .about-content {
+      padding: var(--space-lg);
       color: var(--theme-text);
     }
 
     .p-note {
-      font-size: var(--text-lg);
+      font-size: var(--text-base);
       line-height: 1.8;
       color: var(--theme-muted);
+      margin: 0 0 var(--space-lg) 0;
+    }
+
+    .highlight {
+      color: var(--theme-accent);
+      font-weight: 500;
+    }
+
+    .highlight-alt {
+      color: var(--color-cyan);
+      font-weight: 500;
+    }
+
+    .social-wrapper {
+      padding-top: var(--space-md);
+      border-top: 1px solid var(--theme-border, rgba(255, 255, 255, 0.08));
     }
 
     /* Motto Section */
     .motto-section {
-      padding: var(--space-xl) 0;
-      border-top: 1px solid rgba(255, 255, 255, 0.08);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 0;
     }
 
-    .motto-quote {
+    .motto-card {
+      display: flex;
+      align-items: baseline;
+      gap: var(--space-sm);
+      padding: var(--space-lg);
+      background: var(--theme-bg-secondary);
+      border: 2px solid var(--color-purple);
+      border-radius: var(--radius-subtle);
       font-family: "JetBrains Mono", monospace;
-      font-size: var(--text-xl);
-      text-align: center;
-      color: var(--theme-text);
+    }
+
+    .motto-prefix {
+      color: var(--color-purple);
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .motto-command {
+      color: var(--theme-muted);
+      flex-shrink: 0;
+    }
+
+    .motto-text {
       margin: 0;
       padding: 0;
       border: none;
+      font-size: var(--text-base);
+      color: var(--theme-text);
+      line-height: 1.6;
     }
 
     .quote-mark {
       color: var(--theme-accent);
-      font-size: 1.5em;
-      vertical-align: -0.1em;
-    }
-
-    .cursor {
-      color: var(--theme-accent);
-      animation: blink 1s step-end infinite;
+      font-weight: 700;
     }
 
     @keyframes blink {
@@ -344,23 +938,62 @@ export const prerender = true;
 
     /* Responsive */
     @media (max-width: 768px) {
-      .hero-grid {
+      .terminal-body {
+        padding: var(--space-md);
+        gap: var(--space-sm);
+      }
+
+      .profile-grid {
         grid-template-columns: 1fr;
         text-align: center;
       }
 
-      .hero-image-container {
-        margin: 0 auto;
-        width: 140px;
-        height: 140px;
+      .hero-image-wrapper {
+        align-items: center;
       }
 
-      .hero-roles {
-        justify-content: center;
+      .boot-sequence {
+        text-align: left;
+      }
+
+      .hero-image-container {
+        width: 120px;
+        height: 120px;
+      }
+
+      .glitch-frame {
+        inset: -6px;
+      }
+
+      .frame-corner {
+        width: 14px;
+        height: 14px;
+      }
+
+      .output {
+        font-size: var(--text-xl);
       }
 
       .role-item {
-        font-size: var(--text-2xl);
+        font-size: var(--text-lg);
+      }
+
+      .role-status {
+        display: none;
+      }
+
+      .motto-card {
+        flex-direction: column;
+        gap: var(--space-xs);
+      }
+
+      .motto-prefix,
+      .motto-command {
+        display: inline;
+      }
+
+      .about-content {
+        padding: var(--space-md);
       }
 
       .posts-grid {
@@ -370,6 +1003,29 @@ export const prerender = true;
       .section-header {
         flex-direction: column;
         align-items: flex-start;
+      }
+    }
+
+    /* Reduce motion for accessibility */
+    @media (prefers-reduced-motion: reduce) {
+      .login-sequence {
+        display: none !important;
+      }
+
+      .typed-text,
+      .hero-image,
+      .image-label,
+      .boot-line,
+      .role-line,
+      .login-line,
+      .glitch-frame,
+      .crt-scanline,
+      .profile-grid {
+        animation: none !important;
+        opacity: 1 !important;
+        width: 100% !important;
+        clip-path: none !important;
+        border-color: transparent !important;
       }
     }
   </style>
