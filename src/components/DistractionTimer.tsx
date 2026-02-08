@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState, type FC } from 'react';
 
-export const DistractionTimer: React.FC = () => {
+export const DistractionTimer: FC = () => {
   const [seconds, setSeconds] = useState(0);
   const [highScore, setHighScore] = useState(0);
   const [timerRunning, setTimerRunning] = useState(false);

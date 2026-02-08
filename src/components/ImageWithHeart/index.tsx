@@ -1,3 +1,4 @@
+import type { FC } from "react";
 import "./style.css";
 
 interface Props {
@@ -6,7 +7,7 @@ interface Props {
   className?: string;
 }
 
-export const ImageWithHeart: React.FC<Props> = ({ image, isLiked, className }) => {
+export const ImageWithHeart: FC<Props> = ({ image, isLiked, className }) => {
   return (
     <div className={`${className} crt-filter`}>
       <img src={image} alt="Currently now-playing image" />

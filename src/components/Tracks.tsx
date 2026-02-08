@@ -1,12 +1,11 @@
-
+import type { FC } from "react";
 import type { TrackWithAllRelationships } from "@/lib/types/spotify";
-
 
 type TracksProps = {
   tracks: TrackWithAllRelationships[] | [];
 };
 
-const Tracks: React.FC<TracksProps> = ({
+const Tracks: FC<TracksProps> = ({
   tracks
 }) => {
 

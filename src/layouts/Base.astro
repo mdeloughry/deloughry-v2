@@ -49,7 +49,7 @@ const {
 		<SkipLink />
 		<Header transition:name="header" />
 		<main id="main" class="flex-1 pb-12">
-			<NowPlaying client:load transition:name="now-playing" transition:animate={"slide"} transition:persist/>
+			<NowPlaying client:only="react" transition:name="now-playing" transition:animate={"slide"} transition:persist/>
 			<slot />
 		</main>
 		<Footer />

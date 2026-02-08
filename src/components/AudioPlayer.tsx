@@ -1,3 +1,4 @@
+import type { FC } from "react";
 import { PlayIcon } from "./ImageWithBadge/play-icon";
 import { StopIcon } from "./ImageWithBadge/stop-icon";
 
@@ -8,7 +9,7 @@ type AudioPlayerProps = {
   onPlay: () => void;
 };
 
-const AudioPlayer: React.FC<AudioPlayerProps> = ({
+const AudioPlayer: FC<AudioPlayerProps> = ({
   src,
   isPlaying,
   onStop,

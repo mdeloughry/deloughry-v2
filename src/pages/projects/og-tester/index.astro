@@ -1,0 +1,44 @@
+---
+import PageLayout from "@/layouts/Base";
+import OgTester from "src/components/OgTester/OgTester";
+
+const meta = {
+  title: "OG Tag Analyzer",
+  description: "Analyze Open Graph meta tags for any URL. See how your links appear when shared on social media.",
+};
+
+export const prerender = false;
+---
+
+<PageLayout meta={meta}>
+  <article class="og-tester-page">
+    <header class="page-header">
+      <h1 class="page-title"><span class="accent-slash">//</span> OG Tag Analyzer</h1>
+      <p class="page-subtitle">Test your Open Graph meta tags</p>
+    </header>
+
+    <OgTester client:load />
+  </article>
+</PageLayout>
+
+<style>
+  .og-tester-page {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xl);
+  }
+
+  .page-header {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+    padding-bottom: var(--space-lg);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .page-subtitle {
+    font-size: var(--text-base);
+    color: var(--theme-muted);
+    margin: 0;
+  }
+</style>

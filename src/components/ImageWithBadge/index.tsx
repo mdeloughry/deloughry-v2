@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import "./style.css";
 import { SpotifyLogo } from "./spotify-logo";
 import { PlayIcon } from "./play-icon";

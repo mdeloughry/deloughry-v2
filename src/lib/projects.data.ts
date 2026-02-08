@@ -40,6 +40,16 @@ export const projects: Project[] = [
 		category: 'experiment',
 		status: 'development',
 		technologies: ['JavaScript', 'Canvas API', 'React']
+	},
+	{
+		slug: 'og-tester',
+		title: 'OG Tag Analyzer',
+		description: 'Analyze Open Graph meta tags for any URL. See how your links appear when shared on social media.',
+		url: '/projects/og-tester',
+		tags: ['utility', 'seo', 'meta-tags', 'developer-tools'],
+		category: 'tool',
+		status: 'live',
+		technologies: ['React', 'TypeScript', 'open-graph-scraper']
 	}
 ];
 

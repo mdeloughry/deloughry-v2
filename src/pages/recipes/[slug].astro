@@ -17,8 +17,8 @@ if (!recipe) {
 }
 const meta = {
 	title: recipe.title,
-	...(recipe.description ? { description: recipe.description } : {}),
-	...(recipe.image ? { ogImage: recipe.image } : {}),
+	description: recipe.description || `Recipe for ${recipe.title}`,
+	ogImage: recipe.image || `/recipes/og-image/${slug}.png`,
 };
 ---
 
