@@ -2,15 +2,12 @@
 import PageLayout from "@/layouts/Base";
 import type { Playlist } from "@/lib/types/spotify";
 
-const playlistsResponse = await fetch(import.meta.env.API_URL + "/spotify/playlists/monthly");
-const playlists: Playlist[] = await playlistsResponse.json();
-const pastPlaylistsResponse = await fetch(import.meta.env.API_URL + "/spotify/playlists/years");
-const pastPlaylists: Playlist[] = await pastPlaylistsResponse.json();
-
-// Debug: Log first playlist artwork during build
-if (playlists.length > 0) {
-  console.log(`[BUILD] First playlist: ${playlists[0].name}, artwork URL: ${playlists[0].artwork?.[0]?.url?.substring(0, 80)}...`);
-}
+const playlists: Playlist[] = await (
+  await fetch(import.meta.env.API_URL + "/spotify/playlists/monthly")
+).json();
+const pastPlaylists: Playlist[] = await (
+  await fetch(import.meta.env.API_URL + "/spotify/playlists/years")
+).json();
 const meta = {
   title: "Spotify Jams",
   description: "A collection of monthly liked songs",
