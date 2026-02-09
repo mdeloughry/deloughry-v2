@@ -13,7 +13,12 @@ export async function getStaticPaths(): Promise<GetStaticPathsResult> {
   const params = [];
   const playlists = await getPlaylistsfromDB();
 
+  console.log(`[BUILD] Found ${playlists.length} playlists from database`);
+
   for await (const playlist of playlists) {
+    // Debug: Log artwork URL during build
+    console.log(`[BUILD] Playlist: ${playlist.name}, artwork: ${playlist.artwork?.[0]?.url?.substring(0, 80) ?? 'none'}...`);
+
     params.push({
       params: { playlist: playlist.id },
       props: { playlist, tracks: playlist.tracks },
