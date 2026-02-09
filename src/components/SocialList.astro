@@ -1,6 +1,8 @@
 ---
 import Mastodon from "./assets/svgs/Mastodon.astro";
 import GitHub from "./assets/svgs/GitHub.astro";
+import X from "./assets/svgs/X.astro";
+import Bluesky from "./assets/svgs/Bluesky.astro";
 ---
 
 <nav class="social-list" aria-label="Social media links">
@@ -18,6 +20,32 @@ import GitHub from "./assets/svgs/GitHub.astro";
 			>
 				<GitHub class="social-icon" aria-hidden="true" />
 				<span class="social-name">GITHUB</span>
+				<span class="sr-only"> (opens in new tab)</span>
+			</a>
+		</li>
+		<li>
+			<a
+				class="social-link social-link--x"
+				href="https://x.com/dr_dinomight"
+				target="_blank"
+				rel="noopener noreferrer me"
+				aria-label="X (Twitter) profile (opens in new tab)"
+			>
+				<X class="social-icon" aria-hidden="true" />
+				<span class="social-name">X</span>
+				<span class="sr-only"> (opens in new tab)</span>
+			</a>
+		</li>
+		<li>
+			<a
+				class="social-link social-link--bluesky"
+				href="https://bsky.app/profile/deloughry.co.uk"
+				target="_blank"
+				rel="noopener noreferrer me"
+				aria-label="Bluesky profile (opens in new tab)"
+			>
+				<Bluesky class="social-icon" aria-hidden="true" />
+				<span class="social-name">BLUESKY</span>
 				<span class="sr-only"> (opens in new tab)</span>
 			</a>
 		</li>
@@ -93,6 +121,20 @@ import GitHub from "./assets/svgs/GitHub.astro";
 	}
 	.social-link--github:hover {
 		background: var(--color-success);
+	}
+
+	.social-link--x {
+		color: var(--theme-text);
+	}
+	.social-link--x:hover {
+		background: var(--theme-text);
+	}
+
+	.social-link--bluesky {
+		color: var(--color-cyan);
+	}
+	.social-link--bluesky:hover {
+		background: var(--color-cyan);
 	}
 
 	.social-link--mastodon {
