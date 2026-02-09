@@ -1,8 +1,6 @@
 ---
 import PageLayout from "@/layouts/Base";
 import type { GetStaticPathsResult } from "astro";
-import ImageWithBadge from "src/components/ImageWithBadge";
-import Tracks from "src/components/Tracks";
 import type {
   PlaylistWithAllRelationships,
   TrackWithAllRelationships,
@@ -38,32 +36,539 @@ export const prerender = true;
 ---
 
 <PageLayout meta={meta}>
-  <h1 class="title mb-6">{playlist.name}</h1>
-  <a href="/playlists" class="brutal-link mb-4">&lt; Back</a>
-  <div class="mt-6 flex flex-col gap-4 sm:flex-row">
-    <div class="w-full sm:w-1/4">
-      <a href={playlist.externalUrl} class="brutal-link" target="_blank">
-        <ImageWithBadge
-          client:load
-          imageUrl={playlist.artwork[0]?.url ?? ""}
-          underText="Play on Spotify"
-          transition:name={"album-artwork"}
-        />
-      </a>
-    </div>
-    <div class="flex-1">
-      <h2 class="my-4 flex justify-between sm:justify-start sm:gap-4">
-        <span>Tracks</span><span class="text-accent"
-          >({tracks.length ?? 0})</span
+  <div class="playlist-detail">
+    <!-- Navigation -->
+    <a href="/playlists" class="back-link">
+      <span class="back-arrow">&lt;</span>
+      <span>Back to Playlists</span>
+    </a>
+
+    <!-- Hero Section -->
+    <header class="playlist-hero">
+      <div class="hero-artwork">
+        <a
+          href={playlist.externalUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="artwork-link"
         >
-      </h2>
-      {
-        tracks && (
-          <>
-            <Tracks client:load tracks={tracks} />
-          </>
-        )
-      }
-    </div>
+          <div class="artwork-frame">
+            <div class="frame-corner top-left"></div>
+            <div class="frame-corner top-right"></div>
+            <div class="frame-corner bottom-left"></div>
+            <div class="frame-corner bottom-right"></div>
+          </div>
+          <div class="artwork-container crt-filter">
+            <img
+              src={playlist.artwork[0]?.url ?? ""}
+              alt={playlist.name}
+              class="artwork-image crt-image"
+              transition:name="album-artwork"
+            />
+            <div class="artwork-overlay">
+              <svg class="play-icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M8 5v14l11-7z" />
+              </svg>
+              <span class="play-text">Play on Spotify</span>
+            </div>
+          </div>
+        </a>
+      </div>
+
+      <div class="hero-info">
+        <div class="info-label">
+          <span class="label-prefix">//</span> MONTHLY_PLAYLIST
+        </div>
+        <h1 class="playlist-title">{playlist.name}</h1>
+        <div class="playlist-meta">
+          <span class="meta-item">
+            <span class="meta-value">{tracks.length}</span>
+            <span class="meta-label">tracks</span>
+          </span>
+        </div>
+        <a
+          href={playlist.externalUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="spotify-btn"
+        >
+          <svg class="spotify-icon" viewBox="0 0 24 24" fill="currentColor">
+            <path
+              d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"
+            ></path>
+          </svg>
+          <span>Open in Spotify</span>
+        </a>
+      </div>
+    </header>
+
+    <!-- Tracks Section -->
+    <section class="tracks-section">
+      <div class="section-header">
+        <h2 class="section-title">
+          <span class="title-prefix">#</span> Tracklist
+        </h2>
+        <span class="track-count">{tracks.length} tracks</span>
+      </div>
+
+      <div class="tracks-list">
+        {
+          tracks.map((track, index) => (
+            <a
+              href={track.externalUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="track-item"
+            >
+              <span class="track-number">
+                {String(index + 1).padStart(2, "0")}
+              </span>
+              <div class="track-artwork">
+                {track.artwork[0]?.url ? (
+                  <img src={track.artwork[0].url} alt="" />
+                ) : (
+                  <div class="no-artwork" />
+                )}
+              </div>
+              <div class="track-info">
+                <span class="track-name">{track.name}</span>
+                <span class="track-artists">
+                  {track.artists.map((a) => a.name).join(", ")}
+                </span>
+              </div>
+              <div class="track-play">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M8 5v14l11-7z" />
+                </svg>
+              </div>
+            </a>
+          ))
+        }
+      </div>
+    </section>
   </div>
+
+  <style>
+    .playlist-detail {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-xl);
+    }
+
+    /* Back Link */
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-xs);
+      font-family: "JetBrains Mono", monospace;
+      font-size: var(--text-sm);
+      color: var(--theme-muted);
+      text-decoration: none;
+      transition: color var(--transition-fast);
+    }
+
+    .back-link:hover {
+      color: var(--theme-accent);
+    }
+
+    .back-arrow {
+      color: var(--theme-accent);
+    }
+
+    /* Hero Section */
+    .playlist-hero {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: var(--space-xl);
+      align-items: start;
+    }
+
+    /* Artwork */
+    .hero-artwork {
+      position: relative;
+    }
+
+    .artwork-link {
+      display: block;
+      position: relative;
+    }
+
+    .artwork-frame {
+      position: absolute;
+      inset: -10px;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .frame-corner {
+      position: absolute;
+      width: 24px;
+      height: 24px;
+      border: 2px solid var(--theme-accent);
+    }
+
+    .frame-corner.top-left {
+      top: 0;
+      left: 0;
+      border-right: none;
+      border-bottom: none;
+    }
+    .frame-corner.top-right {
+      top: 0;
+      right: 0;
+      border-left: none;
+      border-bottom: none;
+    }
+    .frame-corner.bottom-left {
+      bottom: 0;
+      left: 0;
+      border-right: none;
+      border-top: none;
+    }
+    .frame-corner.bottom-right {
+      bottom: 0;
+      right: 0;
+      border-left: none;
+      border-top: none;
+    }
+
+    .artwork-container {
+      position: relative;
+      aspect-ratio: 1;
+      overflow: hidden;
+      border-radius: var(--radius-subtle);
+    }
+
+    .artwork-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: grayscale(100%);
+      transition: filter var(--transition-medium);
+    }
+
+    .artwork-link:hover .artwork-image {
+      filter: grayscale(0%);
+    }
+
+    .artwork-overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-sm);
+      background: rgba(0, 0, 0, 0.8);
+      opacity: 0;
+      transition: opacity var(--transition-medium);
+    }
+
+    .artwork-link:hover .artwork-overlay {
+      opacity: 1;
+    }
+
+    .play-icon {
+      width: 4rem;
+      height: 4rem;
+      color: var(--color-success);
+    }
+
+    .play-text {
+      font-family: "JetBrains Mono", monospace;
+      font-size: var(--text-sm);
+      color: var(--theme-text);
+    }
+
+    /* Hero Info */
+    .hero-info {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-md);
+      padding-top: var(--space-sm);
+    }
+
+    .info-label {
+      font-family: "JetBrains Mono", monospace;
+      font-size: var(--text-sm);
+      color: var(--theme-muted);
+      letter-spacing: 0.05em;
+    }
+
+    .label-prefix {
+      color: var(--theme-accent);
+    }
+
+    .playlist-title {
+      font-family: "JetBrains Mono", monospace;
+      font-size: var(--text-display);
+      font-weight: 700;
+      color: var(--theme-text);
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      margin: 0;
+    }
+
+    .playlist-meta {
+      display: flex;
+      gap: var(--space-lg);
+    }
+
+    .meta-item {
+      display: flex;
+      align-items: baseline;
+      gap: var(--space-xs);
+    }
+
+    .meta-value {
+      font-family: "JetBrains Mono", monospace;
+      font-size: var(--text-3xl);
+      font-weight: 700;
+      color: var(--theme-accent);
+    }
+
+    .meta-label {
+      font-family: "JetBrains Mono", monospace;
+      font-size: var(--text-sm);
+      color: var(--theme-muted);
+    }
+
+    .spotify-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-sm);
+      padding: var(--space-sm) var(--space-md);
+      background: var(--color-success);
+      color: var(--theme-bg);
+      font-family: "JetBrains Mono", monospace;
+      font-size: var(--text-sm);
+      font-weight: 600;
+      text-decoration: none;
+      border-radius: var(--radius-subtle);
+      transition:
+        transform var(--transition-fast),
+        box-shadow var(--transition-fast);
+      width: fit-content;
+    }
+
+    .spotify-btn:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: 2px 2px 0 var(--theme-accent);
+    }
+
+    .spotify-icon {
+      width: 1.25rem;
+      height: 1.25rem;
+    }
+
+    /* Tracks Section */
+    .tracks-section {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-md);
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: var(--space-sm);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .section-title {
+      font-family: "JetBrains Mono", monospace;
+      font-size: var(--text-xl);
+      font-weight: 600;
+      color: var(--theme-text);
+      margin: 0;
+    }
+
+    .title-prefix {
+      color: var(--color-purple);
+    }
+
+    .track-count {
+      font-family: "JetBrains Mono", monospace;
+      font-size: var(--text-sm);
+      color: var(--theme-muted);
+    }
+
+    /* Track List */
+    .tracks-list {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .track-item {
+      display: grid;
+      grid-template-columns: 3rem 3.5rem 1fr auto;
+      gap: var(--space-md);
+      align-items: center;
+      padding: var(--space-sm) var(--space-sm);
+      text-decoration: none;
+      border-radius: var(--radius-subtle);
+      transition:
+        background var(--transition-fast),
+        transform var(--transition-fast);
+    }
+
+    .track-item:hover {
+      background: var(--theme-bg-secondary);
+      transform: translateX(4px);
+    }
+
+    .track-item:nth-child(odd) {
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .track-item:nth-child(odd):hover {
+      background: var(--theme-bg-secondary);
+    }
+
+    .track-number {
+      font-family: "JetBrains Mono", monospace;
+      font-size: var(--text-sm);
+      color: var(--theme-muted);
+      text-align: right;
+    }
+
+    .track-item:hover .track-number {
+      color: var(--theme-accent);
+    }
+
+    .track-artwork {
+      width: 3.5rem;
+      height: 3.5rem;
+      border-radius: var(--radius-subtle);
+      overflow: hidden;
+      background: var(--theme-bg-elevated);
+    }
+
+    .track-artwork img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: grayscale(100%);
+      transition: filter var(--transition-fast);
+    }
+
+    .track-item:hover .track-artwork img {
+      filter: grayscale(0%);
+    }
+
+    .no-artwork {
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(
+        135deg,
+        var(--theme-bg-elevated),
+        var(--theme-bg-secondary)
+      );
+    }
+
+    .track-info {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      min-width: 0;
+    }
+
+    .track-name {
+      font-family: "JetBrains Mono", monospace;
+      font-size: var(--text-base);
+      font-weight: 500;
+      color: var(--theme-text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      transition: color var(--transition-fast);
+    }
+
+    .track-item:hover .track-name {
+      color: var(--theme-accent);
+    }
+
+    .track-artists {
+      font-family: "JetBrains Mono", monospace;
+      font-size: var(--text-xs);
+      color: var(--theme-muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .track-play {
+      width: 2rem;
+      height: 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--theme-muted);
+      opacity: 0;
+      transition: opacity var(--transition-fast);
+    }
+
+    .track-play svg {
+      width: 1.25rem;
+      height: 1.25rem;
+    }
+
+    .track-item:hover .track-play {
+      opacity: 1;
+      color: var(--color-success);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .playlist-hero {
+        grid-template-columns: 1fr;
+        gap: var(--space-lg);
+      }
+
+      .hero-artwork {
+        max-width: 240px;
+        margin: 0 auto;
+      }
+
+      .hero-info {
+        text-align: center;
+        align-items: center;
+      }
+
+      .playlist-title {
+        font-size: var(--text-3xl);
+      }
+
+      .track-item {
+        grid-template-columns: 2.5rem 3rem 1fr auto;
+        gap: var(--space-sm);
+        padding: var(--space-xs) var(--space-xs);
+      }
+
+      .track-artwork {
+        width: 3rem;
+        height: 3rem;
+      }
+
+      .track-name {
+        font-size: var(--text-sm);
+      }
+
+      .track-play {
+        display: none;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .track-item:hover {
+        transform: none;
+      }
+
+      .spotify-btn:hover {
+        transform: none;
+        box-shadow: none;
+      }
+    }
+  </style>
 </PageLayout>
