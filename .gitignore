@@ -31,3 +31,6 @@ pnpm-debug.log*
 
 # OG image testing output
 test-og-images/
+
+# Local Claude settings
+.claude.local.md
